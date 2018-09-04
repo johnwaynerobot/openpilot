@@ -107,7 +107,7 @@ class CarInterface(object):
     # sending if read only is False
     if sendcan is not None:
       self.sendcan = sendcan
-      self.CC = CarController(self.cp.dbc_name, CP.enableCamera)
+      self.CC = CarController(self.cp.dbc_name, CP.carFingerprint, CP.enableCamera)
 
     if self.CS.CP.carFingerprint == CAR.DUMMY:  #2018.09.03 set ILX to dummy for bypass test
       self.compute_gb = get_compute_gb_acura()
@@ -181,18 +181,22 @@ class CarInterface(object):
 
     ret.steerKiBP, ret.steerKpBP = [[0.], [0.]]
 
+    # # 2018.09.04
+    # full torque for 20 deg at 80mph means 0.00007818594 comment from hyundai
     ret.steerKf = 0.00006 # conservative feed-forward
+
 
     #2018.09.02 DV add Kia soul #TODO need to modified paramater
     if candidate == CAR.SOUL:
       stop_and_go = False
-      ret.safetyParam = 1 # Accord and CRV 5G use an alternate user brake msg
+      ret.safetyParam = 8 # define in /boardd/boardd.cc
       ret.mass = 3410. * CV.LB_TO_KG + std_cargo
       ret.wheelbase = 2.66
       ret.centerToFront = ret.wheelbase * 0.41
       ret.steerRatio = 16.0   # 12.3 is spec end-to-end
       tire_stiffness_factor = 0.677
       ret.steerKpV, ret.steerKiV = [[0.6], [0.18]]
+      ret.steerKiBP, ret.steerKpBP = [[0.], [0.]] # 2018.09.04 from hyundai
       ret.longitudinalKpBP = [0., 5., 35.]
       ret.longitudinalKpV = [1.2, 0.8, 0.5]
       ret.longitudinalKiBP = [0., 35.]
@@ -200,13 +204,14 @@ class CarInterface(object):
 
     elif candidate == CAR.SOUL1:
       stop_and_go = False
-      ret.safetyParam = 1  # Accord and CRV 5G use an alternate user brake msg
+      ret.safetyParam = 8  # define in /boardd/boardd.cc
       ret.mass = 3410. * CV.LB_TO_KG + std_cargo
       ret.wheelbase = 2.66
       ret.centerToFront = ret.wheelbase * 0.41
       ret.steerRatio = 16.0  # 12.3 is spec end-to-end
       tire_stiffness_factor = 0.677
       ret.steerKpV, ret.steerKiV = [[0.6], [0.18]]
+      ret.steerKiBP, ret.steerKpBP = [[0.], [0.]]  # 2018.09.04 from hyundai
       ret.longitudinalKpBP = [0., 5., 35.]
       ret.longitudinalKpV = [1.2, 0.8, 0.5]
       ret.longitudinalKiBP = [0., 35.]
@@ -214,13 +219,14 @@ class CarInterface(object):
 
     elif candidate == CAR.SOUL2:
       stop_and_go = False
-      ret.safetyParam = 1  # Accord and CRV 5G use an alternate user brake msg
+      ret.safetyParam = 8  # define in /boardd/boardd.cc
       ret.mass = 3410. * CV.LB_TO_KG + std_cargo
       ret.wheelbase = 2.66
       ret.centerToFront = ret.wheelbase * 0.41
       ret.steerRatio = 16.0  # 12.3 is spec end-to-end
       tire_stiffness_factor = 0.677
       ret.steerKpV, ret.steerKiV = [[0.6], [0.18]]
+      ret.steerKiBP, ret.steerKpBP = [[0.], [0.]]  # 2018.09.04 from hyundai
       ret.longitudinalKpBP = [0., 5., 35.]
       ret.longitudinalKpV = [1.2, 0.8, 0.5]
       ret.longitudinalKiBP = [0., 35.]
@@ -229,7 +235,7 @@ class CarInterface(object):
     else:
       raise ValueError("unsupported car %s" % candidate)
 
-     #TODO 2018.09.02 DV should modified our steering control type to match kia
+     #TODO 2018.09.04 should modified our steering control type to match kia angle
     ret.steerControlType = car.CarParams.SteerControlType.torque
 
     # min speed to enable ACC. if car can do stop and go, then set enabling speed
@@ -355,7 +361,9 @@ class CarInterface(object):
     ret.vEgo = self.CS.v_ego
     ret.aEgo = self.CS.a_ego
     ret.vEgoRaw = self.CS.v_ego_raw
-    ret.yawRate = self.VM.yaw_rate(self.CS.angle_steers * CV.DEG_TO_RAD, self.CS.v_ego)
+    #2018.09.04 change to vehicle yaw rate values
+    #ret.yawRate = self.VM.yaw_rate(self.CS.angle_steers * CV.DEG_TO_RAD, self.CS.v_ego)
+    ret.yawRate = self.CS.yaw_rate
     ret.standstill = self.CS.standstill
     ret.wheelSpeeds.fl = self.CS.v_wheel_fl
     ret.wheelSpeeds.fr = self.CS.v_wheel_fr

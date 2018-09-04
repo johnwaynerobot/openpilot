@@ -3,6 +3,7 @@ from common.kalman.simple_kalman import KF1D
 from selfdrive.can.parser import CANParser, CANDefine
 from selfdrive.config import Conversions as CV
 from selfdrive.car.kia.values import CAR, DBC, STEER_THRESHOLD, SPEED_FACTOR # change to Kia Soul folder
+import numpy as np
 
 #2018.09.04 comment out Gear shifter no use
 #def parse_gear_shifter(gear, vals):
@@ -27,7 +28,8 @@ def calc_cruise_offset(offset, speed):
   return min(_K0 + _K1 * speed + _K2 * speed * offset, 0.)
 
 
-def get_can_signals(CP):
+#2018.09.04 change cansignal to can_parser
+def get_can_parser(CP):
 
     # this function generates lists for signal, messages and initial values
     signals = [
@@ -70,13 +72,14 @@ def get_can_signals(CP):
           ("CRUISE_SETTING", "SCM_BUTTONS", 0),  #UI from 0x1A6
           #2018.09.02 DV change ACC_STATUS to UI Main 1
           ("MAIN_ON", "SCM_BUTTONS", 0),   #ACC_STATUS to MAIN_ON 2018.09.02 DV
+          ("YAW_RATE", "IMU", 0) #2018.09.04 Input vehicle Yaw rate
       ]
 
     checks = [
           # address,  message frequency
           #("TCU2", 0), # 2018.09.04 dont know frequency comment out check
-         # ("WHEEL_SPEEDS", 50),
-         # ("STEERING_SENSORS", 100),
+          ("WHEEL_SPEEDS", 50),
+          ("STEERING_SENSORS", 100),
           #("SCM_FEEDBACK", 5,  #either 5 (200ms) or 10 (100ms), not sure ignore
           #("GEARBOX", 0), #2018.09.04 don't know frequency ignore
           #("STANDSTILL", 50), Standstill VSA
@@ -84,7 +87,7 @@ def get_can_signals(CP):
          #("CRUISE", 10),  #2018.09.03 remove cruise check
          # ("ENG_INFO", 100),  #2018.09.02 change POWERTRAIN DATA To ENG_INFO
           #("VSA_STATUS", 0),
-         # ("SCM_BUTTONS", 25), #2018.09.04 come from 0x1A6
+          ("SCM_BUTTONS", 25), #2018.09.04 come from 0x1A6
       ]
 
 
@@ -124,12 +127,15 @@ def get_can_signals(CP):
                 ("BRAKE_HOLD_ACTIVE", "VSA_STATUS", 0)]
     elif CP.carFingerprint == CAR.SOUL:  # 2018.09.02 DV Kia Soul UI 0x1A6 ADAS Cruise button
         signals += [("MAIN_ON", "SCM_BUTTONS", 0)]
+        signals += [("CF_Clu_CruiseSwMain", "CLU1", 0)] #2018.09.04 signal for Steering/brake/gas max test
 
     elif CP.carFingerprint == CAR.SOUL1:  # 2018.09.03 DV Kia Soul UI 0x1A6 ADAS Cruise button
         signals += [("MAIN_ON", "SCM_BUTTONS", 0)]
+        signals += [("CF_Clu_CruiseSwMain", "CLU1", 0)]  # 2018.09.04 signal for Steering/brake/gas max test
 
     elif CP.carFingerprint == CAR.SOUL2:  # 2018.09.03 DV Kia Soul UI 0x1A6 ADAS Cruise button
         signals += [("MAIN_ON", "SCM_BUTTONS", 0)]
+        signals += [("CF_Clu_CruiseSwMain", "CLU1", 0)]  # 2018.09.04 signal for Steering/brake/gas max test
 
         # add gas interceptor reading if we are using it
     if CP.enableGasInterceptor:
@@ -137,12 +143,12 @@ def get_can_signals(CP):
         signals.append(("THROTTLE_REPORT_operator_override", "THROTTLE_REPORT", 0)) #2018.09.02 DV add change for Kia soul
         #checks.append(("THROTTLE_REPORT", 50)) # signal and frequency#2018.09.02 DV add change for Kia soul
         #comment out check, frequency need to verify
-    return signals, #checks
+    return signals, checks
 
 
-def get_can_parser(CP):
-  signals, checks = get_can_signals(CP)
-  return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, 0)
+#def get_can_parser(CP):  #2018.09.04 combine in above
+ # signals, checks = get_can_signals(CP)
+    return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, 0)
 
 
 class CarState(object):
@@ -187,10 +193,17 @@ class CarState(object):
     dt = 0.01
     # Q = np.matrix([[10.0, 0.0], [0.0, 100.0]])
     # R = 1e3
-    self.v_ego_kf = KF1D(x0=[[0.0], [0.0]],
-                         A=[[1.0, dt], [0.0, 1.0]],
-                         C=[[1.0, 0.0]],
-                         K=[[0.12287673], [0.29666309]])
+    #self.v_ego_kf = KF1D(x0=[[0.0], [0.0]],
+    #                     A=[[1.0, dt], [0.0, 1.0]],
+     #                    C=[[1.0, 0.0]],
+       #                  K=[[0.12287673], [0.29666309]])
+    #
+    #hyundai change 2018.09.04
+    self.v_ego_kf = KF1D(x0=np.matrix([[0.0], [0.0]]),
+                         A=np.matrix([[1.0, dt], [0.0, 1.0]]),
+                         C=np.matrix([1.0, 0.0]),
+                         K=np.matrix([[0.12287673], [0.29666309]]))
+
     self.v_ego = 0.0
 
   def update(self, cp):
@@ -237,7 +250,7 @@ class CarState(object):
     if self.CP.carFingerprint in (CAR.SOUL): # 2018.09.04 add multiple soul because can change
         self.standstill = cp.vl["TM_DATA"]['VS_TCU'] < 0.1
         self.door_all_closed = not cp.vl["SCM_FEEDBACK"]['DOOR_OPEN_FL']
-        self.steer_error = cp.vl["STEERING_REPORT"]['STEERING_REPORT_operator_override'] != 0
+        self.steer_error = cp.vl["STEERING_REPORT"]['STEERING_REPORT_dtcs'] != 0
         self.steer_not_allowed = cp.vl["STEERING_REPORT"]['STEERING_REPORT_operator_override'] != 0
         self.steer_warning = cp.vl["STEERING_REPORT"]['STEERING_REPORT_operator_override'] != 0
         self.brake_error = cp.vl["BRAKE_REPORT"]['BRAKE_REPORT_dtcs']
@@ -263,11 +276,13 @@ class CarState(object):
         # On set, cruise set speed pulses between 254~255 and the set speed prev is set to avoid this.
         self.v_cruise_pcm = self.v_cruise_pcm_prev if cp.vl["ACC_HUD"]['CRUISE_SPEED'] > 160.0 else cp.vl["ACC_HUD"]['CRUISE_SPEED']
         self.v_cruise_pcm_prev = self.v_cruise_pcm
+        self.yaw_rate = cp.vl["IMU"]['YAW_RATE']
+        self.generic_toggle = cp.vl["CLU1"]['CF_Clu_CruiseSwMain'] #2019.09.04 use stock cruise main switch for steer max test
 
     elif self.CP.carFingerprint in (CAR.SOUL1, CAR.SOUL2): # 2018.09.04 update
             self.standstill = cp.vl["TM_DATA"]['VS_TCU'] < 0.1
             self.door_all_closed = not cp.vl["SCM_FEEDBACK"]['DOOR_OPEN_FL']
-            self.steer_error = cp.vl["STEERING_REPORT"]['STEERING_REPORT_operator_override'] != 0
+            self.steer_error = cp.vl["STEERING_REPORT"]['STEERING_REPORT_dtcs'] != 0
             self.steer_not_allowed = cp.vl["STEERING_REPORT"]['STEERING_REPORT_operator_override'] != 0
             self.steer_warning = cp.vl["STEERING_REPORT"]['STEERING_REPORT_operator_override'] != 0
             self.brake_error = cp.vl["BRAKE_REPORT"]['BRAKE_REPORT_dtcs']
@@ -292,7 +307,8 @@ class CarState(object):
             self.cruise_speed_offset = calc_cruise_offset(0, self.v_ego)
             self.v_cruise_pcm = self.v_cruise_pcm_prev if cp.vl["ACC_HUD"]['CRUISE_SPEED'] > 160.0 else cp.vl["ACC_HUD"]['CRUISE_SPEED']
             self.v_cruise_pcm_prev = self.v_cruise_pcm
-
+            self.yaw_rate = cp.vl["IMU"]['YAW_RATE']
+            self.generic_toggle = cp.vl["CLU1"]['CF_Clu_CruiseSwMain']  # 2019.09.04 use stock cruise main switch for steer max test
 
     # calc best v_ego estimate, by averaging two opposite corners
     speed_factor = SPEED_FACTOR[self.CP.carFingerprint]
@@ -331,6 +347,7 @@ class CarState(object):
             self.car_gas = cp.vl["ENG_INFO"]['PEDAL_GAS'] #2018.09.02 DV cruise control gas not available change to pedal gas
 
     #self.steer_torque_driver = cp.vl["STEER_STATUS"]['STEER_TORQUE_SENSOR'] 2018.09.02 comment out to use steering operator override
+    #TODO find actual Steering Driver Torque value on CAN
     self.steer_torque_driver = cp.vl["STEERING_REPORT"]['STEERING_REPORT_operator_override']
     self.steer_override = abs(self.steer_torque_driver) > STEER_THRESHOLD[self.CP.carFingerprint] #threshold set in values.py
 

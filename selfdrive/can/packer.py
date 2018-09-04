@@ -44,7 +44,7 @@ class CANPacker(object):
     addr, msg = self.pack_bytes(addr, values, counter)
     return [addr, 0, msg, bus]
 
-
+# 2018.09.04 Kia Soul don't need alive counter and checksum, just reading
 if __name__ == "__main__":
   ## little endian test
   cp = CANPacker("hyundai_santa_fe_2019_ccan")

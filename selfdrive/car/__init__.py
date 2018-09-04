@@ -5,7 +5,7 @@ from common.numpy_fast import clip
 def dbc_dict(pt_dbc, radar_dbc, chassis_dbc=None):
   return {'pt': pt_dbc, 'radar': radar_dbc, 'chassis': chassis_dbc}
 
-
+#2018.09.04 #TODO need to define one where command steering angle instead of torque
 def apply_std_steer_torque_limits(apply_torque, apply_torque_last, driver_torque, LIMITS):
 
   # limits due to driver torque

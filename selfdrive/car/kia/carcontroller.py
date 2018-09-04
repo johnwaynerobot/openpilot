@@ -3,11 +3,20 @@ from collections import namedtuple
 from selfdrive.boardd.boardd import can_list_to_can_capnp
 from selfdrive.controls.lib.drive_helpers import rate_limit
 from common.numpy_fast import clip
-#from selfdrive.car.honda import hondacan
-from selfdrive.car.kia import kiacan
-#from selfdrive.car.honda.values import AH, CruiseButtons, CAR
+from selfdrive.car import apply_std_steer_torque_limits #same as Hyundai change
 from selfdrive.car.kia.values import AH, CruiseButtons, CAR  #2018.09.02 DV add for Kia soul
 from selfdrive.can.packer import CANPacker
+
+#2018.09.04 import from Hyundai sanfe 2019, #TODO will need to use
+#define in steering for reference
+#No use yet
+class SteerLimitParams:
+  STEER_MAX = 5  # 409 is the max, change 250 to 5 degrees
+  STEER_DELTA_UP = 3
+  STEER_DELTA_DOWN = 7
+  STEER_DRIVER_ALLOWANCE = 50
+  STEER_DRIVER_MULTIPLIER = 2
+  STEER_DRIVER_FACTOR = 1
 
 def actuator_hystereses(brake, braking, brake_steady, v_ego, car_fingerprint):
   # hyst params... TODO: move these to VehicleParams
@@ -132,13 +141,23 @@ class CarController(object):
       STEER_MAX = 0x1000
       BRAKE_MAX = 1024 / 4
 
+      # init safety test lines (2018.09.04 , test parameter)
+    if CS.generic_toggle:
+        actuators.steer = 1.0
+      # end safety test lines
+
     # steer torque is converted back to CAN reference (positive when steering right)
     apply_gas = clip(actuators.gas, 0., 1.)
     apply_brake = int(clip(self.brake_last * BRAKE_MAX, 0, BRAKE_MAX - 1))
     apply_steer = int(clip(-actuators.steer * STEER_MAX, -STEER_MAX, STEER_MAX))
 
+     #2018.09.04 hyundai make this change, but need to understand more, we don't have steer_torque driver value
+    #apply_steer = actuators.steer * SteerLimitParams.STEER_MAX
+   # apply_steer = apply_std_steer_torque_limits(apply_steer, self.apply_steer_last, CS.steer_torque_driver,
+                                               # SteerLimitParams)
+
     # any other cp.vl[0x18F]['STEER_STATUS'] is common and can happen during user override. sending 0 torque to avoid EPS sending error 5
-    lkas_active = enabled and not CS.steer_not_allowed
+    lkas_active = enabled and not CS.steer_not_allowed  #2018.09.04 coming from steering report that driver not over
 
     # Send CAN commands.
     can_sends = []
@@ -202,4 +221,5 @@ class CarController(object):
           self.new_radar_config = car.RadarState.Error.wrongConfig in radar_error
         can_sends.extend(kia_soul.create_radar_commands(CS.v_ego, CS.CP.carFingerprint, self.new_radar_config, idx))
 
+    ### Send messages to canbus
     sendcan.send(can_list_to_can_capnp(can_sends, msgtype='sendcan').to_bytes())

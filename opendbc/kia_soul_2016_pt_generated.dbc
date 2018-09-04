@@ -280,7 +280,7 @@ BO_ 880 GEARBOX: 8 TCM
 
 BO_ 1264 CLU1: 8 XXX
  SG_ CF_Clu_CruiseSwState : 0|3@1+ (1,0) [0|7] "" XXX
- SG_ CF_CLU_CruiseSwMain : 3|1@1+ (1,0) [0|1] "" XXX
+ SG_ CF_Blr_MaxStat : 3|1@1+ (1,0) [0|1] "" XXX
  SG_ CF_Clu_SldMainSW : 4|1@1+ (1,0) [0|1] "" XXX
  SG_ CF_Clu_ParityBit1 : 5|1@1+ (1,0) [0|1] "pulse count" XXX
  SG_ CF_Clu_SPEED_UNIT : 6|1@1+ (1,0) [0|1] "" XXX
