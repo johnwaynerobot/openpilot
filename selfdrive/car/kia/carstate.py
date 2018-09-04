@@ -4,14 +4,15 @@ from selfdrive.can.parser import CANParser, CANDefine
 from selfdrive.config import Conversions as CV
 from selfdrive.car.kia.values import CAR, DBC, STEER_THRESHOLD, SPEED_FACTOR # change to Kia Soul folder
 
-def parse_gear_shifter(gear, vals):
-
-  val_to_capnp = {'P': 'park', 'R': 'reverse', 'N': 'neutral',
-                  'D': 'drive', 'S': 'sport', 'L': 'low'}
-  try:
-    return val_to_capnp[vals[gear]]
-  except KeyError:
-    return "unknown"
+#2018.09.04 comment out Gear shifter no use
+#def parse_gear_shifter(gear, vals):
+#
+ # val_to_capnp = {'P': 'park', 'R': 'reverse', 'N': 'neutral',
+#                  'D': 'drive', 'S': 'sport', 'L': 'low'}
+#  try:
+#    return val_to_capnp[vals[gear]]
+#  except KeyError:
+#    return "unknown"
 
 
 def calc_cruise_offset(offset, speed):
@@ -30,6 +31,7 @@ def get_can_signals(CP):
 
     # this function generates lists for signal, messages and initial values
     signals = [
+           #signal name, sig_address, default
           ("VS_TCU", "TM_DATA", 0),  #2018.09.02 DV transmission vehicle speed B0_1088 TCU2
           ("WHEEL_SPEED_FL", "WHEEL_SPEEDS", 0),  #2018.09.02 DV  Wheel speed B0_1200
           ("WHEEL_SPEED_FR", "WHEEL_SPEEDS", 0),  #2018.09.02 DV  Wheel speed B0_1200
@@ -43,22 +45,23 @@ def get_can_signals(CP):
           ("LEFT_BLINKER", "SCM_FEEDBACK", 0), #2018.09.02 D.V B0_1680 modified dbc to match
           ("RIGHT_BLINKER", "SCM_FEEDBACK", 0), #2018.09.02 D.V B0_1680 modified dbc to match
           ("GEAR", "GEARBOX", 0),  #2018.09.02 D.V B0_880 modified dbc to match
-          ("BRAKE_REPORT_dtcs", "BRAKE_REPORT", 1), #2018.09.02 BRAKE_ERROR1 and BRAKE_ERROR2 equal to B0_115 BRAKE_REPORT_dtcs
+                                    #Transmission Gear (0 = N or P, 1-6 = Fwd, 14 = Rev)
+          ("BRAKE_REPORT_dtcs", "BRAKE_REPORT", 0), #2018.09.02 BRAKE_ERROR1 and BRAKE_ERROR2 equal to B0_115 BRAKE_REPORT_dtcs
           # 2018.09.02 D.V add in B0_1680 modified dbc value 0 is SEATBELT_DRIVER_LATCHED same as lamp 0 is belt on 1 belt off
           ("SEATBELT_DRIVER_LAMP", "SEATBELT_STATUS", 1),
           # 2018.09.02 D.V  brake switch status push or not push
           # set brake switch same as brake pressed B0_809 ENG_INFO
           ("BRAKE_PRESSED", "ENG_INFO", 0), # initial value is 0, 2 is brake pressed
           ("CRUISE_BUTTONS", "SCM_BUTTONS", 0), #2018.09.02 use UI B0_422 (0x1A6) messages
-          ("ESP_DISABLED", "VSA_STATUS", 1),  #2018.09.02 modified dbc to match use B0_339 ESP_DISABLED when VSA button push OFF
+          ("ESP_DISABLED", "VSA_STATUS", 0),  #2018.09.02 modified dbc to match use B0_339 ESP_DISABLED when VSA button push OFF
           ("HUD_LEAD", "ACC_HUD", 0), #2018.09.02 coming from EON for Lead Distance)
           # 2018.09.02 DV change USER_BRAKE to BRAKE_REPORT_operator_override B0_115
           ("BRAKE_REPORT_operator_override", "BRAKE_REPORT", 0),
           #2018.09.02 DV change STEER_STATUS to STEERING_REPORT_operator_override from B0_131 STEERING_REPORT
-          ("STEERING_REPORT_operator_override", "STEERING_REPORT", 5),
+          ("STEERING_REPORT_operator_override", "STEERING_REPORT", 0),
           #2018.09.02 DV add modified dbc B0 1306 -TM Gear
           #("GEAR_SHIFTER", "TM_GEAR", 0), #2018.09.02 DV change gear shifter to individual message
-          ("TM_PARK", "TM_GEAR", 1),
+          ("TM_PARK", "TM_GEAR", 0),
           ("TM_REVERSE", "TM_GEAR", 0),
           ("TM_NEUTRAL", "TM_GEAR", 0),
           ("TM_DRIVE", "TM_GEAR", 0),
@@ -70,17 +73,18 @@ def get_can_signals(CP):
       ]
 
     checks = [
-          ("TCU2", 100),
-          ("WHEEL_SPEEDS", 50),
-          ("STEERING_SENSORS", 100),
-          ("SCM_FEEDBACK", 10),
-          ("GEARBOX", 100),
+          # address,  message frequency
+          #("TCU2", 0), # 2018.09.04 dont know frequency comment out check
+         # ("WHEEL_SPEEDS", 50),
+         # ("STEERING_SENSORS", 100),
+          #("SCM_FEEDBACK", 5,  #either 5 (200ms) or 10 (100ms), not sure ignore
+          #("GEARBOX", 0), #2018.09.04 don't know frequency ignore
           #("STANDSTILL", 50), Standstill VSA
-          ("SEATBELT_STATUS", 10),
+         # ("SEATBELT_STATUS", 0),
          #("CRUISE", 10),  #2018.09.03 remove cruise check
-          ("ENG_INFO", 100),  #2018.09.02 change POWERTRAIN DATA To ENG_INFO
-          ("VSA_STATUS", 50),
-          ("SCM_BUTTONS", 25), #2018.09.02 come from 0x1A6
+         # ("ENG_INFO", 100),  #2018.09.02 change POWERTRAIN DATA To ENG_INFO
+          #("VSA_STATUS", 0),
+         # ("SCM_BUTTONS", 25), #2018.09.04 come from 0x1A6
       ]
 
 
@@ -107,6 +111,12 @@ def get_can_signals(CP):
     elif CP.carFingerprint == CAR.SOUL:
         signals += [("DOOR_OPEN_FL", "SCM_FEEDBACK", 1)] #2018.09.03 update
 
+    elif CP.carFingerprint == CAR.SOUL1:
+        signals += [("DOOR_OPEN_FL", "SCM_FEEDBACK", 1)]  # 2018.09.04 update
+
+    elif CP.carFingerprint == CAR.SOUL2:
+        signals += [("DOOR_OPEN_FL", "SCM_FEEDBACK", 1)]  # 2018.09.04 update
+
     if CP.carFingerprint == CAR.DUMMY:
         signals += [("CAR_GAS", "GAS_PEDAL_2", 0),
                 ("MAIN_ON", "SCM_FEEDBACK", 0),
@@ -115,13 +125,19 @@ def get_can_signals(CP):
     elif CP.carFingerprint == CAR.SOUL:  # 2018.09.02 DV Kia Soul UI 0x1A6 ADAS Cruise button
         signals += [("MAIN_ON", "SCM_BUTTONS", 0)]
 
+    elif CP.carFingerprint == CAR.SOUL1:  # 2018.09.03 DV Kia Soul UI 0x1A6 ADAS Cruise button
+        signals += [("MAIN_ON", "SCM_BUTTONS", 0)]
+
+    elif CP.carFingerprint == CAR.SOUL2:  # 2018.09.03 DV Kia Soul UI 0x1A6 ADAS Cruise button
+        signals += [("MAIN_ON", "SCM_BUTTONS", 0)]
+
         # add gas interceptor reading if we are using it
     if CP.enableGasInterceptor:
 
         signals.append(("THROTTLE_REPORT_operator_override", "THROTTLE_REPORT", 0)) #2018.09.02 DV add change for Kia soul
-        checks.append(("THROTTLE_REPORT", 50)) #2018.09.02 DV add change for Kia soul
-
-    return signals, checks
+        #checks.append(("THROTTLE_REPORT", 50)) # signal and frequency#2018.09.02 DV add change for Kia soul
+        #comment out check, frequency need to verify
+    return signals, #checks
 
 
 def get_can_parser(CP):
@@ -139,6 +155,19 @@ class CarState(object):
     self.shifter_REVERSE = self.can_define.dv["TM_GEAR"]["TM_REVERSE"]
     self.shifter_NEUTRAL = self.can_define.dv["TM_GEAR"]["TM_NEUTRAL"]
     self.shifter_DRIVE = self.can_define.dv["TM_GEAR"]["TM_DRIVE"]
+    if self.shifter_PARK == 1:
+        self.gear_shifter = "park"
+    elif self.shifter_NEUTRAL == 1:
+        self.gear_shifter = "neutral"
+    elif self.shifter_DRIVE == 1:
+        self.gear_shifter = "drive"
+    elif self.shifter_REVERSE == 1:
+        self.gear_shifter = "reverse"
+    else:
+        self.gear_shifter = "unknown"
+    # end of gear parse definition
+
+
 
     self.user_gas, self.user_gas_pressed = 0., 0
     self.brake_switch_prev = 0
@@ -183,30 +212,87 @@ class CarState(object):
 
     # ******************* parse out can *******************
 
-    if self.CP.carFingerprint in (CAR.DUMMY): # 2018.09.03 change dummy for test
-        self.standstill = cp.vl["ENGINE_DATA"]['XMISSION_SPEED'] < 0.1
-        self.door_all_closed = not cp.vl["SCM_FEEDBACK"]['DRIVERS_DOOR_OPEN']
-    elif self.CP.carFingerprint in (CAR.SOUL): # 2018.09.02 DV add standstill for car not moving
-            self.standstill = cp.vl["TM_DATA"]['VS_TCU'] < 0.1
-            self.door_all_closed = not cp.vl["SCM_FEEDBACK"]['DOOR_OPEN_FL']
+    #2018.09.03 Gear name define
 
-    self.seatbelt = not cp.vl["SEATBELT_STATUS"]['SEATBELT_DRIVER_LAMP']   #2018.09.03 delete duplicate signal
+    # can_gear_shifter = int(cp.vl["GEARBOX"]['GEAR_SHIFTER'])
+    # self.gear_shifter = parse_gear_shifter(can_gear_shifter, self.shifter_values)
+    # 2018.09.02 DV change gear shifter info for kia soul
+    self.shifter_PARK = self.can_define.dv["TM_GEAR"]["TM_PARK"]
+    self.shifter_REVERSE = self.can_define.dv["TM_GEAR"]["TM_REVERSE"]
+    self.shifter_NEUTRAL = self.can_define.dv["TM_GEAR"]["TM_NEUTRAL"]
+    self.shifter_DRIVE = self.can_define.dv["TM_GEAR"]["TM_DRIVE"]
 
-    if self.CP.carFingerprint in (CAR.SOUL):  #2018.09.02 separate fingerprint for kia soul
+    if self.shifter_PARK == 1:
+        self.gear_shifter = "park"
+    elif self.shifter_NEUTRAL == 1:
+        self.gear_shifter = "neutral"
+    elif self.shifter_DRIVE == 1:
+        self.gear_shifter = "drive"
+    elif self.shifter_REVERSE == 1:
+        self.gear_shifter = "reverse"
+    else:
+        self.gear_shifter = "unknown"
+    # end of gear parse definition
+
+    if self.CP.carFingerprint in (CAR.SOUL): # 2018.09.04 add multiple soul because can change
+        self.standstill = cp.vl["TM_DATA"]['VS_TCU'] < 0.1
+        self.door_all_closed = not cp.vl["SCM_FEEDBACK"]['DOOR_OPEN_FL']
         self.steer_error = cp.vl["STEERING_REPORT"]['STEERING_REPORT_operator_override'] != 0
         self.steer_not_allowed = cp.vl["STEERING_REPORT"]['STEERING_REPORT_operator_override'] != 0
         self.steer_warning = cp.vl["STEERING_REPORT"]['STEERING_REPORT_operator_override'] != 0
         self.brake_error = cp.vl["BRAKE_REPORT"]['BRAKE_REPORT_dtcs']
         self.esp_disabled = cp.vl["VSA_STATUS"]['ESP_DISABLED']
+        self.seatbelt = not cp.vl["SEATBELT_STATUS"]['SEATBELT_DRIVER_LAMP']  # 2018.09.04 0 is 1, 1 is off
+        self.angle_steers = cp.vl["STEERING_SENSORS"]['STEER_ANGLE']
+        self.angle_steers_rate = cp.vl["STEERING_SENSORS"]['STEER_ANGLE_RATE']
+        self.cruise_setting = cp.vl["SCM_BUTTONS"]['CRUISE_SETTING']
+        self.cruise_buttons = cp.vl["SCM_BUTTONS"]['CRUISE_BUTTONS']
+        self.blinker_on = cp.vl["SCM_FEEDBACK"]['LEFT_BLINKER'] or cp.vl["SCM_FEEDBACK"]['RIGHT_BLINKER']
+        self.left_blinker_on = cp.vl["SCM_FEEDBACK"]['LEFT_BLINKER']
+        self.right_blinker_on = cp.vl["SCM_FEEDBACK"]['RIGHT_BLINKER']
+        self.gear = cp.vl["GEARBOX"]['GEAR']  # 2018.09.04
+        self.park_brake = 0  # TODO
+        self.brake_hold = 0  # TODO
+        self.main_on = cp.vl["SCM_BUTTONS"]['MAIN_ON']
+        self.brake_switch = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] ==2 # 2018.09.02 DV "2"value is brake switch ON
+        self.brake_pressed = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] ==2 # 2018.09.02 change for Kia soul
+        self.brake_switch_prev = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] == 2  # 2018.09.02 DV "2"value is brake switch ON
+        self.brake_switch_ts = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] == 2
+        self.stopped = cp.vl["ACC_HUD"]['CRUISE_SPEED'] == 252.
+        self.cruise_speed_offset = calc_cruise_offset(0, self.v_ego)
+        # On set, cruise set speed pulses between 254~255 and the set speed prev is set to avoid this.
+        self.v_cruise_pcm = self.v_cruise_pcm_prev if cp.vl["ACC_HUD"]['CRUISE_SPEED'] > 160.0 else cp.vl["ACC_HUD"]['CRUISE_SPEED']
+        self.v_cruise_pcm_prev = self.v_cruise_pcm
 
-    elif self.CP.carFingerprint in (CAR.DUMMY):
-      # 2 = temporary; 3 = TBD; 4 = temporary, hit a bump; 5 = (permanent); 6 = temporary; 7 = (permanent)
-      # TODO: Use values from DBC to parse this field
-            self.steer_error = cp.vl["STEER_STATUS"]['STEER_STATUS'] not in [0, 2, 3, 4, 6]
-            self.steer_not_allowed = cp.vl["STEER_STATUS"]['STEER_STATUS'] != 0
-            self.steer_warning = cp.vl["STEER_STATUS"]['STEER_STATUS'] not in [0, 3]   # 3 is low speed lockout, not worth a warning
-            self.brake_error = cp.vl["STANDSTILL"]['BRAKE_ERROR_1'] or cp.vl["STANDSTILL"]['BRAKE_ERROR_2']
+    elif self.CP.carFingerprint in (CAR.SOUL1, CAR.SOUL2): # 2018.09.04 update
+            self.standstill = cp.vl["TM_DATA"]['VS_TCU'] < 0.1
+            self.door_all_closed = not cp.vl["SCM_FEEDBACK"]['DOOR_OPEN_FL']
+            self.steer_error = cp.vl["STEERING_REPORT"]['STEERING_REPORT_operator_override'] != 0
+            self.steer_not_allowed = cp.vl["STEERING_REPORT"]['STEERING_REPORT_operator_override'] != 0
+            self.steer_warning = cp.vl["STEERING_REPORT"]['STEERING_REPORT_operator_override'] != 0
+            self.brake_error = cp.vl["BRAKE_REPORT"]['BRAKE_REPORT_dtcs']
             self.esp_disabled = cp.vl["VSA_STATUS"]['ESP_DISABLED']
+            self.seatbelt = not cp.vl["SEATBELT_STATUS"]['SEATBELT_DRIVER_LAMP']  # 2018.09.04 0 is 1, 1 is off
+            self.angle_steers = cp.vl["STEERING_SENSORS"]['STEER_ANGLE']
+            self.angle_steers_rate = cp.vl["STEERING_SENSORS"]['STEER_ANGLE_RATE']
+            self.cruise_setting = cp.vl["SCM_BUTTONS"]['CRUISE_SETTING']
+            self.cruise_buttons = cp.vl["SCM_BUTTONS"]['CRUISE_BUTTONS']
+            self.blinker_on = cp.vl["SCM_FEEDBACK"]['LEFT_BLINKER'] or cp.vl["SCM_FEEDBACK"]['RIGHT_BLINKER']
+            self.left_blinker_on = cp.vl["SCM_FEEDBACK"]['LEFT_BLINKER']
+            self.right_blinker_on = cp.vl["SCM_FEEDBACK"]['RIGHT_BLINKER']
+            self.gear = cp.vl["GEARBOX"]['GEAR']  # 2018.09.04
+            self.park_brake = 0  # TODO
+            self.brake_hold = 0  # TODO
+            self.main_on = cp.vl["SCM_BUTTONS"]['MAIN_ON']  #ACC main using UI
+            self.brake_switch = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] ==2 # 2018.09.02 DV "2"value is brake switch ON
+            self.brake_pressed = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] ==2  # 2018.09.02 change for Kia soul
+            self.brake_switch_prev = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] ==2  #2018.09.02 DV "2"value is brake switch ON
+            self.brake_switch_ts = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] ==2
+            self.stopped = cp.vl["ACC_HUD"]['CRUISE_SPEED'] == 252.
+            self.cruise_speed_offset = calc_cruise_offset(0, self.v_ego)
+            self.v_cruise_pcm = self.v_cruise_pcm_prev if cp.vl["ACC_HUD"]['CRUISE_SPEED'] > 160.0 else cp.vl["ACC_HUD"]['CRUISE_SPEED']
+            self.v_cruise_pcm_prev = self.v_cruise_pcm
+
 
     # calc best v_ego estimate, by averaging two opposite corners
     speed_factor = SPEED_FACTOR[self.CP.carFingerprint]
@@ -222,7 +308,7 @@ class CarState(object):
       self.v_weight * self.v_wheel      #2018.09.02 DV change ENGINE_DATA to TM_DATA and VS_TCU to match KIA SOUL
 
     if abs(speed - self.v_ego) > 2.0:  # Prevent large accelerations when car starts at non zero speed
-      self.v_ego_x = [[speed], [0.0]]
+      self.v_ego_x = [[speed], [0.0]]  #kalman filter here
 
     self.v_ego_raw = speed
     v_ego_x = self.v_ego_kf.update(speed)
@@ -235,37 +321,11 @@ class CarState(object):
       self.user_gas = cp.vl["THROTTLE_REPORT"]['THROTTLE_REPORT_operator_override'] #2018.09.02 change for Kia soul when gas being press
       self.user_gas_pressed = self.user_gas > 0 # this works because interceptor read < 0 when pedal position is 0. Once calibrated, this will change
 
-    self.gear = 0 if self.CP.carFingerprint == CAR.DUMMY else cp.vl["GEARBOX"]['GEAR'] #2018.09.03 define dummy for test
-    self.angle_steers = cp.vl["STEERING_SENSORS"]['STEER_ANGLE']
-    self.angle_steers_rate = cp.vl["STEERING_SENSORS"]['STEER_ANGLE_RATE']
 
-    self.cruise_setting = cp.vl["SCM_BUTTONS"]['CRUISE_SETTING']
-    self.cruise_buttons = cp.vl["SCM_BUTTONS"]['CRUISE_BUTTONS']
-
-    self.blinker_on = cp.vl["SCM_FEEDBACK"]['LEFT_BLINKER'] or cp.vl["SCM_FEEDBACK"]['RIGHT_BLINKER']
-    self.left_blinker_on = cp.vl["SCM_FEEDBACK"]['LEFT_BLINKER']
-    self.right_blinker_on = cp.vl["SCM_FEEDBACK"]['RIGHT_BLINKER']
-
-    if self.CP.carFingerprint in (CAR.DUMMY):
-      self.park_brake = cp.vl["EPB_STATUS"]['EPB_STATE'] != 0
-      self.brake_hold = cp.vl["VSA_STATUS"]['BRAKE_HOLD_ACTIVE']
-      self.main_on = cp.vl["SCM_FEEDBACK"]['MAIN_ON']
-    else:
-      self.park_brake = 0  # TODO
-      self.brake_hold = 0  # TODO
-      self.main_on = cp.vl["SCM_BUTTONS"]['MAIN_ON']
-
-    #can_gear_shifter = int(cp.vl["GEARBOX"]['GEAR_SHIFTER'])
-    #self.gear_shifter = parse_gear_shifter(can_gear_shifter, self.shifter_values)
-    #2018.09.02 DV change gear shifter info for kia soul
-    self.shifter_PARK = self.can_define.dv["TM_GEAR"]["TM_PARK"]
-    self.shifter_REVERSE = self.can_define.dv["TM_GEAR"]["TM_REVERSE"]
-    self.shifter_NEUTRAL = self.can_define.dv["TM_GEAR"]["TM_NEUTRAL"]
-    self.shifter_DRIVE = self.can_define.dv["TM_GEAR"]["TM_DRIVE"]
 
     self.pedal_gas = cp.vl["ENG_INFO"]['PEDAL_GAS'] #2018.09.02 DV change for pedal gas
     # crv doesn't include cruise control
-    if self.CP.carFingerprint in (CAR.SOUL):  #2018.09.02 DV change for Kia soul
+    if self.CP.carFingerprint in (CAR.SOUL, CAR.SOUL1, CAR.SOUL2):  #2018.09.04
       self.car_gas = self.pedal_gas
     elif self.CP.carFingerprint in (CAR.DUMMY): #2018.09.03 define dummy to prevent duplicate
             self.car_gas = cp.vl["ENG_INFO"]['PEDAL_GAS'] #2018.09.02 DV cruise control gas not available change to pedal gas
@@ -273,52 +333,6 @@ class CarState(object):
     #self.steer_torque_driver = cp.vl["STEER_STATUS"]['STEER_TORQUE_SENSOR'] 2018.09.02 comment out to use steering operator override
     self.steer_torque_driver = cp.vl["STEERING_REPORT"]['STEERING_REPORT_operator_override']
     self.steer_override = abs(self.steer_torque_driver) > STEER_THRESHOLD[self.CP.carFingerprint] #threshold set in values.py
-
-    self.brake_switch = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] not in [0, 3] #2018.09.02 DV "2"value is brake switch ON
-
-    if self.CP.radarOffCan: #2018.09.02 this for car with bosch radar
-      self.stopped = cp.vl["ACC_HUD"]['CRUISE_SPEED'] == 252.
-      self.cruise_speed_offset = calc_cruise_offset(0, self.v_ego)
-      if self.CP.carFingerprint == CAR.DUMMY:
-        self.brake_switch = cp.vl["POWERTRAIN_DATA"]['BRAKE_SWITCH']
-        self.brake_pressed = cp.vl["POWERTRAIN_DATA"]['BRAKE_PRESSED'] or \
-                          (self.brake_switch and self.brake_switch_prev and \
-                          cp.ts["POWERTRAIN_DATA"]['BRAKE_SWITCH'] != self.brake_switch_ts)
-        self.brake_switch_prev = self.brake_switch
-        self.brake_switch_ts = cp.ts["POWERTRAIN_DATA"]['BRAKE_SWITCH']
-      else:
-        self.brake_pressed = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] not in [0, 3]  #2018.09.02 change for Kia soul
-      # On set, cruise set speed pulses between 254~255 and the set speed prev is set to avoid this.
-      self.v_cruise_pcm = self.v_cruise_pcm_prev if cp.vl["ACC_HUD"]['CRUISE_SPEED'] > 160.0 else cp.vl["ACC_HUD"]['CRUISE_SPEED']
-      self.v_cruise_pcm_prev = self.v_cruise_pcm
-
-      #  change for Kia soul #
-    elif self.CP.carFingerprint in (CAR.SOUL): # 2018.09.02 DV
-        self.brake_switch = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] ==2  #2018.09.02 DV "2"value is brake switch ON
-        self.stopped = cp.vl["ACC_HUD"]['CRUISE_SPEED'] == 252.
-        self.cruise_speed_offset = calc_cruise_offset(0, self.v_ego)  #not using cruise control same as bosch honda car
-        # brake switch has shown some single time step noise, so only considered when
-        # switch is on for at least 2 consecutive CAN samples
-        self.brake_pressed = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] ==2  #2018.09.02 DV "2"value is brake switch ON
-        self.brake_switch_prev = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] ==2  #2018.09.02 DV "2"value is brake switch ON
-        self.brake_switch_ts = cp.ts["ENG_INFO"]['BRAKE_PRESSED'] ==2
-      # end here change for this section for kia for brake #
-
-    else:
-      self.brake_switch = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] not in [0, 3] #2018.09.03 "2"value is brake switch ON
-      self.cruise_speed_offset = calc_cruise_offset(0, self.v_ego)  # not using cruise control same as bosch honda car
-      #self.v_cruise_pcm = cp.vl["CRUISE"]['CRUISE_SPEED_PCM'] #2018.09.03 not receive
-      # brake switch has shown some single time step noise, so only considered when
-      # switch is on for at least 2 consecutive CAN samples
-      self.brake_pressed = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] ==2  #2018.09.02 DV "2"value is brake switch ON
-      self.brake_switch_prev = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] ==2  #2018.09.02 DV "2"value is brake switch ON
-      self.brake_switch_ts = cp.ts["ENG_INFO"]['BRAKE_PRESSED'] ==2
-
-
-
-
-
-
 
     #self.user_brake = cp.vl["VSA_STATUS"]['USER_BRAKE']
     self.user_brake = cp.vl["BRAKE_REPORT"]['BRAKE_REPORT_operator_override']  #2018.09.02 DV add for Kia soul

@@ -144,19 +144,16 @@ class CarInterface(object):
   def get_params(candidate, fingerprint):
 
     ret = car.CarParams.new_message()
-    ret.carName = "honda"
+    ret.carName = "kia"
     ret.carFingerprint = candidate
 
-    if candidate in HONDA_BOSCH:
-      ret.safetyModel = car.CarParams.SafetyModels.hondaBosch
-      ret.enableCamera = True
-      ret.radarOffCan = True
-    else:
-      ret.safetyModel = car.CarParams.SafetyModels.honda
-      #ret.enableCamera = not any(x for x in CAMERA_MSGS if x in fingerprint)
-      ret.enableCamera = not any(x for x in CAMERA_MSGS_SOUL if x in fingerprint)  #2018.09.02 DV change for KIA message
+        #remove #radar off can from base
+
+    ret.safetyModel = car.CarParams.SafetyModels.kia
+     #ret.enableCamera = not any(x for x in CAMERA_MSGS if x in fingerprint)
+    ret.enableCamera = not any(x for x in CAMERA_MSGS_SOUL if x in fingerprint)  #2018.09.02 DV change for KIA message
       #ret.enableGasInterceptor = 0x201 in fingerprint
-      ret.enableGasInterceptor = 0x93 in fingerprint   #2018.09.02 DV change for gas interceptor to throttle report
+    ret.enableGasInterceptor = 0x93 in fingerprint   #2018.09.02 DV change for gas interceptor to throttle report
     cloudlog.warn("ECU Camera Simulated: %r", ret.enableCamera)
     cloudlog.warn("ECU Gas Interceptor: %r", ret.enableGasInterceptor)
 
@@ -186,31 +183,42 @@ class CarInterface(object):
 
     ret.steerKf = 0.00006 # conservative feed-forward
 
-    if candidate == CAR.DUMMY:
-      stop_and_go = True
-      ret.mass = mass_civic
-      ret.wheelbase = wheelbase_civic
-      ret.centerToFront = centerToFront_civic
-      ret.steerRatio = 14.63  # 10.93 is end-to-end spec
-      tire_stiffness_factor = 1.
-      # Civic at comma has modified steering FW, so different tuning for the Neo in that car
-      is_fw_modified = os.getenv("DONGLE_ID") in ['99c94dc769b5d96e']
-      ret.steerKpV, ret.steerKiV = [[0.33], [0.10]] if is_fw_modified else [[0.8], [0.24]]
-      if is_fw_modified:
-        ret.steerKf = 0.00003
-      ret.longitudinalKpBP = [0., 5., 35.]
-      ret.longitudinalKpV = [3.6, 2.4, 1.5]
-      ret.longitudinalKiBP = [0., 35.]
-      ret.longitudinalKiV = [0.54, 0.36]
-
     #2018.09.02 DV add Kia soul #TODO need to modified paramater
-    elif candidate == CAR.SOUL:
+    if candidate == CAR.SOUL:
       stop_and_go = False
       ret.safetyParam = 1 # Accord and CRV 5G use an alternate user brake msg
       ret.mass = 3410. * CV.LB_TO_KG + std_cargo
       ret.wheelbase = 2.66
       ret.centerToFront = ret.wheelbase * 0.41
       ret.steerRatio = 16.0   # 12.3 is spec end-to-end
+      tire_stiffness_factor = 0.677
+      ret.steerKpV, ret.steerKiV = [[0.6], [0.18]]
+      ret.longitudinalKpBP = [0., 5., 35.]
+      ret.longitudinalKpV = [1.2, 0.8, 0.5]
+      ret.longitudinalKiBP = [0., 35.]
+      ret.longitudinalKiV = [0.18, 0.12]
+
+    elif candidate == CAR.SOUL1:
+      stop_and_go = False
+      ret.safetyParam = 1  # Accord and CRV 5G use an alternate user brake msg
+      ret.mass = 3410. * CV.LB_TO_KG + std_cargo
+      ret.wheelbase = 2.66
+      ret.centerToFront = ret.wheelbase * 0.41
+      ret.steerRatio = 16.0  # 12.3 is spec end-to-end
+      tire_stiffness_factor = 0.677
+      ret.steerKpV, ret.steerKiV = [[0.6], [0.18]]
+      ret.longitudinalKpBP = [0., 5., 35.]
+      ret.longitudinalKpV = [1.2, 0.8, 0.5]
+      ret.longitudinalKiBP = [0., 35.]
+      ret.longitudinalKiV = [0.18, 0.12]
+
+    elif candidate == CAR.SOUL2:
+      stop_and_go = False
+      ret.safetyParam = 1  # Accord and CRV 5G use an alternate user brake msg
+      ret.mass = 3410. * CV.LB_TO_KG + std_cargo
+      ret.wheelbase = 2.66
+      ret.centerToFront = ret.wheelbase * 0.41
+      ret.steerRatio = 16.0  # 12.3 is spec end-to-end
       tire_stiffness_factor = 0.677
       ret.steerKpV, ret.steerKiV = [[0.6], [0.18]]
       ret.longitudinalKpBP = [0., 5., 35.]
@@ -250,6 +258,46 @@ class CarInterface(object):
 
     #2018.09.02 Add separation for Kia soul and other below
     if candidate == CAR.SOUL:
+      # no max steer limit VS speed
+      ret.steerMaxBP = [0.]  # m/s
+      ret.steerMaxV = [1.]  # max steer allowed #Todo:2018.09.02 tune in car and change
+
+      ret.gasMaxBP = [0.]  # m/s
+      ret.gasMaxV = [0.6] if ret.enableGasInterceptor else [0.]  # max gas allowed  #TODO: 2018.09.02 confirm in car
+      ret.brakeMaxBP = [5., 20.]  # m/s
+      ret.brakeMaxV = [1., 0.8]  # max brake allowed
+
+      ret.longPidDeadzoneBP = [0.]
+      ret.longPidDeadzoneV = [0.]
+
+      ret.stoppingControl = True
+      ret.steerLimitAlert = True
+      ret.startAccel = 0.5
+
+      ret.steerActuatorDelay = 0.1
+      ret.steerRateCost = 0.5
+
+    elif candidate == CAR.SOUL1:
+      # no max steer limit VS speed
+      ret.steerMaxBP = [0.]  # m/s
+      ret.steerMaxV = [1.]  # max steer allowed #Todo:2018.09.02 tune in car and change
+
+      ret.gasMaxBP = [0.]  # m/s
+      ret.gasMaxV = [0.6] if ret.enableGasInterceptor else [0.]  # max gas allowed  #TODO: 2018.09.02 confirm in car
+      ret.brakeMaxBP = [5., 20.]  # m/s
+      ret.brakeMaxV = [1., 0.8]  # max brake allowed
+
+      ret.longPidDeadzoneBP = [0.]
+      ret.longPidDeadzoneV = [0.]
+
+      ret.stoppingControl = True
+      ret.steerLimitAlert = True
+      ret.startAccel = 0.5
+
+      ret.steerActuatorDelay = 0.1
+      ret.steerRateCost = 0.5
+
+    elif candidate == CAR.SOUL2:
       # no max steer limit VS speed
       ret.steerMaxBP = [0.]  # m/s
       ret.steerMaxV = [1.]  # max steer allowed #Todo:2018.09.02 tune in car and change
@@ -333,13 +381,9 @@ class CarInterface(object):
     ret.steeringAngle = self.CS.angle_steers
     ret.steeringRate = self.CS.angle_steers_rate
 
-    # gear shifter lever
-    #ret.gearShifter = self.CS.gear_shifter
-    #2018.09.02 DV change gear info for Kia soul
-    ret.gearPark = self.CS.shifter_PARK
-    ret.gearREVERSE = self.CS.shifter_REVERSE
-    ret.gearNEUTRAL = self.CS.shifter_NEUTRAL
-    ret.gearDRIVE = self.CS.shifter_DRIVE
+    # gear shifter lever (#2018.09.04 define in carstate.py
+    ret.gearShifter = self.CS.gear_shifter
+
 
 
     ret.steeringTorque = self.CS.steer_torque_driver
@@ -423,8 +467,7 @@ class CarInterface(object):
       events.append(create_event('steerTempUnavailable', [ET.WARNING]))
     if self.CS.brake_error:
       events.append(create_event('brakeUnavailable', [ET.NO_ENTRY, ET.IMMEDIATE_DISABLE, ET.PERMANENT]))
-    #if not ret.gearShifter == 'drive':
-    if not ret.gearDRIVE == 1:  #2018.09.02 DV change to gearPark
+    if not ret.gearShifter == 'drive':
       events.append(create_event('wrongGear', [ET.NO_ENTRY, ET.SOFT_DISABLE]))
     if ret.doorOpen:
       events.append(create_event('doorOpen', [ET.NO_ENTRY, ET.SOFT_DISABLE]))
@@ -434,13 +477,10 @@ class CarInterface(object):
       events.append(create_event('espDisabled', [ET.NO_ENTRY, ET.SOFT_DISABLE]))
     if not self.CS.main_on:
       events.append(create_event('wrongCarMode', [ET.NO_ENTRY, ET.USER_DISABLE]))
-    #if ret.gearShifter == 1:
-    if ret.gearREVERSE == 1: #2018.09.02 DV change to gearREVERSE
+    if ret.gearShifter == "reverse":
       events.append(create_event('reverseGear', [ET.NO_ENTRY, ET.IMMEDIATE_DISABLE]))
-    if self.CS.brake_hold and self.CS.CP.carFingerprint not in HONDA_BOSCH:
-      events.append(create_event('brakeHold', [ET.NO_ENTRY, ET.USER_DISABLE]))
-    if self.CS.park_brake:
-      events.append(create_event('parkBrake', [ET.NO_ENTRY, ET.USER_DISABLE]))
+
+  #remove brake hold and #electric parking brake
 
     if self.CP.enableCruise and ret.vEgo < self.CP.minEnableSpeed:
       events.append(create_event('speedTooLow', [ET.NO_ENTRY]))

@@ -29,11 +29,11 @@ def actuator_hystereses(brake, braking, brake_steady, v_ego, car_fingerprint):
     brake_steady = brake + brake_hyst_gap
   brake = brake_steady
 
-  if (car_fingerprint in (CAR.DUMMY)) and brake > 0.0:  #change Ilx to dummy car
+  if (car_fingerprint in (CAR.SOUL)) and brake > 0.0:  ##2018.09.04 TODO: need to tune for kia soul
     brake += 0.15
   
   #2018.09.02 TODO: need to tune for kia soul
-  elif (car_fingerprint in (CAR.SOUL)) and brake > 0.0:
+  elif (car_fingerprint in (CAR.SOUL1, CAR.SOUL2)) and brake > 0.0:
     brake += 0.15
   
   return brake, braking, brake_steady
@@ -125,7 +125,7 @@ class CarController(object):
     if CS.CP.carFingerprint in (CAR.DUMMY):
          STEER_MAX = 0xF00
          BRAKE_MAX = 1024 / 4
-    elif CS.CP.carFingerprint in (CAR.SOUL):
+    elif CS.CP.carFingerprint in (CAR.SOUL, CAR.SOUL1, CAR.SOUL2): # 2018.09.04 add different fingerprint messages Kia
           STEER_MAX = 0x05  #2018.09.02 DV, this steering angle TODO: need tune parameter max steering allow, value clip when coming on can
           BRAKE_MAX = 100 #2018.09.02 DV TODO: need to tune for BRAKE_COMMAND_pedal_command, but the value clip when coming out
     else:

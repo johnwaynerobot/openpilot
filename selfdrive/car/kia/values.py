@@ -56,10 +56,10 @@ FINGERPRINTS = {
   # Soul Vehicle with Steering Gas and Throttle in disable state
   CAR.SOUL: [{115: 8, 131: 8, 147: 8, 185: 8, 357: 8, 544: 8, 688: 8, 790: 8, 809: 8, 880: 8, 1088: 8, 1200: 8, 1680: 8
   }], # from fingerprint.py
-  CAR.SOUL1: [{1088: 8, 688: 8, 131: 8, 422: 8, 809: 8, 1200: 8, 780: 8, 880: 8, 115: 8, 147: 8, 790: 8, 544: 8, 506: 88
-  }], # add 1A6 , 30C and 1FA using controlsd fingerprint
-  CAR.SOUL2: [{688: 8, 131: 8, 357: 8, 809: 8, 1200: 8, 185: 8
-  }], #random from controlsd fingerprint
+  CAR.SOUL1: [{115: 8, 131: 8, 147: 8, 185: 8, 357: 8, 422: 8, 544: 8, 688: 8, 790: 8, 809: 8, 880: 8, 1088: 8, 1200: 8, 1680: 8
+  }], # Fingerprint and add 1A6 as startup
+  CAR.SOUL2: [{115: 8, 131: 8, 147: 8, 185: 8, 357: 8, 422: 8, 544: 8, 790: 8, 809: 8, 880: 8, 1088: 8, 1200: 8, 1680: 8
+  }], # from get_fingerprint.py and car already start 1A6
   CAR.SOUL3: [{544: 8, 131: 8, 147: 8, 688: 8, 115: 8, 185: 8
   }], #random2 from controlsd fingerprint
   CAR.SOUL4: [{544: 8, 1200: 8, 131: 8, 422: 8, 780: 8, 688: 8, 115: 8, 506: 8

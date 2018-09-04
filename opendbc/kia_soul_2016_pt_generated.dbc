@@ -172,17 +172,17 @@ BO_ 175 FAULT_REPORT: 8 FAULT
 
 
 BO_ 1200 WHEEL_SPEEDS: 8 VSA
- SG_ WHEEL_SPEED_FL : 0|14@01+ (0.01,0) [0|250] "kph" EON
- SG_ WHEEL_SPEED_FR : 16|14@1+ (0.01,0) [0|250] "kph" EON
- SG_ WHEEL_SPEED_RL : 32|14@1+ (0.01,0) [0|250] "kph" EON
- SG_ WHEEL_SPEED_RR : 48|14@1+ (0.01,0) [0|250] "kph" EON
+ SG_ WHEEL_SPEED_FL : 0|14@01+ (0.03125,0) [0|250] "kph" EON
+ SG_ WHEEL_SPEED_FR : 16|14@1+ (0.03125,0) [0|250] "kph" EON
+ SG_ WHEEL_SPEED_RL : 32|14@1+ (0.03125,0) [0|250] "kph" EON
+ SG_ WHEEL_SPEED_RR : 48|14@1+ (0.03125,0) [0|250] "kph" EON
  SG_ WHL_SPD_AliveCounter_LSB : 14|2@1+ (1,0) [0|15] "" EON
  SG_ WHL_SPD_AliveCounter_MSB : 30|2@1+ (1,0) [0|15] "" EON
  SG_ WHL_SPD_Checksum_LSB : 46|2@1+ (1,0) [0|15] "" EON
  SG_ WHL_SPD_Checksum_MSB : 62|2@1+ (1,0) [0|15] "" EON
 
 BO_ 688 STEERING_SENSORS: 5 EPS
- SG_ STEERING_ANGLE_RATE : 16|8@1+ (4,0) [0|1016] "" EON
+ SG_ STEERING_ANGLE_RATE : 16|8@1+ (4,0) [0|1016.0] "" EON
  SG_ SAS_Stat : 24|8@1+ (1,0) [0|255] "" XXX
  SG_ MsgCount : 32|4@1+ (1,0) [0|15] "" EON
  SG_ CheckSum : 36|4@1+ (1,0) [0|15] "" EON
@@ -280,7 +280,7 @@ BO_ 880 GEARBOX: 8 TCM
 
 BO_ 1264 CLU1: 8 XXX
  SG_ CF_Clu_CruiseSwState : 0|3@1+ (1,0) [0|7] "" XXX
- SG_ CF_Blr_MaxStat : 3|1@1+ (1,0) [0|1] "" XXX
+ SG_ CF_CLU_CruiseSwMain : 3|1@1+ (1,0) [0|1] "" XXX
  SG_ CF_Clu_SldMainSW : 4|1@1+ (1,0) [0|1] "" XXX
  SG_ CF_Clu_ParityBit1 : 5|1@1+ (1,0) [0|1] "pulse count" XXX
  SG_ CF_Clu_SPEED_UNIT : 6|1@1+ (1,0) [0|1] "" XXX
