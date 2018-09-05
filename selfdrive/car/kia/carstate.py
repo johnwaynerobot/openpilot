@@ -1,6 +1,6 @@
 from common.numpy_fast import interp
 from common.kalman.simple_kalman import KF1D
-from selfdrive.can.parser import CANParser, CANDefine
+from selfdrive.can.parser import CANParser, #CANDefine (2018.09.05 comment out CANDefine
 from selfdrive.config import Conversions as CV
 from selfdrive.car.kia.values import CAR, DBC, STEER_THRESHOLD, SPEED_FACTOR # change to Kia Soul folder
 import numpy as np
@@ -154,7 +154,7 @@ def get_can_parser(CP):
 class CarState(object):
   def __init__(self, CP):
     self.CP = CP
-    self.can_define = CANDefine(DBC[CP.carFingerprint]['pt'])
+    #.can_define = CANDefine(DBC[CP.carFingerprint]['pt'])
     #2018.09.05 remove define twice
     #self.shifter_values = self.can_define.dv["GEARBOX"]["GEAR_SHIFTER"]
     #2018.09.02 DV change the value for Kia soul gear info, link in interface.py
