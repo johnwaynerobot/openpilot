@@ -155,22 +155,22 @@ class CarState(object):
   def __init__(self, CP):
     self.CP = CP
     self.can_define = CANDefine(DBC[CP.carFingerprint]['pt'])
+    #2018.09.05 remove define twice
     #self.shifter_values = self.can_define.dv["GEARBOX"]["GEAR_SHIFTER"]
     #2018.09.02 DV change the value for Kia soul gear info, link in interface.py
-    self.shifter_PARK = self.can_define.dv["TM_GEAR"]["TM_PARK"]
-    self.shifter_REVERSE = self.can_define.dv["TM_GEAR"]["TM_REVERSE"]
-    self.shifter_NEUTRAL = self.can_define.dv["TM_GEAR"]["TM_NEUTRAL"]
-    self.shifter_DRIVE = self.can_define.dv["TM_GEAR"]["TM_DRIVE"]
-    if self.shifter_PARK == 1:
-        self.gear_shifter = "park"
-    elif self.shifter_NEUTRAL == 1:
-        self.gear_shifter = "neutral"
-    elif self.shifter_DRIVE == 1:
-        self.gear_shifter = "drive"
-    elif self.shifter_REVERSE == 1:
-        self.gear_shifter = "reverse"
-    else:
-        self.gear_shifter = "unknown"
+    #self.shifter_REVERSE = self.can_define.dv["TM_GEAR"]["TM_REVERSE"]
+    #self.shifter_NEUTRAL = self.can_define.dv["TM_GEAR"]["TM_NEUTRAL"]
+    #self.shifter_DRIVE = self.can_define.dv["TM_GEAR"]["TM_DRIVE"]
+    #if self.shifter_PARK == 1:
+     #   self.gear_shifter = "park"
+    #elif self.shifter_NEUTRAL == 1:
+     #   self.gear_shifter = "neutral"
+   # elif self.shifter_DRIVE == 1:
+     #   self.gear_shifter = "drive"
+    #elif self.shifter_REVERSE == 1:
+    #    self.gear_shifter = "reverse"
+    #else:
+    #    self.gear_shifter = "unknown"
     # end of gear parse definition
 
 

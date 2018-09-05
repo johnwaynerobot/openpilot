@@ -357,6 +357,9 @@ class CarInterface(object):
     # create message
     ret = car.CarState.new_message()
 
+    #2018.09.05 add generic toggle for testing steering max#
+    ret.genericToggle = self.CS.generic_toggle
+
     # speeds
     ret.vEgo = self.CS.v_ego
     ret.aEgo = self.CS.a_ego
