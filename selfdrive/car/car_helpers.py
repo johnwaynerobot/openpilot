@@ -69,8 +69,8 @@ def fingerprint(logcan, timeout):
     # message has elapsed, exit. Toyota needs higher time_fingerprint, since DSU does not
     # broadcast immediately
     if len(candidate_cars) == 1 and st is not None:
-      # TODO: better way to decide to wait more if Toyota                                            #2018.09.04 add kia spoof message wait
-      time_fingerprint = 1.0 if ("TOYOTA" in candidate_cars[0] or "LEXUS" in candidate_cars[0] or "kia" in candidate_cars[0])  else 0.1
+      # TODO: better way to decide to wait more if Toyota
+      time_fingerprint = 1.0 if ("TOYOTA" in candidate_cars[0] or "LEXUS" in candidate_cars[0]) else 0.1
       if (ts-st) > time_fingerprint:
         break
 
