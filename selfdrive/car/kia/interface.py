@@ -121,7 +121,7 @@ class CarInterface(object):
     if self.CS.CP.carFingerprint == CAR.DUMMY:   #2018.09.06 12:43AM dummy car for not use
         self.compute_gb = get_compute_gb_acura()
     else:
-        self.compute_gb = compute_gb_honda()
+        self.compute_gb = compute_gb_honda  #2018.09.06 2:56PM remove parentheses
 
   @staticmethod
   def calc_accel_override(a_ego, a_target, v_ego, v_target):
