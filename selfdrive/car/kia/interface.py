@@ -103,7 +103,7 @@ class CarInterface(object):
     self.brake_pressed_prev = False
     self.can_invalid_count = 0
 
-    self.cp = get_can_parser(CP, canbus)  #2018.09.06 at 10:20AM fix error , it need two argument
+
 
     # *** init the major players ***
     canbus = CanBus()
