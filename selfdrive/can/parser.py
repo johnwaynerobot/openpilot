@@ -75,7 +75,8 @@ class CANParser(object):
 
     # print can_values_len
     ret = set()
-    for i in xrange(can_values_len):
+    #for i in xrange(can_values_len):  (#2018.09.06 3:19PM remove typo xrange)
+    for i in range(can_values_len):
       cv = self.can_values[i]
       address = cv.address
       # print hex(cv.address), ffi.string(cv.name)
