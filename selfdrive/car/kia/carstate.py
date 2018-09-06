@@ -150,6 +150,7 @@ def get_can_signals(CP, canbus):
 def get_can_parser(CP, canbus):  #2018.09.04 combine in above
     signals, checks = get_can_signals(CP, canbus)  #2018.09.06 add two argument
     #canbus.powertrain is can 0 (bus 0)
+    print(carstate.py)
     print(DBC[CP.carFingerprint]['pt'])
     return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, canbus.powertrain)
 

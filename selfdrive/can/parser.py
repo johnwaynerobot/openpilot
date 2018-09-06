@@ -17,7 +17,9 @@ class CANParser(object):
 
     #2018.09.06 3:56PMEST add print for test
 
-    print("parser.py section")
+    print("parser.py section dbc_name")
+    print(self.dbc_name)
+    print("dbc_lookup")
     print(self.dbc)
     num_msgs = self.dbc[0].num_msgs
     for i in range(num_msgs):
