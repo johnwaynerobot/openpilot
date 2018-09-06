@@ -8,10 +8,9 @@ from selfdrive.swaglog import cloudlog
 from selfdrive.config import Conversions as CV
 from selfdrive.controls.lib.drive_helpers import create_event, EventTypes as ET, get_events
 from selfdrive.controls.lib.vehicle_model import VehicleModel
-#from selfdrive.car.honda.carstate import CarState, get_can_parser
-#from selfdrive.car.honda.values import CruiseButtons, CM, BP, AH, CAR, HONDA_BOSCH
-from selfdrive.car.kia.carstate import CarState, get_can_parser   #2018.09.02 DV add kia soul
-from selfdrive.car.kia.values import CruiseButtons, CM, BP, AH, CAR, HONDA_BOSCH #2018.09.02 DV add Kia Soul
+#2018.09.02 DV add kia soul
+from selfdrive.car.kia.carstate import CarState, get_can_parser
+from selfdrive.car.kia.values import CruiseButtons, CM, BP, AH, CAR
 from selfdrive.controls.lib.planner import A_ACC_MAX
 
 #try:
@@ -27,7 +26,7 @@ except ImportError:
 
 # msgs sent for steering controller by camera module on can 0.
 # those messages are mutually exclusive on CRV and non-CRV cars
-CAMERA_MSGS = [0xe4, 0x194] #message on Honda car
+#CAMERA_MSGS = [0xe4, 0x194] #message on Honda car
 
 CAMERA_MSGS_SOUL = [0x82] #Kia Soul Steering command message
 
@@ -86,6 +85,12 @@ def get_compute_gb_acura():
 
   return _compute_gb_acura
 
+#borrow from subaru interface.py
+# canbus number define as 0
+class CanBus(object):
+  def __init__(self):
+    self.powertrain = 0
+    self.obstacle = 1
 
 class CarInterface(object):
   def __init__(self, CP, sendcan=None):
@@ -101,18 +106,22 @@ class CarInterface(object):
     self.cp = get_can_parser(CP)
 
     # *** init the major players ***
-    self.CS = CarState(CP)
+    canbus = CanBus()
+    self.CS = CarState(CP, canbus)    #2018.09.05 add in canbus borrow from subaru interface.py
     self.VM = VehicleModel(CP)
+    self.cp = get_can_parser(CP, canbus)    #2018.09.05 borrow from subaru delete powertrain
 
     # sending if read only is False
     if sendcan is not None:
       self.sendcan = sendcan
-      self.CC = CarController(self.cp.dbc_name, CP.carFingerprint, CP.enableCamera)
+      #2018.09.05 11:41PM change dbc_name to canbus
+      self.CC = CarController(canbus, CP.carFingerprint, CP.enableCamera)
 
-    if self.CS.CP.carFingerprint == CAR.DUMMY:  #2018.09.03 set ILX to dummy for bypass test
-      self.compute_gb = get_compute_gb_acura()
+
+    if self.CS.CP.carFingerprint == CAR.DUMMY:   #2018.09.06 12:43AM dummy car for not use
+        self.compute_gb = get_compute_gb_acura()
     else:
-      self.compute_gb = compute_gb_honda
+        self.compute_gb = compute_gb_honda()
 
   @staticmethod
   def calc_accel_override(a_ego, a_target, v_ego, v_target):
@@ -375,6 +384,7 @@ class CarInterface(object):
 
     # gas pedal
     ret.gas = self.CS.car_gas / 256.0
+    #TODO 2018.09.05 check Throttle report operator override match this
     if not self.CP.enableGasInterceptor:
       ret.gasPressed = self.CS.pedal_gas > 0
     else:
@@ -396,7 +406,7 @@ class CarInterface(object):
     ret.gearShifter = self.CS.gear_shifter
 
 
-
+    #2018.09.05 #TODO find steering torque value from steering wheel
     ret.steeringTorque = self.CS.steer_torque_driver
     ret.steeringPressed = self.CS.steer_override  #2018.09.02 this come values py when steering operator override =1
 

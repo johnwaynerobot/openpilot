@@ -4,6 +4,7 @@ from selfdrive.can.parser import CANParser
 from selfdrive.config import Conversions as CV
 from selfdrive.car.kia.values import CAR, DBC, STEER_THRESHOLD, SPEED_FACTOR # change to Kia Soul folder
 import numpy as np
+from cereal import car
 
 #2018.09.04 comment out Gear shifter no use
 #def parse_gear_shifter(gear, vals):
@@ -29,7 +30,7 @@ def calc_cruise_offset(offset, speed):
 
 
 #2018.09.04 change cansignal to can_parser
-def get_can_parser(CP):
+def get_can_parser(CP, canbus):
 
     # this function generates lists for signal, messages and initial values
     signals = [
@@ -148,12 +149,15 @@ def get_can_parser(CP):
 
 #def get_can_parser(CP):  #2018.09.04 combine in above
  # signals, checks = get_can_signals(CP)
-    return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, 0)
+    #canbus.powertrain is can 0 (bus 0)
+    return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, canbus.powertrain)
 
 
 class CarState(object):
-  def __init__(self, CP):
+  def __init__(self, CP, canbus):
+      #intializae can parser
     self.CP = CP
+    self.car_fingerprint = CP.carFingerprint   #borrow from subaru carstate
     #.can_define = CANDefine(DBC[CP.carFingerprint]['pt'])
     #2018.09.05 remove define twice
     #self.shifter_values = self.can_define.dv["GEARBOX"]["GEAR_SHIFTER"]
@@ -173,8 +177,9 @@ class CarState(object):
     #    self.gear_shifter = "unknown"
     # end of gear parse definition
 
-
-
+    self.steer_torque_driver = 0     #borrow from subaru carstate.py
+    self.steer_not_allowed = False   #borrow from subaru carstate.py
+    self.main_on = False             #borrow from subaru carstate.py
     self.user_gas, self.user_gas_pressed = 0., 0
     self.brake_switch_prev = 0
     self.brake_switch_ts = 0
@@ -211,7 +216,7 @@ class CarState(object):
     # copy can_valid
     self.can_valid = cp.can_valid
 
-    # car params
+    # car param# 2018.09.06 12:33AM add canbus.powertrain  to distinction of can bus channels
     v_weight_v = [0., 1.]  # don't trust smooth speed at low values to avoid premature zero snapping
     v_weight_bp = [1., 6.]   # smooth blending, below ~0.6m/s the smooth speed snaps to zero
 
@@ -230,10 +235,10 @@ class CarState(object):
     # can_gear_shifter = int(cp.vl["GEARBOX"]['GEAR_SHIFTER'])
     # self.gear_shifter = parse_gear_shifter(can_gear_shifter, self.shifter_values)
     # 2018.09.02 DV change gear shifter info for kia soul
-    self.shifter_PARK = self.can_define.dv["TM_GEAR"]["TM_PARK"]
-    self.shifter_REVERSE = self.can_define.dv["TM_GEAR"]["TM_REVERSE"]
-    self.shifter_NEUTRAL = self.can_define.dv["TM_GEAR"]["TM_NEUTRAL"]
-    self.shifter_DRIVE = self.can_define.dv["TM_GEAR"]["TM_DRIVE"]
+    self.shifter_PARK = cp.vl["TM_GEAR"]["TM_PARK"]
+    self.shifter_REVERSE = cp.vl["TM_GEAR"]["TM_REVERSE"]
+    self.shifter_NEUTRAL = cp.vl["TM_GEAR"]["TM_NEUTRAL"]
+    self.shifter_DRIVE = cp.vl["TM_GEAR"]["TM_DRIVE"]
 
     if self.shifter_PARK == 1:
         self.gear_shifter = "park"
@@ -247,7 +252,7 @@ class CarState(object):
         self.gear_shifter = "unknown"
     # end of gear parse definition
 
-    if self.CP.carFingerprint in (CAR.SOUL): # 2018.09.04 add multiple soul because can change
+    if self.CP.carFingerprint == CAR.SOUL:   # 2018.09.04 add multiple soul because can change
         self.standstill = cp.vl["TM_DATA"]['VS_TCU'] < 0.1
         self.door_all_closed = not cp.vl["SCM_FEEDBACK"]['DOOR_OPEN_FL']
         self.steer_error = cp.vl["STEERING_REPORT"]['STEERING_REPORT_dtcs'] != 0
@@ -341,9 +346,9 @@ class CarState(object):
 
     self.pedal_gas = cp.vl["ENG_INFO"]['PEDAL_GAS'] #2018.09.02 DV change for pedal gas
     # crv doesn't include cruise control
-    if self.CP.carFingerprint in (CAR.SOUL, CAR.SOUL1, CAR.SOUL2):  #2018.09.04
+    if self.CP.carFingerprint in (CAR.SOUL, CAR.SOUL1):  #2018.09.04
       self.car_gas = self.pedal_gas
-    elif self.CP.carFingerprint in (CAR.DUMMY): #2018.09.03 define dummy to prevent duplicate
+    elif self.CP.carFingerprint in (CAR.SOUL2): #2018.09.05 getridd of dummy put soul2 to prevent duplicate
             self.car_gas = cp.vl["ENG_INFO"]['PEDAL_GAS'] #2018.09.02 DV cruise control gas not available change to pedal gas
 
     #self.steer_torque_driver = cp.vl["STEER_STATUS"]['STEER_TORQUE_SENSOR'] 2018.09.02 comment out to use steering operator override

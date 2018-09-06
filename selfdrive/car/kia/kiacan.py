@@ -189,7 +189,7 @@ def create_ui_commands(packer, pcm_speed, hud):
   commands.append(packer.make_can_msg('RADAR_HUD', 0, radar_hud_values, idx)) #2018.09.03 change to bus 0
   return commands
 
-
+#2018.09.06 12:37AM add comment, this message for radar on bus  1,  channel 2 can of panda
 def create_radar_commands(v_ego, idx):
   """Creates an iterable of CAN messages for the radar system."""
   commands = []

@@ -5,18 +5,30 @@ from selfdrive.controls.lib.drive_helpers import rate_limit
 from common.numpy_fast import clip
 from selfdrive.car import apply_std_steer_torque_limits #same as Hyundai change
 from selfdrive.car.kia.values import AH, CruiseButtons, CAR  #2018.09.02 DV add for Kia soul
+from selfdrive.car.kia.carstate import CarState, get_can_parser
 from selfdrive.can.packer import CANPacker
 
 #2018.09.04 import from Hyundai sanfe 2019, #TODO will need to use
 #define in steering for reference
 #No use yet
-class SteerLimitParams:
-  STEER_MAX = 5  # 409 is the max, change 250 to 5 degrees
-  STEER_DELTA_UP = 3
-  STEER_DELTA_DOWN = 7
-  STEER_DRIVER_ALLOWANCE = 50
-  STEER_DRIVER_MULTIPLIER = 2
-  STEER_DRIVER_FACTOR = 1
+class SteerLimitParams():
+  def __init__(self, car_fingerprint):
+
+    if car_fingerprint in (CAR.SOUL, CAR.SOUL1, CAR.SOUL2):
+      self.STEER_MAX = 5  # 409 is the max, change 250 to 5 degrees
+      self.STEER_DELTA_UP = 3  # torque increase per refresh
+      self.STEER_DELTA_DOWN = 7   # torque decrease per refresh
+      self.STEER_DRIVER_ALLOWANCE = 50  #allowed driver torque before start limiting
+      self.STEER_DRIVER_MULTIPLIER = 2   # weight driver torque heavily
+      self.STEER_DRIVER_FACTOR = 1   # from dbc not use
+
+    else:
+      self.STEER_MAX = 5  # 409 is the max, change 250 to 5 degrees
+      self.STEER_DELTA_UP = 3  # torque increase per refresh
+      self.STEER_DELTA_DOWN = 7  # torque decrease per refresh
+      self.STEER_DRIVER_ALLOWANCE = 50  # allowed driver torque before start limiting
+      self.STEER_DRIVER_MULTIPLIER = 2  # weight driver torque heavily
+      self.STEER_DRIVER_FACTOR = 1  # from dbc not use
 
 def actuator_hystereses(brake, braking, brake_steady, v_ego, car_fingerprint):
   # hyst params... TODO: move these to VehicleParams
@@ -71,13 +83,25 @@ HUDData = namedtuple("HUDData",
 
 
 class CarController(object):
-  def __init__(self, dbc_name, enable_camera=True):
+  def __init__(self, canbus, car_fingerprint, enable_camera=True):
     self.braking = False
     self.brake_steady = 0.
     self.brake_last = 0.
     self.enable_camera = enable_camera
-    self.packer = CANPacker(dbc_name)
+    #self.packer = CANPacker(dbc_name)
     self.new_radar_config = False
+    self.car_fingerprint = car_fingerprint     #2018.09.06 12:06AM borrow from subaru carcontroller.py
+
+    # 2018.09.06 12:09AM borrow from subaru carcontroller.py
+    # Setup detection helper. Routes commands to
+    # an appropriate CAN bus number.
+    self.canbus = canbus
+
+    self.params = SteerLimitParams(car_fingerprint)  #2018.09.05 define steering paramater limt #TODO to use in code
+
+    #use to pack the message to can bus 2018.09.06 12:24AM
+    self.packer = CANPacker(DBC[car_fingerprint]['pt'])  #2018.09.05 add this from subaru with changes, not sure will error
+
 
   def update(self, sendcan, enabled, CS, frame, actuators, \
              pcm_speed, pcm_override, pcm_cancel_cmd, pcm_accel, \
@@ -161,17 +185,18 @@ class CarController(object):
 
     # Send CAN commands.
     can_sends = []
+    canbus = self.canbus
 
     # Send steering command.
-    idx = frame % 4  #2018.09.02 this mod it get the remainder?? #2018.09.03 remove idx
-    can_sends.append(kia_soul.create_steering_control_enable(self.packer, apply_steer, lkas_active, CS.CP.carFingerprint))
-    can_sends.append(kia_soul.create_steering_control(self.packer, apply_steer, lkas_active, CS.CP.carFingerprint))
-    can_sends.append(kia_soul.create_steering_control_disable(self.packer, apply_steer, lkas_active, CS.CP.carFingerprint))
+    idx = frame % 4  #2018.09.02 this mod it get the remainder?? #2018.09.03 remove idx, 2018.09.06 12:33 AM add canbus.powertrain
+    can_sends.append(kia_soul.create_steering_control_enable(self.packer, canbus.powertrain, apply_steer, lkas_active, CS.CP.carFingerprint))
+    can_sends.append(kia_soul.create_steering_control(self.packer, canbus.powertrain, apply_steer, lkas_active, CS.CP.carFingerprint))
+    can_sends.append(kia_soul.create_steering_control_disable(self.packer, canbus.powertrain, apply_steer, lkas_active, CS.CP.carFingerprint))
 
     # Send dashboard UI commands.
     if (frame % 10) == 0:
-      idx = (frame/10) % 4
-      can_sends.extend(kia_soul.create_ui_commands(self.packer, pcm_speed, hud, CS.CP.carFingerprint, idx))
+      idx = (frame/10) % 4                                #2018.09.06 12:33AM add canbus.powertrain
+      can_sends.extend(kia_soul.create_ui_commands(self.packer, canbus.powertrain, pcm_speed, hud, CS.CP.carFingerprint, idx))
 
     if CS.CP.radarOffCan:
       # If using stock ACC, spam cancel command to kill gas when OP disengages.
@@ -185,27 +210,28 @@ class CarController(object):
       if (frame % 2) == 0:
         idx = (frame / 2) % 4
         can_sends.append(
-          kia_soul.create_brake_enable_soul(self.packer, apply_brake, pcm_override,
-                                      pcm_cancel_cmd, hud.chime, hud.fcw)) #enable brake command,
+          kia_soul.create_brake_enable_soul(self.packer, canbus.powertrain, apply_brake, pcm_override,
+                                      pcm_cancel_cmd, hud.chime, hud.fcw)) #enable brake command,  #2018.09.06 12:33AM add canbus.powertrain
         can_sends.append(
-          kia_soul.create_brake_command_soul(self.packer, apply_brake, pcm_override,
-                                      pcm_cancel_cmd, hud.chime, hud.fcw)) #creating brake command
+          kia_soul.create_brake_command_soul(self.packer, canbus.powertrain, apply_brake, pcm_override,
+                                      pcm_cancel_cmd, hud.chime, hud.fcw)) #creating brake command  #2018.09.06 12:33AM add canbus.powertrain
         can_sends.append(
-          kia_soul.create_brake_disable_soul(self.packer, apply_brake, pcm_override,
-                                      pcm_cancel_cmd, hud.chime, hud.fcw)) #disable brake command
+          kia_soul.create_brake_disable_soul(self.packer, canbus.powertrain, apply_brake, pcm_override,
+                                      pcm_cancel_cmd, hud.chime, hud.fcw)) #disable brake command #2018.09.06 12:33AM add canbus.powertrain
         can_sends.append(
-          kia_soul.create_brake_command(self.packer, apply_brake, pcm_override,
+          kia_soul.create_brake_command(self.packer, canbus.powertrain, apply_brake, pcm_override,
                                       pcm_cancel_cmd, hud.chime, hud.fcw, idx)) #creating brake command for chime & FCW, brake command need idx
-
+        # 2018.09.06 12:33AM add canbus.powertrain  to distinction of can bus channel
 
           #2018.09.02 DV TODO: need to confirm THROTTLE PEDAL command pedal command
           #2018.09.03 remove idx for oscc kit
         if CS.CP.enableGasInterceptor:
           # send exactly zero if apply_gas is zero. Interceptor will send the max between read value and apply_gas.
           # This prevents unexpected pedal range rescaling
-          can_sends.append(kia_soul.create_gas_command_enable(self.packer, apply_gas))
-          can_sends.append(kia_soul.create_gas_command(self.packer, apply_gas))
-          can_sends.append(kia_soul.create_gas_command_disable(self.packer, apply_gas))
+          # 2018.09.06 12:33AM add canbus.powertrain  to distinction of can bus channel
+          can_sends.append(kia_soul.create_gas_command_enable(self.packer, canbus.powertrain, apply_gas))
+          can_sends.append(kia_soul.create_gas_command(self.packer, canbus.powertrain, apply_gas))
+          can_sends.append(kia_soul.create_gas_command_disable(self.packer, canbus.powertrain, apply_gas))
 
           
       # radar at 20Hz, but these msgs need to be sent at 50Hz on ilx (seems like an Acura bug)
@@ -219,7 +245,8 @@ class CarController(object):
         idx = (frame/radar_send_step) % 4
         if not self.new_radar_config:  # only change state once
           self.new_radar_config = car.RadarState.Error.wrongConfig in radar_error
-        can_sends.extend(kia_soul.create_radar_commands(CS.v_ego, CS.CP.carFingerprint, self.new_radar_config, idx))
+        can_sends.extend(create_radar_commands(CS.v_ego, CS.CP.carFingerprint, self.new_radar_config, idx))
+            #2018.09.06 12:39AM change to just create_radar_commands to match kiacan.py
 
     ### Send messages to canbus
     sendcan.send(can_list_to_can_capnp(can_sends, msgtype='sendcan').to_bytes())
