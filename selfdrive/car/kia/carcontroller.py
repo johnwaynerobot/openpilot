@@ -7,6 +7,7 @@ from selfdrive.car import apply_std_steer_torque_limits #same as Hyundai change
 from selfdrive.car.kia.values import AH, CruiseButtons, CAR, DBC  #2018.09.02 DV add for Kia soul
 from selfdrive.car.kia.carstate import CarState, get_can_parser
 from selfdrive.can.packer import CANPacker
+from selfdrive.car.kia import kiacan
 
 #2018.09.04 import from Hyundai sanfe 2019, #TODO will need to use
 #define in steering for reference
@@ -102,7 +103,7 @@ class CarController(object):
 
     #use to pack the message to can bus 2018.09.06 12:24AM
     #self.packer = CANPacker(DBC[car_fingerprint]['pt'])  #2018.09.05 add this from subaru with changes, not sure will error
-    self.packer = CANPacker('kia_soul_2016_ccan.dbc')  # 2018.09.06 2:06PMEST
+    #self.packer = CANPacker('kia_soul_2016_ccan.dbc')  # 2018.09.06 2:06PMEST comment
 
 
 
@@ -193,37 +194,37 @@ class CarController(object):
 
     # Send steering command.
     idx = frame % 4  #2018.09.02 this mod it get the remainder?? #2018.09.03 remove idx, 2018.09.06 12:33 AM add canbus.powertrain
-    can_sends.append(kia_soul.create_steering_control_enable(self.packer, canbus.powertrain, apply_steer, lkas_active, CS.CP.carFingerprint))
-    can_sends.append(kia_soul.create_steering_control(self.packer, canbus.powertrain, apply_steer, lkas_active, CS.CP.carFingerprint))
-    can_sends.append(kia_soul.create_steering_control_disable(self.packer, canbus.powertrain, apply_steer, lkas_active, CS.CP.carFingerprint))
+    can_sends.append(kiacan.create_steering_control_enable(self.packer, canbus.powertrain, apply_steer, lkas_active, CS.CP.carFingerprint))
+    can_sends.append(kiacan.create_steering_control(self.packer, canbus.powertrain, apply_steer, lkas_active, CS.CP.carFingerprint))
+    can_sends.append(kiacan.create_steering_control_disable(self.packer, canbus.powertrain, apply_steer, lkas_active, CS.CP.carFingerprint))
 
     # Send dashboard UI commands.
     if (frame % 10) == 0:
       idx = (frame/10) % 4                                #2018.09.06 12:33AM add canbus.powertrain
-      can_sends.extend(kia_soul.create_ui_commands(self.packer, canbus.powertrain, pcm_speed, hud, CS.CP.carFingerprint, idx))
+      can_sends.extend(kiacan.create_ui_commands(self.packer, canbus.powertrain, pcm_speed, hud, CS.CP.carFingerprint, idx))
 
     if CS.CP.radarOffCan:
       # If using stock ACC, spam cancel command to kill gas when OP disengages.
       if pcm_cancel_cmd:
-        can_sends.append(kia_soul.spam_buttons_command(self.packer, CruiseButtons.CANCEL, idx))
+        can_sends.append(kiacan.spam_buttons_command(self.packer, CruiseButtons.CANCEL, idx))
       elif CS.stopped:
-        can_sends.append(kia_soul.spam_buttons_command(self.packer, CruiseButtons.RES_ACCEL, idx))
+        can_sends.append(kiacan.spam_buttons_command(self.packer, CruiseButtons.RES_ACCEL, idx))
     else:
       # Send gas and brake commands.
       #2018.09.02 Paras already change here for oscc kia soul kit oscc doesn't need idx
       if (frame % 2) == 0:
         idx = (frame / 2) % 4
         can_sends.append(
-          kia_soul.create_brake_enable_soul(self.packer, canbus.powertrain, apply_brake, pcm_override,
+          kiacan.create_brake_enable_soul(self.packer, canbus.powertrain, apply_brake, pcm_override,
                                       pcm_cancel_cmd, hud.chime, hud.fcw)) #enable brake command,  #2018.09.06 12:33AM add canbus.powertrain
         can_sends.append(
-          kia_soul.create_brake_command_soul(self.packer, canbus.powertrain, apply_brake, pcm_override,
+          kiacan.create_brake_command_soul(self.packer, canbus.powertrain, apply_brake, pcm_override,
                                       pcm_cancel_cmd, hud.chime, hud.fcw)) #creating brake command  #2018.09.06 12:33AM add canbus.powertrain
         can_sends.append(
-          kia_soul.create_brake_disable_soul(self.packer, canbus.powertrain, apply_brake, pcm_override,
+          kiacan.create_brake_disable_soul(self.packer, canbus.powertrain, apply_brake, pcm_override,
                                       pcm_cancel_cmd, hud.chime, hud.fcw)) #disable brake command #2018.09.06 12:33AM add canbus.powertrain
         can_sends.append(
-          kia_soul.create_brake_command(self.packer, canbus.powertrain, apply_brake, pcm_override,
+          kiacan.create_brake_command(self.packer, canbus.powertrain, apply_brake, pcm_override,
                                       pcm_cancel_cmd, hud.chime, hud.fcw, idx)) #creating brake command for chime & FCW, brake command need idx
         # 2018.09.06 12:33AM add canbus.powertrain  to distinction of can bus channel
 
@@ -233,9 +234,9 @@ class CarController(object):
           # send exactly zero if apply_gas is zero. Interceptor will send the max between read value and apply_gas.
           # This prevents unexpected pedal range rescaling
           # 2018.09.06 12:33AM add canbus.powertrain  to distinction of can bus channel
-          can_sends.append(kia_soul.create_gas_command_enable(self.packer, canbus.powertrain, apply_gas))
-          can_sends.append(kia_soul.create_gas_command(self.packer, canbus.powertrain, apply_gas))
-          can_sends.append(kia_soul.create_gas_command_disable(self.packer, canbus.powertrain, apply_gas))
+          can_sends.append(kiacan.create_gas_command_enable(self.packer, canbus.powertrain, apply_gas))
+          can_sends.append(kiacan.create_gas_command(self.packer, canbus.powertrain, apply_gas))
+          can_sends.append(kiacan.create_gas_command_disable(self.packer, canbus.powertrain, apply_gas))
 
           
       # radar at 20Hz, but these msgs need to be sent at 50Hz on ilx (seems like an Acura bug)
