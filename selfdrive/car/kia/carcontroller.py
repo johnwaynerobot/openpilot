@@ -4,7 +4,7 @@ from selfdrive.boardd.boardd import can_list_to_can_capnp
 from selfdrive.controls.lib.drive_helpers import rate_limit
 from common.numpy_fast import clip
 from selfdrive.car import apply_std_steer_torque_limits #same as Hyundai change
-from selfdrive.car.kia.values import AH, CruiseButtons, CAR  #2018.09.02 DV add for Kia soul
+from selfdrive.car.kia.values import AH, CruiseButtons, CAR, DBC  #2018.09.02 DV add for Kia soul
 from selfdrive.car.kia.carstate import CarState, get_can_parser
 from selfdrive.can.packer import CANPacker
 

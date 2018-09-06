@@ -10,7 +10,7 @@ from selfdrive.controls.lib.drive_helpers import create_event, EventTypes as ET,
 from selfdrive.controls.lib.vehicle_model import VehicleModel
 #2018.09.02 DV add kia soul
 from selfdrive.car.kia.carstate import CarState, get_can_parser
-from selfdrive.car.kia.values import CruiseButtons, CM, BP, AH, CAR
+from selfdrive.car.kia.values import CruiseButtons, CM, BP, AH, CAR,
 from selfdrive.controls.lib.planner import A_ACC_MAX
 
 #try:
