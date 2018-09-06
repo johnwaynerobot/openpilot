@@ -99,8 +99,12 @@ class CarController(object):
 
     self.params = SteerLimitParams(car_fingerprint)  #2018.09.05 define steering paramater limt #TODO to use in code
 
+
     #use to pack the message to can bus 2018.09.06 12:24AM
-    self.packer = CANPacker(DBC[car_fingerprint]['pt'])  #2018.09.05 add this from subaru with changes, not sure will error
+    #self.packer = CANPacker(DBC[car_fingerprint]['pt'])  #2018.09.05 add this from subaru with changes, not sure will error
+    self.packer = CANPacker('kia_soul_2016_ccan.dbc')  # 2018.09.06 2:06PMEST
+
+
 
 
   def update(self, sendcan, enabled, CS, frame, actuators, \
