@@ -103,7 +103,7 @@ class CarController(object):
 
     #use to pack the message to can bus 2018.09.06 12:24AM
     #self.packer = CANPacker(DBC[car_fingerprint]['pt'])  #2018.09.05 add this from subaru with changes, not sure will error
-    self.packer = CANPacker('kia_soul_2016_ccan.dbc')  # 2018.09.06 2:06PMEST comment
+    #self.packer = CANPacker('kia_soul_2016_ccan.dbc')  # 2018.09.06 2:06PMEST comment
 
 
 

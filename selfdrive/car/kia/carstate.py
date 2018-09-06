@@ -30,7 +30,7 @@ def calc_cruise_offset(offset, speed):
 
 
 #2018.09.04 change cansignal to can_parser
-def get_can_parser(CP, canbus):
+def get_can_signals(CP, canbus):
 
     # this function generates lists for signal, messages and initial values
     signals = [
@@ -147,7 +147,7 @@ def get_can_parser(CP, canbus):
     return signals, checks
 
 
-#def get_can_parser(CP):  #2018.09.04 combine in above
+def get_can_parser(CP, canbus):  #2018.09.04 combine in above
     signals, checks = get_can_signals(CP)
     #canbus.powertrain is can 0 (bus 0)
     return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, canbus.powertrain)
