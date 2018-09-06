@@ -107,7 +107,7 @@ class CarInterface(object):
 
     # *** init the major players ***
     canbus = CanBus()
-    self.CS = CarState(CP, canbus)    #2018.09.05 add in canbus borrow from subaru interface.py
+    self.CS = CarState(CP, 0)    #2018.09.05 add in canbus borrow from subaru interface.py
     self.VM = VehicleModel(CP)
     self.cp = get_can_parser(CP, canbus)    #2018.09.05 borrow from subaru delete powertrain
 
@@ -116,6 +116,10 @@ class CarInterface(object):
       self.sendcan = sendcan
       #2018.09.05 11:41PM change dbc_name to canbus
       self.CC = CarController(canbus, CP.carFingerprint, CP.enableCamera)
+      print("self.cc interface.py canbus")
+      print(canbus)
+      print("interface.py CP.carFingerprint")
+      print(CP.carFingerprint)
 
 
     if self.CS.CP.carFingerprint == CAR.DUMMY:   #2018.09.06 12:43AM dummy car for not use

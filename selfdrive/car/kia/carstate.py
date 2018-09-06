@@ -154,7 +154,7 @@ def get_can_parser(CP, canbus):  #2018.09.04 combine in above
     print (canbus)
     print("carstate.py")
     print(DBC[CP.carFingerprint]['pt'])
-    return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, canbus.powertrain)
+    return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, 0)   #2018.09.06 4:37PM change canbuspowertrain to 0
 
     print("carstate.py canbus.powertrain")
     print(canbus.powertrain)
