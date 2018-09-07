@@ -107,7 +107,7 @@ def get_car(logcan, sendcan=None, passive=True):
   print(candidate)
   print(fingerprints)
   params = interface_cls.get_params(candidate, fingerprints)
-  (print'car_helpers.py print params')
+  print("car_helpers.py print params")
   print(params)
 
   return interface_cls(params, sendcan), params
