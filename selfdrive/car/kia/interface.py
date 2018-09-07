@@ -108,7 +108,7 @@ class CarInterface(object):
 
     # *** init the major players ***
    # canbus = CanBus()
-    self.CS = CarState(CP, 0)    #2018.09.05 add in canbus borrow from subaru interface.py
+    self.CS = CarState(CP)    #2018.09.07 11:33AM remove copy from subaru add in canbus borrow from subaru interface.py
     self.VM = VehicleModel(CP)
     self.cp = get_can_parser(CP)    #2018.09.05 borrow from subaru delete powertrain
 
