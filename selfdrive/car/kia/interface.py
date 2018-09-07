@@ -10,7 +10,8 @@ from selfdrive.controls.lib.drive_helpers import create_event, EventTypes as ET,
 from selfdrive.controls.lib.vehicle_model import VehicleModel
 #2018.09.02 DV add kia soul
 from selfdrive.car.kia.carstate import CarState, get_can_parser
-from selfdrive.car.kia.values import CruiseButtons, CM, BP, AH, CAR
+from selfdrive.car.kia.values import CruiseButtons, CM, BP, AH, CAR ,DBC
+
 from selfdrive.controls.lib.planner import A_ACC_MAX
 
 #try:
@@ -106,20 +107,21 @@ class CarInterface(object):
 
 
     # *** init the major players ***
-    canbus = CanBus()
+   # canbus = CanBus()
     self.CS = CarState(CP, 0)    #2018.09.05 add in canbus borrow from subaru interface.py
     self.VM = VehicleModel(CP)
-    self.cp = get_can_parser(CP, canbus)    #2018.09.05 borrow from subaru delete powertrain
+    self.cp = get_can_parser(CP)    #2018.09.05 borrow from subaru delete powertrain
 
     # sending if read only is False
     if sendcan is not None:
       self.sendcan = sendcan
       #2018.09.05 11:41PM change dbc_name to canbus
-      self.CC = CarController(canbus, CP.carFingerprint, CP.enableCamera)
-      print("self.cc interface.py canbus")
-      print(canbus)
+      self.CC = CarController(self.cp.dbc_name, CP.enableCamera)
+      print("self.cc interface.py dp.dbc_name")
+      print(self.cp.dbc_name)
       print("interface.py CP.carFingerprint")
       print(CP.carFingerprint)
+      print(CP.enableCamera)
 
 
     if self.CS.CP.carFingerprint == CAR.DUMMY:   #2018.09.06 12:43AM dummy car for not use
@@ -202,7 +204,7 @@ class CarInterface(object):
     #2018.09.02 DV add Kia soul #TODO need to modified paramater
     if candidate == CAR.SOUL:
       stop_and_go = False
-      ret.safetyParam = 8 # define in /boardd/boardd.cc
+    #  ret.safetyParam = 8 # define in /boardd/boardd.cc
       ret.mass = 3410. * CV.LB_TO_KG + std_cargo
       ret.wheelbase = 2.66
       ret.centerToFront = ret.wheelbase * 0.41
@@ -217,7 +219,7 @@ class CarInterface(object):
 
     elif candidate == CAR.SOUL1:
       stop_and_go = False
-      ret.safetyParam = 8  # define in /boardd/boardd.cc
+      #ret.safetyParam = 8  # define in /boardd/boardd.cc
       ret.mass = 3410. * CV.LB_TO_KG + std_cargo
       ret.wheelbase = 2.66
       ret.centerToFront = ret.wheelbase * 0.41
@@ -232,7 +234,7 @@ class CarInterface(object):
 
     elif candidate == CAR.SOUL2:
       stop_and_go = False
-      ret.safetyParam = 8  # define in /boardd/boardd.cc
+     # ret.safetyParam = 8  # define in /boardd/boardd.cc
       ret.mass = 3410. * CV.LB_TO_KG + std_cargo
       ret.wheelbase = 2.66
       ret.centerToFront = ret.wheelbase * 0.41
@@ -250,6 +252,7 @@ class CarInterface(object):
 
      #TODO 2018.09.04 should modified our steering control type to match kia angle
     ret.steerControlType = car.CarParams.SteerControlType.torque
+    #ret.steerControlType = car.CarParams.SteerControlType.angle    # 2018.09.06 11:19PM reference in cereal car.capnp
 
     # min speed to enable ACC. if car can do stop and go, then set enabling speed
     # to a negative value, so it won't matter. Otherwise, add 0.5 mph margin to not

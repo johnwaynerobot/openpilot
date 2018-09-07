@@ -84,19 +84,19 @@ HUDData = namedtuple("HUDData",
 
 
 class CarController(object):
-  def __init__(self, canbus, car_fingerprint, enable_camera=True):
+  def __init__(self, dbc_name, enable_camera=True):
     self.braking = False
     self.brake_steady = 0.
     self.brake_last = 0.
     self.enable_camera = enable_camera
-    #self.packer = CANPacker(dbc_name)
+    self.packer = CANPacker(dbc_name)
     self.new_radar_config = False
-    self.car_fingerprint = car_fingerprint     #2018.09.06 12:06AM borrow from subaru carcontroller.py
+    #self.car_fingerprint = car_fingerprint     #2018.09.06 12:06AM borrow from subaru carcontroller.py
 
     # 2018.09.06 12:09AM borrow from subaru carcontroller.py
     # Setup detection helper. Routes commands to
     # an appropriate CAN bus number.
-    self.canbus = canbus
+    #self.canbus = canbus
 
     self.params = SteerLimitParams(car_fingerprint)  #2018.09.05 define steering paramater limt #TODO to use in code
 
@@ -190,18 +190,19 @@ class CarController(object):
 
     # Send CAN commands.
     can_sends = []
-    canbus = self.canbus
+    #canbus = self.canbus  2018.09.06 comment out canbus
 
+    #2018.09.06 10:30PM remove canbus.powertrain
     # Send steering command.
     idx = frame % 4  #2018.09.02 this mod it get the remainder?? #2018.09.03 remove idx, 2018.09.06 12:33 AM add canbus.powertrain
-    can_sends.append(kiacan.create_steering_control_enable(self.packer, canbus.powertrain, apply_steer, lkas_active, CS.CP.carFingerprint))
-    can_sends.append(kiacan.create_steering_control(self.packer, canbus.powertrain, apply_steer, lkas_active, CS.CP.carFingerprint))
-    can_sends.append(kiacan.create_steering_control_disable(self.packer, canbus.powertrain, apply_steer, lkas_active, CS.CP.carFingerprint))
+    can_sends.append(kiacan.create_steering_control_enable(self.packer, apply_steer, lkas_active, CS.CP.carFingerprint))
+    can_sends.append(kiacan.create_steering_control(self.packer, apply_steer, lkas_active, CS.CP.carFingerprint))
+    can_sends.append(kiacan.create_steering_control_disable(self.packer, apply_steer, lkas_active, CS.CP.carFingerprint))
 
     # Send dashboard UI commands.
     if (frame % 10) == 0:
       idx = (frame/10) % 4                                #2018.09.06 12:33AM add canbus.powertrain
-      can_sends.extend(kiacan.create_ui_commands(self.packer, canbus.powertrain, pcm_speed, hud, CS.CP.carFingerprint, idx))
+      can_sends.extend(kiacan.create_ui_commands(self.packer,  pcm_speed, hud, CS.CP.carFingerprint, idx))
 
     if CS.CP.radarOffCan:
       # If using stock ACC, spam cancel command to kill gas when OP disengages.
@@ -215,17 +216,13 @@ class CarController(object):
       if (frame % 2) == 0:
         idx = (frame / 2) % 4
         can_sends.append(
-          kiacan.create_brake_enable_soul(self.packer, canbus.powertrain, apply_brake, pcm_override,
-                                      pcm_cancel_cmd, hud.chime, hud.fcw)) #enable brake command,  #2018.09.06 12:33AM add canbus.powertrain
+          kiacan.create_brake_enable_soul(self.packer,  apply_brake, pcm_override, pcm_cancel_cmd, hud.chime, hud.fcw)) #enable brake command,  #2018.09.06 12:33AM add canbus.powertrain
         can_sends.append(
-          kiacan.create_brake_command_soul(self.packer, canbus.powertrain, apply_brake, pcm_override,
-                                      pcm_cancel_cmd, hud.chime, hud.fcw)) #creating brake command  #2018.09.06 12:33AM add canbus.powertrain
+          kiacan.create_brake_command_soul(self.packer,  apply_brake, pcm_override, pcm_cancel_cmd, hud.chime, hud.fcw)) #creating brake command  #2018.09.06 12:33AM add canbus.powertrain
         can_sends.append(
-          kiacan.create_brake_disable_soul(self.packer, canbus.powertrain, apply_brake, pcm_override,
-                                      pcm_cancel_cmd, hud.chime, hud.fcw)) #disable brake command #2018.09.06 12:33AM add canbus.powertrain
+          kiacan.create_brake_disable_soul(self.packer,  apply_brake, pcm_override, pcm_cancel_cmd, hud.chime, hud.fcw)) #disable brake command #2018.09.06 12:33AM add canbus.powertrain
         can_sends.append(
-          kiacan.create_brake_command(self.packer, canbus.powertrain, apply_brake, pcm_override,
-                                      pcm_cancel_cmd, hud.chime, hud.fcw, idx)) #creating brake command for chime & FCW, brake command need idx
+          kiacan.create_brake_command(self.packer,  apply_brake, pcm_override, pcm_cancel_cmd, hud.chime, hud.fcw, idx)) #creating brake command for chime & FCW, brake command need idx
         # 2018.09.06 12:33AM add canbus.powertrain  to distinction of can bus channel
 
           #2018.09.02 DV TODO: need to confirm THROTTLE PEDAL command pedal command
@@ -234,9 +231,9 @@ class CarController(object):
           # send exactly zero if apply_gas is zero. Interceptor will send the max between read value and apply_gas.
           # This prevents unexpected pedal range rescaling
           # 2018.09.06 12:33AM add canbus.powertrain  to distinction of can bus channel
-          can_sends.append(kiacan.create_gas_command_enable(self.packer, canbus.powertrain, apply_gas))
-          can_sends.append(kiacan.create_gas_command(self.packer, canbus.powertrain, apply_gas))
-          can_sends.append(kiacan.create_gas_command_disable(self.packer, canbus.powertrain, apply_gas))
+          can_sends.append(kiacan.create_gas_command_enable(self.packer, apply_gas))
+          can_sends.append(kiacan.create_gas_command(self.packer, apply_gas))
+          can_sends.append(kiacan.create_gas_command_disable(self.packer, apply_gas))
 
           
       # radar at 20Hz, but these msgs need to be sent at 50Hz on ilx (seems like an Acura bug)

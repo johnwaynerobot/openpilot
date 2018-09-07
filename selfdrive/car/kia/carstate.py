@@ -30,34 +30,35 @@ def calc_cruise_offset(offset, speed):
 
 
 #2018.09.04 change cansignal to can_parser
-def get_can_signals(CP, canbus):
+def get_can_signals(CP):
 
     # this function generates lists for signal, messages and initial values
+    # 2018.09.06 this is explain in  selfdrive/can/plant_can_parser.py the meaning
     signals = [
            #signal name, sig_address, default
           ("VS_TCU", "TM_DATA", 0),  #2018.09.02 DV transmission vehicle speed B0_1088 TCU2
-          ("WHEEL_SPEED_FL", "WHEEL_SPEEDS", 0),  #2018.09.02 DV  Wheel speed B0_1200
-          ("WHEEL_SPEED_FR", "WHEEL_SPEEDS", 0),  #2018.09.02 DV  Wheel speed B0_1200
-          ("WHEEL_SPEED_RL", "WHEEL_SPEEDS", 0),  #2018.09.02 DV  Wheel speed B0_1200
-          ("WHEEL_SPEED_RR", "WHEEL_SPEEDS", 0),  #2018.09.02 DV  Wheel speed B0_1200
-          ("STEER_ANGLE", "STEERING_SENSORS", 0), #2018.09.02 DV  B0_688
-          ("STEER_ANGLE_RATE", "STEERING_SENSORS", 0), #2018.09.02 DV  B0_688
+          ("WHEEL_SPEED_FL", "WHEEL_SPEEDS", 0),    #2018.09.02 DV  Wheel speed B0_1200
+          ("WHEEL_SPEED_FR", "WHEEL_SPEEDS", 0),    #2018.09.02 DV  Wheel speed B0_1200
+          ("WHEEL_SPEED_RL", "WHEEL_SPEEDS", 0),    #2018.09.02 DV  Wheel speed B0_1200
+          ("WHEEL_SPEED_RR", "WHEEL_SPEEDS", 0),    #2018.09.02 DV  Wheel speed B0_1200
+          ("STEER_ANGLE", "STEERING_SENSORS", 0),   #2018.09.02 DV  B0_688
+          ("STEER_ANGLE_RATE", "STEERING_SENSORS", 0),   #2018.09.02 DV  B0_688
           # 2018.09.02 D.V B0_357 #TODO confirm steering_torque_sensor or use steering_report_operator_override
           #use for judgement that driver override the steering to disable
           ("STEER_TORQUE_SENSOR", "STEER_STATUS", 0),
-          ("LEFT_BLINKER", "SCM_FEEDBACK", 0), #2018.09.02 D.V B0_1680 modified dbc to match
-          ("RIGHT_BLINKER", "SCM_FEEDBACK", 0), #2018.09.02 D.V B0_1680 modified dbc to match
+          ("LEFT_BLINKER", "SCM_FEEDBACK", 0),  #2018.09.02 D.V B0_1680 modified dbc to match
+          ("RIGHT_BLINKER", "SCM_FEEDBACK", 0),  #2018.09.02 D.V B0_1680 modified dbc to match
           ("GEAR", "GEARBOX", 0),  #2018.09.02 D.V B0_880 modified dbc to match
                                     #Transmission Gear (0 = N or P, 1-6 = Fwd, 14 = Rev)
-          ("BRAKE_REPORT_dtcs", "BRAKE_REPORT", 0), #2018.09.02 BRAKE_ERROR1 and BRAKE_ERROR2 equal to B0_115 BRAKE_REPORT_dtcs
+          ("BRAKE_REPORT_dtcs", "BRAKE_REPORT", 0),  #2018.09.02 BRAKE_ERROR1 and BRAKE_ERROR2 equal to B0_115 BRAKE_REPORT_dtcs
           # 2018.09.02 D.V add in B0_1680 modified dbc value 0 is SEATBELT_DRIVER_LATCHED same as lamp 0 is belt on 1 belt off
           ("SEATBELT_DRIVER_LAMP", "SEATBELT_STATUS", 1),
           # 2018.09.02 D.V  brake switch status push or not push
           # set brake switch same as brake pressed B0_809 ENG_INFO
-          ("BRAKE_PRESSED", "ENG_INFO", 0), # initial value is 0, 2 is brake pressed
-          ("CRUISE_BUTTONS", "SCM_BUTTONS", 0), #2018.09.02 use UI B0_422 (0x1A6) messages
+          ("BRAKE_PRESSED", "ENG_INFO", 0),     # initial value is 0, 2 is brake pressed
+          ("CRUISE_BUTTONS", "SCM_BUTTONS", 0),     #2018.09.02 use UI B0_422 (0x1A6) messages
           ("ESP_DISABLED", "VSA_STATUS", 0),  #2018.09.02 modified dbc to match use B0_339 ESP_DISABLED when VSA button push OFF
-          ("HUD_LEAD", "ACC_HUD", 0), #2018.09.02 coming from EON for Lead Distance)
+          ("HUD_LEAD", "ACC_HUD", 0),   #2018.09.02 coming from EON for Lead Distance)
           # 2018.09.02 DV change USER_BRAKE to BRAKE_REPORT_operator_override B0_115
           ("BRAKE_REPORT_operator_override", "BRAKE_REPORT", 0),
           #2018.09.02 DV change STEER_STATUS to STEERING_REPORT_operator_override from B0_131 STEERING_REPORT
@@ -73,7 +74,7 @@ def get_can_signals(CP, canbus):
           ("CRUISE_SETTING", "SCM_BUTTONS", 0),  #UI from 0x1A6
           #2018.09.02 DV change ACC_STATUS to UI Main 1
           ("MAIN_ON", "SCM_BUTTONS", 0),   #ACC_STATUS to MAIN_ON 2018.09.02 DV
-          ("YAW_RATE", "IMU", 0) #2018.09.04 Input vehicle Yaw rate
+          ("YAW_RATE", "IMU", 0),    #2018.09.04 Input vehicle Yaw rate
       ]
 
     checks = [
@@ -88,7 +89,7 @@ def get_can_signals(CP, canbus):
          #("CRUISE", 10),  #2018.09.03 remove cruise check
          # ("ENG_INFO", 100),  #2018.09.02 change POWERTRAIN DATA To ENG_INFO
           #("VSA_STATUS", 0),
-          ("SCM_BUTTONS", 25), #2018.09.04 come from 0x1A6
+          ("SCM_BUTTONS", 25)  #2018.09.04 come from 0x1A6
       ]
 
 
@@ -146,22 +147,23 @@ def get_can_signals(CP, canbus):
         #comment out check, frequency need to verify
     return signals, checks
 
-
-def get_can_parser(CP, canbus):  #2018.09.04 combine in above
-    signals, checks = get_can_signals(CP, canbus)  #2018.09.06 add two argument
+    #2018.09.06 11:49PM remove canbus
+def get_can_parser(CP):  #2018.09.04 combine in above
+    signals, checks = get_can_signals(CP)  #2018.09.06 add two argument
     #canbus.powertrain is can 0 (bus 0)
-    print ("carstate.py canbus")
-    print (canbus)
+    print ("carstate.py signals")
+    print (signals)
+    print (checks)
     print("carstate.py")
     print(DBC[CP.carFingerprint]['pt'])
     return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, 0)   #2018.09.06 4:37PM change canbuspowertrain to 0
 
-    print("carstate.py canbus.powertrain")
-    print(canbus.powertrain)
+    #print("carstate.py canbus.powertrain")
+   # print(canbus.powertrain)
 
 
 class CarState(object):
-  def __init__(self, CP, canbus):
+  def __init__(self, CP):
       #intializae can parser
     self.CP = CP
     self.car_fingerprint = CP.carFingerprint   #borrow from subaru carstate
@@ -371,16 +373,16 @@ class CarState(object):
 
 
 # carstate standalone tester
-if __name__ == '__main__':
-  import zmq
-  context = zmq.Context()
+#if __name__ == '__main__':
+  #import zmq
+  #context = zmq.Context()
 
-  class CarParams(object):
-    def __init__(self):
-      self.carFingerprint = "KIA SOUL TEST"
-      self.enableGasInterceptor = 1
-  CP = CarParams()
-  CS = CarState(CP)
+  #class CarParams(object):
+   # def __init__(self):
+   #   self.carFingerprint = "KIA SOUL TEST"
+   #   self.enableGasInterceptor = 1
+ # CP = CarParams()
+ # CS = CarState(CP)
 
   # while 1:
   #   CS.update()
