@@ -21,6 +21,8 @@ class CANParser(object):
     print(self.dbc_name)
     print("dbc_lookup")
     print(self.dbc)
+    print("parser.py self.dbc[0]")
+    print(self.dbc[0])
     num_msgs = self.dbc[0].num_msgs
     for i in range(num_msgs):
       msg = self.dbc[0].msgs[i]

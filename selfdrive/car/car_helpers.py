@@ -102,6 +102,12 @@ def get_car(logcan, sendcan=None, passive=True):
     cloudlog.warning("car matched %s, but interface wasn't available or failed to import" % candidate)
     return None, None
 
+  #2018.09.07 11:48AM add debug print helper
+  print("car_helpers.py file print candidate and fingerprint")
+  print(candidate)
+  print(fingerprints)
   params = interface_cls.get_params(candidate, fingerprints)
+  (print'car_helpers.py print params')
+  print(params)
 
   return interface_cls(params, sendcan), params
