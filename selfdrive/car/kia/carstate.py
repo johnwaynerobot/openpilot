@@ -80,8 +80,8 @@ def get_can_signals(CP):
     checks = [
           # address,  message frequency
           #("TCU2", 0), # 2018.09.04 dont know frequency comment out check
-          ("WHEEL_SPEEDS", 50),
-          ("STEERING_SENSORS", 100),
+         # ("WHEEL_SPEEDS", 50),
+          #("STEERING_SENSORS", 100),
           #("SCM_FEEDBACK", 5,  #either 5 (200ms) or 10 (100ms), not sure ignore
           #("GEARBOX", 0), #2018.09.04 don't know frequency ignore
           #("STANDSTILL", 50), Standstill VSA
@@ -89,7 +89,7 @@ def get_can_signals(CP):
          #("CRUISE", 10),  #2018.09.03 remove cruise check
          # ("ENG_INFO", 100),  #2018.09.02 change POWERTRAIN DATA To ENG_INFO
           #("VSA_STATUS", 0),
-          ("SCM_BUTTONS", 25)  #2018.09.04 come from 0x1A6
+          #("SCM_BUTTONS", 25)  #2018.09.04 come from 0x1A6
       ]
 
 
