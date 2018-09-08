@@ -29,6 +29,10 @@ class CANPacker(object):
 
     for i in range(num_msgs):
       msg = self.dbc[0].msgs[i]
+      print("packer.py .msg[i]")
+      print(msgs[i])
+      print("packer.py self.dbc[0]")
+      print(self.dbc[0])
       print("packer.py msg")
       print(msg)
 
@@ -51,6 +55,13 @@ class CANPacker(object):
     values_c = ffi.new("SignalPackValue[]", values_thing)
 
     return libdbc.canpack_pack(self.packer, addr, len(values_thing), values_c, counter)
+
+  print("packery.py libdbc.canpack_pack function")
+  print(self.packer)
+  print(addr)
+  print(len(values_thing))
+  print(values_c)
+  print(counter)
 
   def pack_bytes(self, addr, values, counter=-1):
     addr, size = self.name_to_address_and_size[addr]
