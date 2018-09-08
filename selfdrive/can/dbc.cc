@@ -1,6 +1,6 @@
 #include <string>
 #include <vector>
-#include <iostream>  // 2018.09.08 5:16PM
+
 
 #include "common.h"
 
@@ -14,11 +14,6 @@ std::vector<const DBC*>& get_dbcs() {
 }
 
 const DBC* dbc_lookup(const std::string& dbc_name) {
-  // Print in dbc.cc string
-  std::cout << "print from dbc.cc get_dbcs()" << std::endl;
-  //cout<<"print from dbc.cc get_dbcs()";
-  std::cout <<get_dbcs()<< std::endl;
-  //cout<<get_dbcs();
   for (const auto& dbci : get_dbcs()) {
     if (dbc_name == dbci->name) {
       return dbci;
