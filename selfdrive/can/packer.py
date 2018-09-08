@@ -57,7 +57,6 @@ class CANPacker(object):
     return libdbc.canpack_pack(self.packer, addr, len(values_thing), values_c, counter)
 
   print("packery.py libdbc.canpack_pack function")
-  print(self.packer)
   print(addr)
   print(len(values_thing))
   print(values_c)
