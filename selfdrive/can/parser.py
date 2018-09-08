@@ -35,9 +35,9 @@ class CANParser(object):
 
       name = ffi.string(msg.name)
       print("parser.py ffi.string(msg.name)")
-      print(msg.name)
+      #print(msg.name)
       #print("parser.py name")
-      #print(name)
+      print(name)
       print("parser.py address")
       address = msg.address
       print(address)
