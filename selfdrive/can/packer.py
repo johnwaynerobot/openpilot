@@ -6,35 +6,35 @@ class CANPacker(object):
   def __init__(self, dbc_name):
 
     #2018.09.06 9:19PM Print dbc_name test
-    print("packer.py debug")
-    print(dbc_name)
-    print("packer.py packer check")
+    #print("packer.py debug")
+    #print(dbc_name)
+    #print("packer.py packer check")
     self.packer = libdbc.canpack_init(dbc_name)
-    print("packer.py packer check")
-    print(self.packer)
+    #print("packer.py packer check")
+    #print(self.packer)
     self.dbc = libdbc.dbc_lookup(dbc_name)
-    print("packer.py packer self.dbc lookup dbc_name")
-    print(self.dbc)
+    #print("packer.py packer self.dbc lookup dbc_name")
+    #print(self.dbc)
 
     self.sig_names = {}
-    print("packer.py sig_names")
-    print(sig_names)
+    #print("packer.py sig_names")
+    #print(sig_names)
     self.name_to_address_and_size = {}
-    print("packer.py names to address size")
-    print(self.name_to_address_and_size)
+    #print("packer.py names to address size")
+    #print(self.name_to_address_and_size)
 
     num_msgs = self.dbc[0].num_msgs
-    print("packer.py num_msgs")
-    print(num_msgs)
+    #print("packer.py num_msgs")
+    #print(num_msgs)
 
     for i in range(num_msgs):
       msg = self.dbc[0].msgs[i]
-      print("packer.py .msg[i]")
-      print(msgs[i])
-      print("packer.py self.dbc[0]")
-      print(self.dbc[0])
-      print("packer.py msg")
-      print(msg)
+     # print("packer.py .msg[i]")
+      #print(msgs[i])
+      #print("packer.py self.dbc[0]")
+      #print(self.dbc[0])
+     # print("packer.py msg")
+     # print(msg)
 
       name = ffi.string(msg.name)
       address = msg.address
@@ -56,11 +56,11 @@ class CANPacker(object):
 
     return libdbc.canpack_pack(self.packer, addr, len(values_thing), values_c, counter)
 
-  print("packery.py libdbc.canpack_pack function")
-  print(addr)
-  print(len(values_thing))
-  print(values_c)
-  print(counter)
+ # print("packery.py libdbc.canpack_pack function")
+  #print(addr)
+  #print(len(values_thing))
+  #print(values_c)
+  #print(counter)
 
   def pack_bytes(self, addr, values, counter=-1):
     addr, size = self.name_to_address_and_size[addr]
@@ -73,8 +73,8 @@ class CANPacker(object):
     addr, msg = self.pack_bytes(addr, values, counter)
     return [addr, 0, msg, bus]
 
-    print("packer.py make_can_msg")
-    print(addr)
+   # print("packer.py make_can_msg")
+   # print(addr)
 
 
 # 2018.09.04 Kia Soul don't need alive counter and checksum, just reading
