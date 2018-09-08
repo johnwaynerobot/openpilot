@@ -87,18 +87,18 @@ FINGERPRINTS = {
 
 
 DBC = {
-  CAR.SOUL: dbc_dict('honda_crv_touring_2016_can_generated.dbc', 'acura_ilx_2016_nidec'),  # 2018.09.03 DV change to generator.py dbc
-  CAR.SOUL1: dbc_dict('honda_crv_touring_2016_can_generated.dbc', 'acura_ilx_2016_nidec'),  # 2018.09.03 DV change to generator.py dbc
-  CAR.SOUL2: dbc_dict('honda_crv_touring_2016_can_generated.dbc', 'acura_ilx_2016_nidec'),  # 2018.09.03 DV change to generator.py dbc
-  CAR.SOUL3: dbc_dict('honda_crv_touring_2016_can_generated.dbc', 'acura_ilx_2016_nidec'),  # 2018.09.03 DV change to generator.py dbc
-  CAR.SOUL4: dbc_dict('honda_crv_touring_2016_can_generated.dbc', 'acura_ilx_2016_nidec'),  # 2018.09.03 DV change to generator.py dbc
-  CAR.SOUL5: dbc_dict('honda_crv_touring_2016_can_generated.dbc', 'acura_ilx_2016_nidec'),  # 2018.09.03 DV change to generator.py dbc
-  CAR.SOUL6: dbc_dict('honda_crv_touring_2016_can_generated.dbc', 'acura_ilx_2016_nidec'),  # 2018.09.03 DV change to generator.py dbc
-  CAR.SOUL7: dbc_dict('honda_crv_touring_2016_can_generated.dbc', 'acura_ilx_2016_nidec'),  # 2018.09.03 DV change to generator.py dbc
-  CAR.SOUL8: dbc_dict('honda_crv_touring_2016_can_generated.dbc', 'acura_ilx_2016_nidec'),  # 2018.09.03 DV change to generator.py dbc
-  CAR.SOUL9: dbc_dict('honda_crv_touring_2016_can_generated.dbc', 'acura_ilx_2016_nidec'),  # 2018.09.03 DV change to generator.py dbc
-  CAR.SOUL10: dbc_dict('honda_crv_touring_2016_can_generated.dbc', 'acura_ilx_2016_nidec'),  # 2018.09.03 DV change to generator.py dbc
-  CAR.SOUL11: dbc_dict('honda_crv_touring_2016_can_generated.dbc', 'acura_ilx_2016_nidec'),  # 2018.09.03 DV change to generator.py dbc
+  CAR.SOUL: dbc_dict('hyundai_santa_fe_2019_ccan.dbc', 'acura_ilx_2016_nidec'),  # 2018.09.03 DV change to generator.py dbc
+  CAR.SOUL1: dbc_dict('hyundai_santa_fe_2019_ccan.dbc', 'acura_ilx_2016_nidec'),  # 2018.09.03 DV change to generator.py dbc
+  CAR.SOUL2: dbc_dict('hyundai_santa_fe_2019_ccan.dbc', 'acura_ilx_2016_nidec'),  # 2018.09.03 DV change to generator.py dbc
+  CAR.SOUL3: dbc_dict('hyundai_santa_fe_2019_ccan.dbc', 'acura_ilx_2016_nidec'),  # 2018.09.03 DV change to generator.py dbc
+  CAR.SOUL4: dbc_dict('hyundai_santa_fe_2019_ccan.dbc', 'acura_ilx_2016_nidec'),  # 2018.09.03 DV change to generator.py dbc
+  CAR.SOUL5: dbc_dict('hyundai_santa_fe_2019_ccan.dbc', 'acura_ilx_2016_nidec'),  # 2018.09.03 DV change to generator.py dbc
+  CAR.SOUL6: dbc_dict('hyundai_santa_fe_2019_ccan.dbc', 'acura_ilx_2016_nidec'),  # 2018.09.03 DV change to generator.py dbc
+  CAR.SOUL7: dbc_dict('hyundai_santa_fe_2019_ccan.dbc', 'acura_ilx_2016_nidec'),  # 2018.09.03 DV change to generator.py dbc
+  CAR.SOUL8: dbc_dict('hyundai_santa_fe_2019_ccan.dbc', 'acura_ilx_2016_nidec'),  # 2018.09.03 DV change to generator.py dbc
+  CAR.SOUL9: dbc_dict('hyundai_santa_fe_2019_ccan.dbc', 'acura_ilx_2016_nidec'),  # 2018.09.03 DV change to generator.py dbc
+  CAR.SOUL10: dbc_dict('hyundai_santa_fe_2019_ccan.dbc', 'acura_ilx_2016_nidec'),  # 2018.09.03 DV change to generator.py dbc
+  CAR.SOUL11: dbc_dict('hyundai_santa_fe_2019_ccan.dbc', 'acura_ilx_2016_nidec'),  # 2018.09.03 DV change to generator.py dbc
 }
 
 
