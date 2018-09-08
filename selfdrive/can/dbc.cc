@@ -14,8 +14,10 @@ std::vector<const DBC*>& get_dbcs() {
 
 const DBC* dbc_lookup(const std::string& dbc_name) {
   // Print in dbc.cc string
-  cout<<"print from dbc.cc get_dbcs()";
-  cout<<get_dbcs();
+  std::cout << "print from dbc.cc get_dbcs()" << std::endl;
+  //cout<<"print from dbc.cc get_dbcs()";
+  std::cout <<get_dbcs()<< std::endl;
+  //cout<<get_dbcs();
   for (const auto& dbci : get_dbcs()) {
     if (dbc_name == dbci->name) {
       return dbci;
