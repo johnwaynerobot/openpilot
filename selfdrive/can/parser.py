@@ -34,13 +34,13 @@ class CANParser(object):
       #print(msg)
 
       name = ffi.string(msg.name)
-      #print("parser.py ffi.string(msg.name)")
-      #print(msg.name)
+      print("parser.py ffi.string(msg.name)")
+      print(msg.name)
       #print("parser.py name")
       #print(name)
-      #print("parser.py address")
-      #address = msg.address
-      #print(address)
+      print("parser.py address")
+      address = msg.address
+      print(address)
 
 
       self.msg_name_to_addres[name] = address
