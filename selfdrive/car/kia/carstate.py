@@ -79,7 +79,7 @@ def get_can_signals(CP):
 
     checks = [
           # address,  message frequency
-          ("TM_DATA", 100),  # 2018.09.04 dont know frequency comment out check
+         # ("TM_DATA", 100),  # 2018.09.04 dont know frequency comment out check
           ("WHEEL_SPEEDS", 50),
           ("STEERING_SENSORS", 50),
           ("SCM_FEEDBACK", 10)  #either 5 (200ms) or 10 (100ms), not sure ignore
@@ -89,7 +89,7 @@ def get_can_signals(CP):
          #("CRUISE", 10),  #2018.09.03 remove cruise check
           ("ENG_INFO", 100),  #2018.09.02 change POWERTRAIN DATA To ENG_INFO
           #("VSA_STATUS", 0),
-          ("SCM_BUTTONS", 50)  #2018.09.04 come from 0x1A6
+         # ("SCM_BUTTONS", 50)  #2018.09.04 come from 0x1A6
       ]
 
 
@@ -143,7 +143,7 @@ def get_can_signals(CP):
     if CP.enableGasInterceptor:
 
         signals.append(("THROTTLE_REPORT_operator_override", "THROTTLE_REPORT", 0)) #2018.09.02 DV add change for Kia soul
-        checks.append(("THROTTLE_REPORT", 50)) # signal and frequency#2018.09.02 DV add change for Kia soul
+       # checks.append(("THROTTLE_REPORT", 50)) # signal and frequency#2018.09.02 DV add change for Kia soul
         #comment out check, frequency need to verify
     return signals, checks
 

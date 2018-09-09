@@ -24,9 +24,9 @@ class CANParser(object):
     #print("parser.py self.dbc[0]")
     #print(self.dbc[0])
     print("self.dbc[0].msgs[1]")
-    print(self.dbc[0].msgs[1])
+    #print(self.dbc[0].msgs[1])
     print("self.dbc[0].msgs[0]")
-    print(self.dbc[0].msgs[0])
+    #print(self.dbc[0].msgs[0])
     num_msgs = self.dbc[0].num_msgs
     print("parser.py num_msgs")
     print(num_msgs)
