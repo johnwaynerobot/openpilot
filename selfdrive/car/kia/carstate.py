@@ -143,7 +143,7 @@ def get_can_signals(CP):
     if CP.enableGasInterceptor:
 
         signals.append(("THROTTLE_REPORT_operator_override", "THROTTLE_REPORT", 0)) #2018.09.02 DV add change for Kia soul
-        #checks.append(("THROTTLE_REPORT", 50)) # signal and frequency#2018.09.02 DV add change for Kia soul
+        checks.append(("THROTTLE_REPORT", 50)) # signal and frequency#2018.09.02 DV add change for Kia soul
         #comment out check, frequency need to verify
     return signals, checks
 
