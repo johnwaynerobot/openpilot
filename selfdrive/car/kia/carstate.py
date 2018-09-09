@@ -52,23 +52,23 @@ def get_can_signals(CP):
                                     #Transmission Gear (0 = N or P, 1-6 = Fwd, 14 = Rev)
           ("BRAKE_REPORT_dtcs", "BRAKE_REPORT", 0),  #2018.09.02 BRAKE_ERROR1 and BRAKE_ERROR2 equal to B0_115 BRAKE_REPORT_dtcs
           # 2018.09.02 D.V add in B0_1680 modified dbc value 0 is SEATBELT_DRIVER_LATCHED same as lamp 0 is belt on 1 belt off
-          ("SEATBELT_DRIVER_LAMP", "SEATBELT_STATUS", 1),
+          ("SEATBELT_DRIVER_LAMP", "SCM_FEEDBACK", 1),
           # 2018.09.02 D.V  brake switch status push or not push
           # set brake switch same as brake pressed B0_809 ENG_INFO
           ("BRAKE_PRESSED", "ENG_INFO", 0),     # initial value is 0, 2 is brake pressed
           ("CRUISE_BUTTONS", "SCM_BUTTONS", 0),     #2018.09.02 use UI B0_422 (0x1A6) messages
-          ("ESP_DISABLED", "VSA_STATUS", 0),  #2018.09.02 modified dbc to match use B0_339 ESP_DISABLED when VSA button push OFF
-          ("HUD_LEAD", "ACC_HUD", 0),   #2018.09.02 coming from EON for Lead Distance)
+         # ("ESP_DISABLED", "VSA_STATUS", 0),  #2018.09.02 modified dbc to match use B0_339 ESP_DISABLED when VSA button push OFF
+         # ("HUD_LEAD", "ACC_HUD", 0),   #2018.09.02 coming from EON for Lead Distance)
           # 2018.09.02 DV change USER_BRAKE to BRAKE_REPORT_operator_override B0_115
           ("BRAKE_REPORT_operator_override", "BRAKE_REPORT", 0),
           #2018.09.02 DV change STEER_STATUS to STEERING_REPORT_operator_override from B0_131 STEERING_REPORT
           ("STEERING_REPORT_operator_override", "STEERING_REPORT", 0),
           #2018.09.02 DV add modified dbc B0 1306 -TM Gear
           #("GEAR_SHIFTER", "TM_GEAR", 0), #2018.09.02 DV change gear shifter to individual message
-          ("TM_PARK", "TM_GEAR", 0),
-          ("TM_REVERSE", "TM_GEAR", 0),
-          ("TM_NEUTRAL", "TM_GEAR", 0),
-          ("TM_DRIVE", "TM_GEAR", 0),
+         # ("TM_PARK", "TM_GEAR", 0),
+         # ("TM_REVERSE", "TM_GEAR", 0),
+         # ("TM_NEUTRAL", "TM_GEAR", 0),
+         # ("TM_DRIVE", "TM_GEAR", 0),
           #2018.09.02 DV change Pedal Gas to ENG_INFO B0_809
           ("PEDAL_GAS", "ENG_INFO", 0),
           ("CRUISE_SETTING", "SCM_BUTTONS", 0),  #UI from 0x1A6
@@ -79,17 +79,17 @@ def get_can_signals(CP):
 
     checks = [
           # address,  message frequency
-          #("TCU2", 0), # 2018.09.04 dont know frequency comment out check
-         # ("WHEEL_SPEEDS", 50),
-          #("STEERING_SENSORS", 100),
-          #("SCM_FEEDBACK", 5,  #either 5 (200ms) or 10 (100ms), not sure ignore
-          #("GEARBOX", 0), #2018.09.04 don't know frequency ignore
+          ("TM_DATA", 100),  # 2018.09.04 dont know frequency comment out check
+          ("WHEEL_SPEEDS", 50),
+          ("STEERING_SENSORS", 50),
+          ("SCM_FEEDBACK", 10)  #either 5 (200ms) or 10 (100ms), not sure ignore
+          ("GEARBOX", 100),  #2018.09.04 don't know frequency ignore
           #("STANDSTILL", 50), Standstill VSA
          # ("SEATBELT_STATUS", 0),
          #("CRUISE", 10),  #2018.09.03 remove cruise check
-         # ("ENG_INFO", 100),  #2018.09.02 change POWERTRAIN DATA To ENG_INFO
+          ("ENG_INFO", 100),  #2018.09.02 change POWERTRAIN DATA To ENG_INFO
           #("VSA_STATUS", 0),
-          #("SCM_BUTTONS", 25)  #2018.09.04 come from 0x1A6
+          ("SCM_BUTTONS", 50)  #2018.09.04 come from 0x1A6
       ]
 
 
@@ -269,7 +269,7 @@ class CarState(object):
         self.steer_warning = cp.vl["STEERING_REPORT"]['STEERING_REPORT_operator_override'] != 0
         self.brake_error = cp.vl["BRAKE_REPORT"]['BRAKE_REPORT_dtcs']
         self.esp_disabled = cp.vl["VSA_STATUS"]['ESP_DISABLED']
-        self.seatbelt = not cp.vl["SEATBELT_STATUS"]['SEATBELT_DRIVER_LAMP']  # 2018.09.04 0 is 1, 1 is off
+        self.seatbelt = not cp.vl["SCM_FEEDBACK"]['SEATBELT_DRIVER_LAMP']  # 2018.09.04 0 is 1, 1 is off
         self.angle_steers = cp.vl["STEERING_SENSORS"]['STEER_ANGLE']
         self.angle_steers_rate = cp.vl["STEERING_SENSORS"]['STEER_ANGLE_RATE']
         self.cruise_setting = cp.vl["SCM_BUTTONS"]['CRUISE_SETTING']
@@ -301,7 +301,7 @@ class CarState(object):
             self.steer_warning = cp.vl["STEERING_REPORT"]['STEERING_REPORT_operator_override'] != 0
             self.brake_error = cp.vl["BRAKE_REPORT"]['BRAKE_REPORT_dtcs']
             self.esp_disabled = cp.vl["VSA_STATUS"]['ESP_DISABLED']
-            self.seatbelt = not cp.vl["SEATBELT_STATUS"]['SEATBELT_DRIVER_LAMP']  # 2018.09.04 0 is 1, 1 is off
+            self.seatbelt = not cp.vl["SCM_FEEDBACK"]['SEATBELT_DRIVER_LAMP']  # 2018.09.04 0 is 1, 1 is off
             self.angle_steers = cp.vl["STEERING_SENSORS"]['STEER_ANGLE']
             self.angle_steers_rate = cp.vl["STEERING_SENSORS"]['STEER_ANGLE_RATE']
             self.cruise_setting = cp.vl["SCM_BUTTONS"]['CRUISE_SETTING']
