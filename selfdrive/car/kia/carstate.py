@@ -82,7 +82,7 @@ def get_can_signals(CP):
             ("WHEEL_SPEEDS", 50),
             ("STEERING_SENSORS", 50),
             ("SCM_FEEDBACK", 10)  #either 5 (200ms) or 10 (100ms), not sure ignore
-            ("GEARBOX", 100),  #2018.09.04 don't know frequency ignore
+           # ("GEARBOX", 100),  #2018.09.04 don't know frequency ignore (9ms)
           #("STANDSTILL", 50), Standstill VSA
          # ("SEATBELT_STATUS", 0),
           #("CRUISE", 10),           #2018.09.03 remove cruise check
