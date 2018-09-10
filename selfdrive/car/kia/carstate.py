@@ -109,34 +109,20 @@ def get_can_signals(CP):
               #      ("CRUISE_SPEED_OFFSET", "CRUISE_PARAMS", 0)] # 2018.09.02 DV comment out, dont have
        # checks += [("CRUISE_PARAMS", 50)]       #2018.09.02 DV comment out don't have
 
-    #if CP.carFingerprint in (CAR.DUMMY):
-    #    signals += [("DRIVERS_DOOR_OPEN", "SCM_FEEDBACK", 1)]
-
-    if CP.carFingerprint == CAR.SOUL:
-        signals += [("DOOR_OPEN_FL", "SCM_FEEDBACK", 1)] #2018.09.03 update
-
-    elif CP.carFingerprint == CAR.SOUL1:
-        signals += [("DOOR_OPEN_FL", "SCM_FEEDBACK", 1)]  # 2018.09.04 update
-
-    elif CP.carFingerprint == CAR.SOUL2:
-        signals += [("DOOR_OPEN_FL", "SCM_FEEDBACK", 1)]  # 2018.09.04 update
-
-    #if CP.carFingerprint == CAR.DUMMY:
-      #  signals += [("CAR_GAS", "GAS_PEDAL_2", 0),
-       #         ("MAIN_ON", "SCM_FEEDBACK", 0),
-       #         ("EPB_STATE", "EPB_STATUS", 0),
-        #        ("BRAKE_HOLD_ACTIVE", "VSA_STATUS", 0)]
     if CP.carFingerprint == CAR.SOUL:  # 2018.09.02 DV Kia Soul UI 0x1A6 ADAS Cruise button
         signals += [("MAIN_ON", "SCM_BUTTONS", 0)]
         signals += [("CF_Clu_CruiseSwMain", "CLU1", 0)] #2018.09.04 signal for Steering/brake/gas max test
+        signals += [("DOOR_OPEN_FL", "SCM_FEEDBACK", 1)]  # 2018.09.03 update
 
     elif CP.carFingerprint == CAR.SOUL1:  # 2018.09.03 DV Kia Soul UI 0x1A6 ADAS Cruise button
         signals += [("MAIN_ON", "SCM_BUTTONS", 0)]
         signals += [("CF_Clu_CruiseSwMain", "CLU1", 0)]  # 2018.09.04 signal for Steering/brake/gas max test
+        signals += [("DOOR_OPEN_FL", "SCM_FEEDBACK", 1)]  # 2018.09.04 update
 
     elif CP.carFingerprint == CAR.SOUL2:  # 2018.09.03 DV Kia Soul UI 0x1A6 ADAS Cruise button
         signals += [("MAIN_ON", "SCM_BUTTONS", 0)]
         signals += [("CF_Clu_CruiseSwMain", "CLU1", 0)]  # 2018.09.04 signal for Steering/brake/gas max test
+        signals += [("DOOR_OPEN_FL", "SCM_FEEDBACK", 1)]  # 2018.09.04 update
 
         # add gas interceptor reading if we are using it
     if CP.enableGasInterceptor:
