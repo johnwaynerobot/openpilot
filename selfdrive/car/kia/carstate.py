@@ -371,7 +371,7 @@ class CarState(object):
     self.hud_lead = cp.vl["ACC_HUD"]['HUD_LEAD']
 
 
- carstate standalone tester
+#carstate standalone tester
 if __name__ == '__main__':
     import zmq
     context = zmq.Context()
