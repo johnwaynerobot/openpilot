@@ -172,12 +172,12 @@ if __name__ == "__main__":
   from common.realtime import sec_since_boot
 
   radar_messages = range(0x430, 0x43A) + range(0x440, 0x446)
-    signals = zip(['LONG_DIST'] * 16 + ['NEW_TRACK'] * 16 + ['LAT_DIST'] * 16 +
+  signals = zip(['LONG_DIST'] * 16 + ['NEW_TRACK'] * 16 + ['LAT_DIST'] * 16 +
                 ['REL_SPEED'] * 16, radar_messages * 4,
                  [255] * 16 + [1] * 16 + [0] * 16 + [0] * 16)
-    checks = zip(radar_messages, [20]*16)
+  checks = zip(radar_messages, [20]*16)
 
-    cp = CANParser("acura_ilx_2016_nidec", signals, checks, 1)
+  cp = CANParser("acura_ilx_2016_nidec", signals, checks, 1)
 
 
   # signals = [
