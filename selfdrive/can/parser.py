@@ -23,9 +23,9 @@ class CANParser(object):
     print(self.dbc)
     #print("parser.py self.dbc[0]")
     #print(self.dbc[0])
-    print("self.dbc[0].msgs[1]")
+    #print("self.dbc[0].msgs[1]")
     #print(self.dbc[0].msgs[1])
-    print("self.dbc[0].msgs[0]")
+   # print("self.dbc[0].msgs[0]")
     #print(self.dbc[0].msgs[0])
     num_msgs = self.dbc[0].num_msgs
     print("parser.py num_msgs")
@@ -172,12 +172,12 @@ if __name__ == "__main__":
   from common.realtime import sec_since_boot
 
   radar_messages = range(0x430, 0x43A) + range(0x440, 0x446)
-  # signals = zip(['LONG_DIST'] * 16 + ['NEW_TRACK'] * 16 + ['LAT_DIST'] * 16 +
-  #               ['REL_SPEED'] * 16, radar_messages * 4,
-  #               [255] * 16 + [1] * 16 + [0] * 16 + [0] * 16)
-  # checks = zip(radar_messages, [20]*16)
+    signals = zip(['LONG_DIST'] * 16 + ['NEW_TRACK'] * 16 + ['LAT_DIST'] * 16 +
+                ['REL_SPEED'] * 16, radar_messages * 4,
+                 [255] * 16 + [1] * 16 + [0] * 16 + [0] * 16)
+    checks = zip(radar_messages, [20]*16)
 
-  # cp = CANParser("acura_ilx_2016_nidec", signals, checks, 1)
+    cp = CANParser("acura_ilx_2016_nidec", signals, checks, 1)
 
 
   # signals = [
@@ -233,45 +233,45 @@ if __name__ == "__main__":
   # cp = CANParser("honda_civic_touring_2016_can_generated", signals, checks, 0)
 
 
-  signals = [
+ # signals = [
     # sig_name, sig_address, default
-    ("GEAR", 956, 0x20),
-    ("BRAKE_PRESSED", 548, 0),
-    ("GAS_PEDAL", 705, 0),
+   # ("GEAR", 956, 0x20),
+   # ("BRAKE_PRESSED", 548, 0),
+    #("GAS_PEDAL", 705, 0),
 
-    ("WHEEL_SPEED_FL", 170, 0),
-    ("WHEEL_SPEED_FR", 170, 0),
-    ("WHEEL_SPEED_RL", 170, 0),
-    ("WHEEL_SPEED_RR", 170, 0),
-    ("DOOR_OPEN_FL", 1568, 1),
-    ("DOOR_OPEN_FR", 1568, 1),
-    ("DOOR_OPEN_RL", 1568, 1),
-    ("DOOR_OPEN_RR", 1568, 1),
-    ("SEATBELT_DRIVER_UNLATCHED", 1568, 1),
-    ("TC_DISABLED", 951, 1),
-    ("STEER_ANGLE", 37, 0),
-    ("STEER_FRACTION", 37, 0),
-    ("STEER_RATE", 37, 0),
-    ("GAS_RELEASED", 466, 0),
-    ("CRUISE_STATE", 466, 0),
-    ("MAIN_ON", 467, 0),
-    ("SET_SPEED", 467, 0),
-    ("STEER_TORQUE_DRIVER", 608, 0),
-    ("STEER_TORQUE_EPS", 608, 0),
-    ("TURN_SIGNALS", 1556, 3),   # 3 is no blinkers
-    ("LKA_STATE", 610, 0),
-  ]
-  checks = [
-    (548, 40),
-    (705, 33),
+    #("WHEEL_SPEED_FL", 170, 0),
+    #("WHEEL_SPEED_FR", 170, 0),
+    #("WHEEL_SPEED_RL", 170, 0),
+    #("WHEEL_SPEED_RR", 170, 0),
+    #("DOOR_OPEN_FL", 1568, 1),
+    #("DOOR_OPEN_FR", 1568, 1),
+    #("DOOR_OPEN_RL", 1568, 1),
+    #("DOOR_OPEN_RR", 1568, 1),
+    #("SEATBELT_DRIVER_UNLATCHED", 1568, 1),
+    #("TC_DISABLED", 951, 1),
+    #("STEER_ANGLE", 37, 0),
+    #("STEER_FRACTION", 37, 0),
+    #("STEER_RATE", 37, 0),
+    #("GAS_RELEASED", 466, 0),
+    #("CRUISE_STATE", 466, 0),
+    #("MAIN_ON", 467, 0),
+    #("SET_SPEED", 467, 0),
+   # ("STEER_TORQUE_DRIVER", 608, 0),
+    #("STEER_TORQUE_EPS", 608, 0),
+    #("TURN_SIGNALS", 1556, 3),   # 3 is no blinkers
+    #("LKA_STATE", 610, 0),
+  #]
+  #checks = [
+   # (548, 40),
+    #(705, 33),
 
-    (170, 80),
-    (37, 80),
-    (466, 33),
-    (608, 50),
-  ]
+   # (170, 80),
+   # (37, 80),
+   # (466, 33),
+   # (608, 50),
+ # ]
 
-  cp = CANParser("toyota_rav4_2017_pt_generated", signals, checks, 0)
+  #cp = CANParser("toyota_rav4_2017_pt_generated", signals, checks, 0)
 
   # print cp.vl
 
