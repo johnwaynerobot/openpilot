@@ -289,18 +289,18 @@ class CarState(object):
             self.brake_error = cp.vl["BRAKE_REPORT"]['BRAKE_REPORT_dtcs']
             self.esp_disabled = cp.vl["VSA_STATUS"]['ESP_DISABLED']
             self.seatbelt = not cp.vl["SCM_FEEDBACK"]['SEATBELT_DRIVER_LAMP']  # 2018.09.04 0 is 1, 1 is off
-            print("Steering sensor")
-            print(cp.vl["STEERING_SENSORS"])
+           # print("Steering sensor")
+            #print(cp.vl["STEERING_SENSORS"])
             self.angle_steers = cp.vl["STEERING_SENSORS"]['STEER_ANGLE']
-            self.angle_steers_rate = cp.vl["STEERING_SENSORS"]['STEER_ANGLE_RATE']
+            #self.angle_steers_rate = cp.vl["STEERING_SENSORS"]['STEER_ANGLE_RATE']  #TODO not sure why it not reading dbc signal order?
             self.cruise_setting = cp.vl["SCM_BUTTONS"]['CRUISE_SETTING']
             self.cruise_buttons = cp.vl["SCM_BUTTONS"]['CRUISE_BUTTONS']
             self.blinker_on = cp.vl["SCM_FEEDBACK"]['LEFT_BLINKER'] or cp.vl["SCM_FEEDBACK"]['RIGHT_BLINKER']
             self.left_blinker_on = cp.vl["SCM_FEEDBACK"]['LEFT_BLINKER']
             self.right_blinker_on = cp.vl["SCM_FEEDBACK"]['RIGHT_BLINKER']
             self.gear = cp.vl["GEARBOX"]['GEAR']  # 2018.09.04
-            self.park_brake = 0  # TODO
-            self.brake_hold = 0  # TODO
+            self.park_brake = 0  # not apply
+            self.brake_hold = 0  # not apply
             self.main_on = cp.vl["SCM_BUTTONS"]['MAIN_ON']  #ACC main using UI
             self.brake_switch = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] ==2 # 2018.09.02 DV "2"value is brake switch ON
             self.brake_pressed = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] ==2  # 2018.09.02 change for Kia soul
