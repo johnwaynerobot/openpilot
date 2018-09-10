@@ -106,7 +106,7 @@ class CarInterface(object):
 
 
 
-    # *** init the major players ***
+    # *** init the major playeselfdrive/car/kia/carstate.pyrs ***
    # canbus = CanBus()
     self.CS = CarState(CP)    #2018.09.07 11:33AM remove copy from subaru add in canbus borrow from subaru interface.py
     self.VM = VehicleModel(CP)

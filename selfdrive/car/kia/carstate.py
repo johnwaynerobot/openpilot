@@ -36,7 +36,7 @@ def get_can_signals(CP):
     # 2018.09.06 this is explain in  selfdrive/can/plant_can_parser.py the meaning
     signals = [
            #signal name, sig_address, default
-            ("VS_TCU", "TM_DATA", 0),  #2018.09.02 DV transmission vehicle speed B0_1088 TCU2
+            ("XMISSION_VSPEED", "ENGINE_DATA", 0),  #2018.09.02 DV transmission vehicle speed B0_1088 TCU2,2018.09.10 change to use 0x316
             ("WHEEL_SPEED_FL", "WHEEL_SPEEDS", 0),    #2018.09.02 DV  Wheel speed B0_1200
             ("WHEEL_SPEED_FR", "WHEEL_SPEEDS", 0),    #2018.09.02 DV  Wheel speed B0_1200
             ("WHEEL_SPEED_RL", "WHEEL_SPEEDS", 0),    #2018.09.02 DV  Wheel speed B0_1200
@@ -78,7 +78,7 @@ def get_can_signals(CP):
 
     checks = [
           # address,  message frequency
-            #("TM_DATA", 100),  # 2018.09.04 dont know frequency comment out check, this signal overlappingg
+            ("ENGINE_DATA", 100),  # 2018.09.10 10ms , 100hz
             ("WHEEL_SPEEDS", 50),
             ("STEERING_SENSORS", 50),
             ("SCM_FEEDBACK", 10)  #either 5 (200ms) or 10 (100ms), not sure ignore
@@ -261,7 +261,7 @@ class CarState(object):
     # end of gear parse definition
 
     if self.CP.carFingerprint == CAR.SOUL:   # 2018.09.04 add multiple soul because can change
-        self.standstill = cp.vl["TM_DATA"]['VS_TCU'] < 0.1
+        self.standstill = cp.vl["ENGINE_DATA"]['XMISSION_VSPEED'] < 0.1
         self.door_all_closed = not cp.vl["SCM_FEEDBACK"]['DOOR_OPEN_FL']
         self.steer_error = cp.vl["STEERING_REPORT"]['STEERING_REPORT_dtcs'] != 0
         self.steer_not_allowed = cp.vl["STEERING_REPORT"]['STEERING_REPORT_operator_override'] != 0
@@ -293,7 +293,7 @@ class CarState(object):
         self.generic_toggle = cp.vl["CLU1"]['CF_Clu_CruiseSwMain'] #2019.09.04 use stock cruise main switch for steer max test
 
     elif self.CP.carFingerprint in (CAR.SOUL1, CAR.SOUL2): # 2018.09.04 update
-            self.standstill = cp.vl["TM_DATA"]['VS_TCU'] < 0.1
+            self.standstill = cp.vl["ENGINE_DATA"]['XMISSION_VSPEED'] < 0.1
             self.door_all_closed = not cp.vl["SCM_FEEDBACK"]['DOOR_OPEN_FL']
             self.steer_error = cp.vl["STEERING_REPORT"]['STEERING_REPORT_dtcs'] != 0
             self.steer_not_allowed = cp.vl["STEERING_REPORT"]['STEERING_REPORT_operator_override'] != 0
@@ -333,8 +333,9 @@ class CarState(object):
 
     # blend in transmission speed at low speed, since it has more low speed accuracy
     self.v_weight = interp(self.v_wheel, v_weight_bp, v_weight_v)
-    speed = (1. - self.v_weight) * cp.vl["TM_DATA"]['VS_TCU'] * CV.KPH_TO_MS * speed_factor + \
-      self.v_weight * self.v_wheel      #2018.09.02 DV change ENGINE_DATA to TM_DATA and VS_TCU to match KIA SOUL
+    speed = (1. - self.v_weight) * cp.vl["ENGINE_DATA"]['XMISSION_VSPEED'] * CV.KPH_TO_MS * speed_factor + \
+      self.v_weight * self.v_wheel      #2018.09.02 DV change ENGINE_DATA to TM_DATA and VS_TCU to match KIA SOUL,
+                                        #2018.09.10 change to engine data
 
     if abs(speed - self.v_ego) > 2.0:  # Prevent large accelerations when car starts at non zero speed
       self.v_ego_x = [[speed], [0.0]]  #kalman filter here
