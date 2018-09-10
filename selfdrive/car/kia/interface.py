@@ -104,13 +104,12 @@ class CarInterface(object):
     self.brake_pressed_prev = False
     self.can_invalid_count = 0
 
-
-
+    self.cp = get_can_parser(CP)  # 2018.09.10 2:53PM move to 108
     # *** init the major playeselfdrive/car/kia/carstate.pyrs ***
    # canbus = CanBus()
     self.CS = CarState(CP)    #2018.09.07 11:33AM remove copy from subaru add in canbus borrow from subaru interface.py
     self.VM = VehicleModel(CP)
-    self.cp = get_can_parser(CP)    #2018.09.05 borrow from subaru delete powertrain
+   # self.cp = get_can_parser(CP)    #2018.09.05 borrow from subaru delete powertrain
 
     # sending if read only is False
     if sendcan is not None:
