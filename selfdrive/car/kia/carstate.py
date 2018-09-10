@@ -289,6 +289,8 @@ class CarState(object):
             self.brake_error = cp.vl["BRAKE_REPORT"]['BRAKE_REPORT_dtcs']
             self.esp_disabled = cp.vl["VSA_STATUS"]['ESP_DISABLED']
             self.seatbelt = not cp.vl["SCM_FEEDBACK"]['SEATBELT_DRIVER_LAMP']  # 2018.09.04 0 is 1, 1 is off
+            print("Steering sensor")
+            print(cp.vl["STEERING_SENSORS"])
             self.angle_steers = cp.vl["STEERING_SENSORS"]['STEER_ANGLE']
             self.angle_steers_rate = cp.vl["STEERING_SENSORS"]['STEER_ANGLE_RATE']
             self.cruise_setting = cp.vl["SCM_BUTTONS"]['CRUISE_SETTING']
