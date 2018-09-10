@@ -281,6 +281,8 @@ class CarState(object):
     elif self.CP.carFingerprint in (CAR.SOUL1, CAR.SOUL2): # 2018.09.04 update
             self.standstill = cp.vl["ENGINE_DATA"]['XMISSION_VSPEED'] < 0.1
             self.door_all_closed = not cp.vl["SCM_FEEDBACK"]['DOOR_OPEN_FL']
+            print("carstate STEERING_REPORT_dtcs']")
+            print(cp.vl["STEERING_REPORT"]['STEERING_REPORT_dtcs'])
             self.steer_error = cp.vl["STEERING_REPORT"]['STEERING_REPORT_dtcs']
             self.steer_not_allowed = cp.vl["STEERING_REPORT"]['STEERING_REPORT_operator_override']
             self.steer_warning = cp.vl["STEERING_REPORT"]['STEERING_REPORT_operator_override']
