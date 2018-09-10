@@ -270,7 +270,7 @@ class CarState(object):
         self.brake_pressed = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] ==2 # 2018.09.02 change for Kia soul
         self.brake_switch_prev = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] == 2  # 2018.09.02 DV "2"value is brake switch ON
         self.brake_switch_ts = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] == 2
-        self.stopped = cp.vl["ACC_HUD"]['CRUISE_SPEED'] == 252.
+        self.stopped = cp.vl["ENGINE_DATA"]['XMISSION_VSPEED'] < 0.1
         self.cruise_speed_offset = calc_cruise_offset(0, self.v_ego)
         # On set, cruise set speed pulses between 254~255 and the set speed prev is set to avoid this.
         self.v_cruise_pcm = self.v_cruise_pcm_prev if cp.vl["ACC_HUD"]['CRUISE_SPEED'] > 160.0 else cp.vl["ACC_HUD"]['CRUISE_SPEED']
@@ -306,7 +306,7 @@ class CarState(object):
             self.brake_pressed = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] ==2  # 2018.09.02 change for Kia soul
             self.brake_switch_prev = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] ==2  #2018.09.02 DV "2"value is brake switch ON
             self.brake_switch_ts = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] ==2
-            self.stopped = cp.vl["ACC_HUD"]['CRUISE_SPEED'] == 252.
+            self.stopped = cp.vl["ENGINE_DATA"]['XMISSION_VSPEED'] < 0.1
             self.cruise_speed_offset = calc_cruise_offset(0, self.v_ego)
             self.v_cruise_pcm = self.v_cruise_pcm_prev if cp.vl["ACC_HUD"]['CRUISE_SPEED'] > 160.0 else cp.vl["ACC_HUD"]['CRUISE_SPEED']
             self.v_cruise_pcm_prev = self.v_cruise_pcm
