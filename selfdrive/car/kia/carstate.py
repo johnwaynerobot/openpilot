@@ -275,7 +275,7 @@ class CarState(object):
         # On set, cruise set speed pulses between 254~255 and the set speed prev is set to avoid this.
         # 2018.09.10 TODO this self.v_cruise_pcm is same as honda, we using gas interceptor, does it need? do we need to simulated the message for debug
        # self.v_cruise_pcm = self.v_cruise_pcm_prev if cp.vl["ACC_HUD"]['CRUISE_SPEED'] > 160.0 else cp.vl["ACC_HUD"]['CRUISE_SPEED']
-        self.v_cruise_pcm_prev = self.v_cruise_pcm
+        #self.v_cruise_pcm_prev = self.v_cruise_pcm
         self.yaw_rate = cp.vl["IMU"]['YAW_RATE']
         self.generic_toggle = cp.vl["CLU1"]['CF_Clu_CruiseSwMain'] #2019.09.04 use stock cruise main switch for steer max test
 
@@ -311,7 +311,7 @@ class CarState(object):
             self.cruise_speed_offset = calc_cruise_offset(0, self.v_ego)
             #2018.09.10 TODO this self.v_cruise_pcm is same as honda, we using gas interceptor, does it need? do we need to simulated the message for debug
            # self.v_cruise_pcm = self.v_cruise_pcm_prev if cp.vl["ACC_HUD"]['CRUISE_SPEED'] > 160.0 else cp.vl["ACC_HUD"]['CRUISE_SPEED']
-            self.v_cruise_pcm_prev = self.v_cruise_pcm
+           # self.v_cruise_pcm_prev = self.v_cruise_pcm
             self.yaw_rate = cp.vl["IMU"]['YAW_RATE']
             self.generic_toggle = cp.vl["CLU1"]['CF_Clu_CruiseSwMain']  # 2019.09.04 use stock cruise main switch for steer max test
 
