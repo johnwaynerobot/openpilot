@@ -84,14 +84,14 @@ HUDData = namedtuple("HUDData",
 
 
 class CarController(object):
-  def __init__(self, dbc_name, enable_camera=True):
+  def __init__(self, dbc_name, car_fingerprint,  enable_camera=True):
     self.braking = False
     self.brake_steady = 0.
     self.brake_last = 0.
     self.enable_camera = enable_camera
     self.packer = CANPacker(dbc_name)
     self.new_radar_config = False
-    #self.car_fingerprint = car_fingerprint     #2018.09.06 12:06AM borrow from subaru carcontroller.py
+    self.car_fingerprint = car_fingerprint     #2018.09.06 12:06AM borrow from subaru carcontroller.py
 
     # 2018.09.06 12:09AM borrow from subaru carcontroller.py
     # Setup detection helper. Routes commands to

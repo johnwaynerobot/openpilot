@@ -115,7 +115,7 @@ class CarInterface(object):
     if sendcan is not None:
       self.sendcan = sendcan
       #2018.09.05 11:41PM change dbc_name to canbus
-      self.CC = CarController(self.cp.dbc_name, CP.enableCamera)
+      self.CC = CarController(self.cp.dbc_name, CP.carFingerprint, CP.enableCamera)  # 2018.09.10 add CP.carFingerprint
       print("self.cc interface.py dp.dbc_name")
       print(self.cp.dbc_name)
       print("interface.py CP.carFingerprint")
