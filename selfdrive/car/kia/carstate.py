@@ -86,7 +86,7 @@ def get_can_signals(CP):
           #("STANDSTILL", 50), Standstill VSA
          # ("SEATBELT_STATUS", 0),
           #("CRUISE", 10),           #2018.09.03 remove cruise check
-            ("ENG_INFO", 100),        #2018.09.02 change POWERTRAIN DATA To ENG_INFO
+           # ("ENG_INFO", 100),        #2018.09.02 change POWERTRAIN DATA To ENG_INFO, 9ms
             ("VSA_STATUS", 100),    #10ms
             ("SCM_BUTTONS", 50)     #2018.09.04 come from 0x1A6 20ms
       ]
