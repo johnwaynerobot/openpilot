@@ -251,6 +251,7 @@ class CarState(object):
         self.standstill = cp.vl["ENGINE_DATA"]['XMISSION_VSPEED'] < 0.1
         self.door_all_closed = not cp.vl["SCM_FEEDBACK"]['DOOR_OPEN_FL']
        # self.steer_error = cp.vl["STEERING_REPORT"]['STEERING_REPORT_dtcs']
+        self.steer_error = False # define 2018.09.11 as false
         self.steer_not_allowed = cp.vl["STEERING_REPORT"]['STEERING_REPORT_operator_override']
         self.steer_warning = cp.vl["STEERING_REPORT"]['STEERING_REPORT_operator_override']
         self.brake_error = cp.vl["BRAKE_REPORT"]['BRAKE_REPORT_dtcs']
@@ -286,6 +287,7 @@ class CarState(object):
             #print("carstate STEERING_REPORT ")
             #print(cp.vl["STEERING_REPORT"])
            # self.steer_error = cp.vl["STEERING_REPORT"]['STEERING_REPORT_dtcs']
+            self.steer_error = False   #2018.09.11 6:10PM set as False TODO should we above or from Car CAN
             self.steer_not_allowed = cp.vl["STEERING_REPORT"]['STEERING_REPORT_operator_override']
             self.steer_warning = cp.vl["STEERING_REPORT"]['STEERING_REPORT_operator_override']
             self.brake_error = cp.vl["BRAKE_REPORT"]['BRAKE_REPORT_dtcs']
