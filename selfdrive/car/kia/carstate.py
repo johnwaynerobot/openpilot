@@ -274,8 +274,8 @@ class CarState(object):
         self.cruise_speed_offset = calc_cruise_offset(0, self.v_ego)
         # On set, cruise set speed pulses between 254~255 and the set speed prev is set to avoid this.
         # 2018.09.10 TODO this self.v_cruise_pcm is same as honda, we using gas interceptor, does it need? do we need to simulated the message for debug
-       # self.v_cruise_pcm = self.v_cruise_pcm_prev if cp.vl["ACC_HUD"]['CRUISE_SPEED'] > 160.0 else cp.vl["ACC_HUD"]['CRUISE_SPEED']
-        #self.v_cruise_pcm_prev = self.v_cruise_pcm
+        self.v_cruise_pcm = self.v_cruise_pcm_prev if cp.vl["ACC_HUD"]['CRUISE_SPEED'] > 160.0 else cp.vl["ACC_HUD"]['CRUISE_SPEED']
+        self.v_cruise_pcm_prev = self.v_cruise_pcm
         #self.yaw_rate = cp.vl["IMU"]['YAW_RATE']
         self.generic_toggle = cp.vl["CLU1"]['CF_Clu_CruiseSwMain'] #2019.09.04 use stock cruise main switch for steer max test
 
@@ -290,8 +290,8 @@ class CarState(object):
             self.brake_error = cp.vl["BRAKE_REPORT"]['BRAKE_REPORT_dtcs']
             self.esp_disabled = cp.vl["VSA_STATUS"]['ESP_DISABLED']
             self.seatbelt = not cp.vl["SCM_FEEDBACK"]['SEATBELT_DRIVER_LAMP']  # 2018.09.04 0 is 1, 1 is off
-           # print("Steering sensor")
-            #print(cp.vl["STEERING_SENSORS"])
+            print("Steering sensor")
+            print(cp.vl["STEERING_SENSORS"])
             self.angle_steers = cp.vl["STEERING_SENSORS"]['STEER_ANGLE']
             #self.angle_steers_rate = cp.vl["STEERING_SENSORS"]['STEER_ANGLE_RATE']  #TODO not sure why it not reading dbc signal order?
             self.cruise_setting = cp.vl["SCM_BUTTONS"]['CRUISE_SETTING']
@@ -310,8 +310,8 @@ class CarState(object):
             self.stopped = cp.vl["ENGINE_DATA"]['XMISSION_VSPEED'] < 0.1
             self.cruise_speed_offset = calc_cruise_offset(0, self.v_ego)
             #2018.09.10 TODO this self.v_cruise_pcm is same as honda, we using gas interceptor, does it need? do we need to simulated the message for debug
-           # self.v_cruise_pcm = self.v_cruise_pcm_prev if cp.vl["ACC_HUD"]['CRUISE_SPEED'] > 160.0 else cp.vl["ACC_HUD"]['CRUISE_SPEED']
-           # self.v_cruise_pcm_prev = self.v_cruise_pcm
+            self.v_cruise_pcm = self.v_cruise_pcm_prev if cp.vl["ACC_HUD"]['CRUISE_SPEED'] > 160.0 else cp.vl["ACC_HUD"]['CRUISE_SPEED']
+            self.v_cruise_pcm_prev = self.v_cruise_pcm
            # self.yaw_rate = cp.vl["IMU"]['YAW_RATE'] > 0
             self.generic_toggle = cp.vl["CLU1"]['CF_Clu_CruiseSwMain']  # 2019.09.04 use stock cruise main switch for steer max test
 

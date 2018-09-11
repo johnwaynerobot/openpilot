@@ -406,7 +406,7 @@ class CarInterface(object):
 
     # steering wheel
     ret.steeringAngle = self.CS.angle_steers
-    ret.steeringRate = self.CS.angle_steers_rate
+   # ret.steeringRate = self.CS.angle_steers_rate  #2018.09.11 TODO some can duplication error? or not reading
 
     # gear shifter lever (#2018.09.04 define in carstate.py
     ret.gearShifter = self.CS.gear_shifter

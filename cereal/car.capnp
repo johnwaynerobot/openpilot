@@ -97,7 +97,7 @@ struct CarState {
 
   # steering wheel
   steeringAngle @7 :Float32;   # deg
-  steeringRate @15 :Float32;   # deg/s
+  steeringRate @15 :Float32;   # deg/s  #2018.09.10 to do, TODO Kia rate is not the same hyundai
   steeringTorque @8 :Float32;  # TODO: standardize units
   steeringPressed @9 :Bool;    # if the user is using the steering wheel
 
