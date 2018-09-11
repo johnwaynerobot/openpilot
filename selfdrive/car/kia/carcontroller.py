@@ -195,14 +195,15 @@ class CarController(object):
     #2018.09.06 10:30PM remove canbus.powertrain
     # Send steering command.
     idx = frame % 4  #2018.09.02 this mod it get the remainder?? #2018.09.03 remove idx, 2018.09.06 12:33 AM add canbus.powertrain
-    can_sends.append(kiacan.create_steering_control_enable(self.packer, apply_steer, lkas_active, CS.CP.carFingerprint))
-    can_sends.append(kiacan.create_steering_control(self.packer, apply_steer, lkas_active, CS.CP.carFingerprint))
-    can_sends.append(kiacan.create_steering_control_disable(self.packer, apply_steer, lkas_active, CS.CP.carFingerprint))
+                     #2018.09.11 update the argument to match for both carcontroller.py and kiacan to fix argument error
+    can_sends.append(kiacan.create_steering_control_enable(self.packer, apply_steer, lkas_active, CS.CP.carFingerprint, idx))
+    can_sends.append(kiacan.create_steering_control(self.packer, apply_steer, lkas_active, CS.CP.carFingerprint, idx))
+    can_sends.append(kiacan.create_steering_control_disable(self.packer, apply_steer, lkas_active, CS.CP.carFingerprint, idx))
 
     # Send dashboard UI commands.
     if (frame % 10) == 0:
-      idx = (frame/10) % 4                                #2018.09.06 12:33AM add canbus.powertrain
-      can_sends.extend(kiacan.create_ui_commands(self.packer,  pcm_speed, hud, CS.CP.carFingerprint, idx))
+      idx = (frame/10) % 4                                #2018.09.06 12:33AM add canbus.powertrain , 2019.09.11 change to match number of argument returuning
+      can_sends.extend(kiacan.create_ui_commands(self.packer, pcm_speed, hud, CS.CP.carFingerprint, idx))
 
     if CS.CP.radarOffCan:
       # If using stock ACC, spam cancel command to kill gas when OP disengages.
@@ -216,11 +217,11 @@ class CarController(object):
       if (frame % 2) == 0:
         idx = (frame / 2) % 4
         can_sends.append(
-          kiacan.create_brake_enable_soul(self.packer,  apply_brake, pcm_override, pcm_cancel_cmd, hud.chime, hud.fcw)) #enable brake command,  #2018.09.06 12:33AM add canbus.powertrain
+          kiacan.create_brake_enable_soul(self.packer,  apply_brake)) #enable brake command,  #2018.09.06 12:33AM add canbus.powertrain
         can_sends.append(
-          kiacan.create_brake_command_soul(self.packer,  apply_brake, pcm_override, pcm_cancel_cmd, hud.chime, hud.fcw)) #creating brake command  #2018.09.06 12:33AM add canbus.powertrain
+          kiacan.create_brake_command_soul(self.packer,  apply_brake)) #creating brake command  #2018.09.06 12:33AM add canbus.powertrain
         can_sends.append(
-          kiacan.create_brake_disable_soul(self.packer,  apply_brake, pcm_override, pcm_cancel_cmd, hud.chime, hud.fcw)) #disable brake command #2018.09.06 12:33AM add canbus.powertrain
+          kiacan.create_brake_disable_soul(self.packer,  apply_brake)) #disable brake command #2018.09.06 12:33AM add canbus.powertrain
         can_sends.append(
           kiacan.create_brake_command(self.packer,  apply_brake, pcm_override, pcm_cancel_cmd, hud.chime, hud.fcw, idx)) #creating brake command for chime & FCW, brake command need idx
         # 2018.09.06 12:33AM add canbus.powertrain  to distinction of can bus channel

@@ -44,7 +44,7 @@ def create_brake_command(packer, apply_brake, pcm_override, pcm_cancel_cmd, chim
   }
   return packer.make_can_msg("BRAKE_COMMAND", 0, values, idx)
 
-def create_brake_command_soul(packer, apply_brake,):
+def create_brake_command_soul(packer, apply_brake):
   """Creates a CAN message for the Honda DBC BRAKE_COMMAND."""
   brake_rq = apply_brake > 0
   if brake_rq==1:
@@ -56,7 +56,7 @@ def create_brake_command_soul(packer, apply_brake,):
   }
   return packer.make_can_msg("SOUL_BRAKE_COMMAND", 0, values)  #remove idx no need for alive counter and checksum
 
-def create_brake_enable_soul(packer, apply_brake, idx):
+def create_brake_enable_soul(packer, apply_brake):
   """Creates a CAN message for the Honda DBC BRAKE_COMMAND."""
 
   brake_rq = apply_brake > 0
@@ -69,7 +69,7 @@ def create_brake_enable_soul(packer, apply_brake, idx):
   }
   return packer.make_can_msg("SOUL_BRAKE_ENABLE", 0, values) #remove idx no need for alive counter and checksum
 
-def create_brake_disable_soul(packer, apply_brake,  idx):
+def create_brake_disable_soul(packer, apply_brake):
   """Creates a CAN message for the Honda DBC BRAKE_COMMAND."""
   brake_rq = apply_brake > 0
 
@@ -82,7 +82,7 @@ def create_brake_disable_soul(packer, apply_brake,  idx):
   return packer.make_can_msg("SOUL_BRAKE_DISABLE", 0, values) #remove idx no need for alive counter and checksum
 
 
-def create_gas_command(packer, gas_amount, idx):
+def create_gas_command(packer, gas_amount):
   """Creates a CAN message for the Honda DBC GAS_COMMAND."""
   enable = gas_amount > 0.001
 
@@ -123,7 +123,7 @@ def create_gas_command_disable(packer, gas_amount):
   return packer.make_can_msg("THROTTLE_DISABLE", 0, values) #remove idx no need for alive counter and checksum
 
 
-def create_steering_control(packer, apply_steer, lkas_active):
+def create_steering_control(packer, apply_steer, lkas_active, car_fingerprint, idx):
   """Creates a CAN message for the Honda DBC STEERING_CONTROL."""
   if lkas_active==1:
     x_steering_enable=0xCC05
@@ -133,7 +133,7 @@ def create_steering_control(packer, apply_steer, lkas_active):
   }
   return packer.make_can_msg("STEERING_COMMAND", 0 , values) #remove idx no need for alive counter and checksum
 
-def create_steering_control_enable(packer,lkas_active):
+def create_steering_control_enable(packer, apply_steer, lkas_active, car_fingerprint, idx):
   """Creates a CAN message for the Honda DBC STEERING_CONTROL."""
   if lkas_active==1:
     x_steering_enable=0xCC05
@@ -143,7 +143,7 @@ def create_steering_control_enable(packer,lkas_active):
     }
   return packer.make_can_msg("STEERING_ENABLE", 0, values) #remove idx no need for alive counter and checksum
 
-def create_steering_control_disable(packer, lkas_active):
+def create_steering_control_disable(packer, apply_steer, lkas_active, car_fingerprint, idx):
   """Creates a CAN message for the Honda DBC STEERING_CONTROL."""
   if lkas_active==0:
     x_steering_disable=0xCC05
@@ -154,7 +154,7 @@ def create_steering_control_disable(packer, lkas_active):
 
 
 
-def create_ui_commands(packer, pcm_speed, hud):
+def create_ui_commands(packer, pcm_speed, hud, car_fingerprint, idx):
   """Creates an iterable of CAN messages for the UIs."""
   commands = []
 
@@ -190,7 +190,7 @@ def create_ui_commands(packer, pcm_speed, hud):
   return commands
 
 #2018.09.06 12:37AM add comment, this message for radar on bus  1,  channel 2 can of panda
-def create_radar_commands(v_ego, idx):
+def create_radar_commands(v_ego, car_fingerprint, new_radar_config, idx):
   """Creates an iterable of CAN messages for the radar system."""
   commands = []
   v_ego_kph = np.clip(int(round(v_ego * CV.MS_TO_KPH)), 0, 255)
