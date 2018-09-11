@@ -418,10 +418,12 @@ class CarInterface(object):
 
     #2018.09.02 TODO need to check is matter, we not using kia cruise control
     # cruise state
-    ret.cruiseState.enabled = self.CS.pcm_acc_status != 0
-    ret.cruiseState.speed = self.CS.v_cruise_pcm * CV.KPH_TO_MS
-    ret.cruiseState.available = bool(self.CS.main_on)
-    ret.cruiseState.speedOffset = self.CS.cruise_speed_offset
+    #ret.cruiseState.enabled = self.CS.pcm_acc_status != 0
+    ret.cruiseState.enabled = 0  #2018.09.11 if use Openpilot cruise, no need, this should set to 0
+    #ret.cruiseState.speed = self.CS.v_cruise_pcm * CV.KPH_TO_MS #2018.09.11 check in controlsd.py if not enable cruise, this not needed
+    ret.cruiseState.speed = 0  # 2018.09.11 check in controlsd.py if not enable cruise, this not needed, set to 0
+    ret.cruiseState.available = bool(self.CS.main_on)  #2018.09.11 not use anywhere else beside interface.py
+    ret.cruiseState.speedOffset = self.CS.cruise_speed_offset  #2018.09.11 finally not use in controlsd.py if we use interceptor and enablecruise=false
     ret.cruiseState.standstill = False
 
     # TODO: button presses

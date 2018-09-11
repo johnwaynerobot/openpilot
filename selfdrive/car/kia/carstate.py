@@ -58,7 +58,7 @@ def get_can_signals(CP):
             ("BRAKE_PRESSED", "ENG_INFO", 0),     # initial value is 0, 2 is brake pressed
             ("CRUISE_BUTTONS", "SCM_BUTTONS", 0),     #2018.09.02 use UI B0_422 (0x1A6) messages
             ("ESP_DISABLED", "VSA_STATUS", 0),  #2018.09.02 modified dbc to match use B0_339 ESP_DISABLED when VSA button push OFF
-         # ("HUD_LEAD", "ACC_HUD", 0),   #2018.09.02 coming from EON for Lead Distance)
+            ("HUD_LEAD", "ACC_HUD", 0),   #2018.09.02 coming from EON for Lead Distance)
           # 2018.09.02 DV change USER_BRAKE to BRAKE_REPORT_operator_override B0_115
             ("BRAKE_REPORT_operator_override", "BRAKE_REPORT", 0),
           #2018.09.02 DV change STEER_STATUS to STEERING_REPORT_operator_override from B0_131 STEERING_REPORT
@@ -88,7 +88,8 @@ def get_can_signals(CP):
           #("CRUISE", 10),           #2018.09.03 remove cruise check
             ("ENG_INFO", 100),        #2018.09.02 change POWERTRAIN DATA To ENG_INFO, 9ms
             ("VSA_STATUS", 100),    #10ms
-            ("SCM_BUTTONS", 50)     #2018.09.04 come from 0x1A6 20ms
+            ("SCM_BUTTONS", 50),     #2018.09.04 come from 0x1A6 20ms
+            ("ACC_HUD", 50)     #2018.09.11 add ACC HUD for debug, it send by EON, TODO cross check on HONDA car
       ]
 
 
@@ -274,8 +275,8 @@ class CarState(object):
         self.cruise_speed_offset = calc_cruise_offset(0, self.v_ego)
         # On set, cruise set speed pulses between 254~255 and the set speed prev is set to avoid this.
         # 2018.09.10 TODO this self.v_cruise_pcm is same as honda, we using gas interceptor, does it need? do we need to simulated the message for debug
-        self.v_cruise_pcm = self.v_cruise_pcm_prev if cp.vl["ACC_HUD"]['CRUISE_SPEED'] > 160.0 else cp.vl["ACC_HUD"]['CRUISE_SPEED']
-        self.v_cruise_pcm_prev = self.v_cruise_pcm
+        #self.v_cruise_pcm = self.v_cruise_pcm_prev if cp.vl["ACC_HUD"]['CRUISE_SPEED'] > 160.0 else cp.vl["ACC_HUD"]['CRUISE_SPEED']
+       # self.v_cruise_pcm_prev = self.v_cruise_pcm  2018.09.11 finally not use in controlsd.py if enablecruise is false
         #self.yaw_rate = cp.vl["IMU"]['YAW_RATE']
         self.generic_toggle = cp.vl["CLU1"]['CF_Clu_CruiseSwMain'] #2019.09.04 use stock cruise main switch for steer max test
 
@@ -309,13 +310,13 @@ class CarState(object):
             self.brake_switch_ts = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] ==2
             self.stopped = cp.vl["ENGINE_DATA"]['XMISSION_VSPEED'] < 0.1
             self.cruise_speed_offset = calc_cruise_offset(0, self.v_ego)
-            print("ACC_HUD")
-            print(cp.vl["ACC_HUD"])
-            print("ACC_HUD CURISE SPEED")
-            print(cp.vl["ACC_HUD"]['CRUISE_SPEED'])
+            #print("ACC_HUD")
+            #print(cp.vl["ACC_HUD"])
+            #print("ACC_HUD CRUISE SPEED")
+            #print(cp.vl["ACC_HUD"]['CRUISE_SPEED'])
             #2018.09.10 TODO this self.v_cruise_pcm is same as honda, we using gas interceptor, does it need? do we need to simulated the message for debug
-            self.v_cruise_pcm = self.v_cruise_pcm_prev if cp.vl["ACC_HUD"]['CRUISE_SPEED'] > 160.0 else cp.vl["ACC_HUD"]['CRUISE_SPEED']
-            self.v_cruise_pcm_prev = self.v_cruise_pcm
+            #self.v_cruise_pcm = self.v_cruise_pcm_prev if cp.vl["ACC_HUD"]['CRUISE_SPEED'] > 160.0 else cp.vl["ACC_HUD"]['CRUISE_SPEED']
+           # self.v_cruise_pcm_prev = self.v_cruise_pcm
            # self.yaw_rate = cp.vl["IMU"]['YAW_RATE'] > 0
             self.generic_toggle = cp.vl["CLU1"]['CF_Clu_CruiseSwMain']  # 2019.09.04 use stock cruise main switch for steer max test
 
