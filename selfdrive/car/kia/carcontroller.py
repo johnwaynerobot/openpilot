@@ -196,14 +196,14 @@ class CarController(object):
     # Send steering command.
     idx = frame % 4  #2018.09.02 this mod it get the remainder?? #2018.09.03 remove idx, 2018.09.06 12:33 AM add canbus.powertrain
                      #2018.09.11 update the argument to match for both carcontroller.py and kiacan to fix argument error
-    can_sends.append(kiacan.create_steering_control_enable(self.packer, apply_steer, lkas_active, CS.CP.carFingerprint, idx))
-    can_sends.append(kiacan.create_steering_control(self.packer, apply_steer, lkas_active, CS.CP.carFingerprint, idx))
-    can_sends.append(kiacan.create_steering_control_disable(self.packer, apply_steer, lkas_active, CS.CP.carFingerprint, idx))
+    can_sends.append(kiacan.create_steering_control_enable(self.packer, lkas_active))
+    can_sends.append(kiacan.create_steering_control(self.packer, apply_steer, lkas_active))
+    can_sends.append(kiacan.create_steering_control_disable(self.packer, lkas_active))
 
     # Send dashboard UI commands.
     if (frame % 10) == 0:
       idx = (frame/10) % 4                                #2018.09.06 12:33AM add canbus.powertrain , 2019.09.11 change to match number of argument returuning
-      can_sends.extend(kiacan.create_ui_commands(self.packer, pcm_speed, hud, CS.CP.carFingerprint, idx))
+      can_sends.extend(kiacan.create_ui_commands(self.packer, pcm_speed, hud, idx))
 
     if CS.CP.radarOffCan:
       # If using stock ACC, spam cancel command to kill gas when OP disengages.

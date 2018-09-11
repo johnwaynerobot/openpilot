@@ -123,7 +123,7 @@ def create_gas_command_disable(packer, gas_amount):
   return packer.make_can_msg("THROTTLE_DISABLE", 0, values) #remove idx no need for alive counter and checksum
 
 
-def create_steering_control(packer, apply_steer, lkas_active, car_fingerprint, idx):
+def create_steering_control(packer, apply_steer, lkas_active):
   """Creates a CAN message for the Honda DBC STEERING_CONTROL."""
   if lkas_active==1:
     x_steering_enable=0xCC05
@@ -133,7 +133,7 @@ def create_steering_control(packer, apply_steer, lkas_active, car_fingerprint, i
   }
   return packer.make_can_msg("STEERING_COMMAND", 0 , values) #remove idx no need for alive counter and checksum
 
-def create_steering_control_enable(packer, apply_steer, lkas_active, car_fingerprint, idx):
+def create_steering_control_enable(packer, lkas_active):
   """Creates a CAN message for the Honda DBC STEERING_CONTROL."""
   if lkas_active==1:
     x_steering_enable=0xCC05
@@ -143,7 +143,7 @@ def create_steering_control_enable(packer, apply_steer, lkas_active, car_fingerp
     }
   return packer.make_can_msg("STEERING_ENABLE", 0, values) #remove idx no need for alive counter and checksum
 
-def create_steering_control_disable(packer, apply_steer, lkas_active, car_fingerprint, idx):
+def create_steering_control_disable(packer, lkas_active):
   """Creates a CAN message for the Honda DBC STEERING_CONTROL."""
   if lkas_active==0:
     x_steering_disable=0xCC05
@@ -154,7 +154,7 @@ def create_steering_control_disable(packer, apply_steer, lkas_active, car_finger
 
 
 
-def create_ui_commands(packer, pcm_speed, hud, car_fingerprint, idx):
+def create_ui_commands(packer, pcm_speed, hud, idx):
   """Creates an iterable of CAN messages for the UIs."""
   commands = []
 
