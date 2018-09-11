@@ -362,8 +362,8 @@ class CarState(object):
     self.steer_torque_driver = cp.vl["STEERING_REPORT"]['STEERING_REPORT_operator_override']
     #2018.09.10 set to TODO should set to steering torque amount when driver turn the steering wheel
     #2018.09.10 using os cc kit set to steering override
-    #self.steer_override = abs(self.steer_torque_driver) > STEER_THRESHOLD[self.CP.carFingerprint] #threshold set in values.py
-    self.steer_override = cp.vl["STEERING_REPORT"]['STEERING_REPORT_operator_override']
+    self.steer_override = abs(self.steer_torque_driver) > STEER_THRESHOLD[self.CP.carFingerprint] #threshold set in values.py
+   # self.steer_override = cp.vl["STEERING_REPORT"]['STEERING_REPORT_operator_override']
 
     #self.user_brake = cp.vl["VSA_STATUS"]['USER_BRAKE']
     self.user_brake = cp.vl["BRAKE_REPORT"]['BRAKE_REPORT_operator_override']  #2018.09.02 DV add for Kia soul
