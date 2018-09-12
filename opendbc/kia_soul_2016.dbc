@@ -103,13 +103,13 @@ BO_ 175 FAULT_REPORT: 8 XXX
  SG_ FAULT_REPORT_reserved : 56|8@1+ (1,0) [0|0] "" XXX
 
 BO_ 339 VSA_STATUS: 8 XXX
+ SG_ ABS_ACT : 10|1@1+ (1,0) [0|1] "" XXX
  SG_ ESP_DISABLED : 12|1@1+ (1,0) [0|1] "" XXX
  SG_ TQI_SLW_TCS : 40|8@1+ (0.390625,0) [0|99.609375] "%" XXX
  SG_ CF_Esc_BrkCtl : 48|1@1+ (1,0) [0|1] "" XXX
  SG_ ESC_OFF_STEP : 49|2@1+ (1,0) [0|3] "" XXX
  SG_ AliveCounter_TCS1 : 52|4@1+ (1,0) [0|14] "" XXX
  SG_ CheckSum_TCS1 : 56|8@1+ (1,0) [0|255] "" XXX
- SG_ ABS_ACT : 10|1@1+ (1,0) [0|1] "" XXX
 
 BO_ 356 VSM11: 4 XXX
  SG_ CR_Esc_StrTqReq : 0|12@1+ (0.01,-20.48) [-20.48|20.47] "Nm" XXX
@@ -156,6 +156,7 @@ BO_ 506 BRAKE_COMMAND: 8 XXX
  SG_ CHECKSUM : 59|4@0+ (1,0) [0|15] "" XXX
 
 BO_ 544 IMU: 8 XXX
+ SG_ LAT_ACCEL : 0|11@1+ (0.01,-10.23) [-10.23|10.24] "m/s^2" XXX
  SG_ LAT_ACCEL_STAT : 11|1@1+ (1,0) [0|1] "" XXX
  SG_ LAT_ACCEL_DIAG : 12|1@1+ (1,0) [0|1] "" XXX
  SG_ LONG_ACCEL : 13|11@1+ (0.01,-10.23) [-10.23|10.24] "m/s^2" XXX
@@ -163,20 +164,19 @@ BO_ 544 IMU: 8 XXX
  SG_ LONG_ACCEL_DIAG : 25|1@1+ (1,0) [0|1] "" XXX
  SG_ CYL_PRES : 26|12@1+ (0.1,0) [0|409.5] "Bar" XXX
  SG_ CYL_PRES_STAT : 38|1@1+ (1,0) [0|1] "" XXX
+ SG_ CYL_PRESS_DIAG : 39|1@1+ (1,0) [0|1] "" XXX
  SG_ YAW_RATE : 40|13@1+ (0.01,-40.95) [-40.95|40.96] "" XXX
  SG_ YAW_RATE_STAT : 53|1@1+ (1,0) [0|1] "" XXX
  SG_ YAW_RATE_DIAG : 54|1@1+ (1,0) [0|1] "" XXX
  SG_ ESP12_AliveCounter : 56|4@1+ (1,0) [0|15] "" XXX
  SG_ ESP12_Checksum : 60|4@1+ (1,0) [0|15] "" XXX
- SG_ LAT_ACCEL : 0|11@1+ (0.01,-10.23) [-10.23|10.24] "m/s^2" XXX
- SG_ CYL_PRESS_DIAG : 39|1@1+ (1,0) [0|1] "" XXX
 
 BO_ 688 STEERING_SENSORS: 5 XXX
+ SG_ STEER_ANGLE : 0|16@1- (0.1,0) [-3276.8|3276.7] "Deg" XXX
  SG_ STEERING_ANGLE_RATE : 16|8@1+ (4,0) [0|1016.0] "" XXX
  SG_ SAS_Stat : 24|8@1+ (1,0) [0|255] "" XXX
  SG_ MsgCount : 32|4@1+ (1,0) [0|15] "" XXX
  SG_ CheckSum : 36|4@1+ (1,0) [0|15] "" XXX
- SG_ STEER_ANGLE : 0|16@1- (0.1,0) [-3276.8|3276.7] "Deg" XXX
 
 BO_ 780 ACC_HUD: 8 XXX
  SG_ PCM_SPEED : 7|16@0+ (0.01,0) [0|250] "kph" XXX
@@ -220,9 +220,9 @@ BO_ 790 ENGINE_DATA: 8 XXX
 BO_ 809 ENG_INFO: 8 XXX
  SG_ VB_OFF_ACT : 24|1@1+ (1,0) [0|1] "" XXX
  SG_ ACC_ACT : 30|1@1+ (1,0) [0|1] "" XXX
- SG_ PEDAL_GAS : 48|8@1+ (0.3906,0) [0|99.603] "%" XXX
  SG_ BRAKE_PRESSED : 32|2@1+ (1,0) [0|3] "" XXX
- 
+ SG_ PEDAL_GAS : 48|8@1+ (0.3906,0) [0|99.603] "%" XXX
+
 BO_ 829 LKAS_HUD: 5 XXX
  SG_ CAM_TEMP_HIGH : 7|1@0+ (1,0) [0|255] "" XXX
  SG_ SET_ME_X41 : 6|7@0+ (1,0) [0|127] "" XXX
