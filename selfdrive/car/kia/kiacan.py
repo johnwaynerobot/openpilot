@@ -47,8 +47,10 @@ def create_brake_command(packer, apply_brake, pcm_override, pcm_cancel_cmd, chim
 def create_brake_command_soul(packer, apply_brake):
   """Creates a CAN message for the Honda DBC BRAKE_COMMAND."""
   brake_rq = apply_brake > 0
-  if brake_rq == 1:
+  if brake_rq == True:
     x = 0xCC05
+  else:
+    x = 0x0000
 
   values = {
     "BRAKE_COMMAND_pedal_command": apply_brake,   # computer
@@ -61,8 +63,10 @@ def create_brake_enable_soul(packer, apply_brake):
 
   brake_rq = apply_brake > 0
 
-  if brake_rq == 1:
+  if brake_rq == True:
     x = 0xCC05
+  else:
+    x = 0x0000
 
   values = {
     "BRAKE_ENABLE_magic": x,
@@ -73,8 +77,10 @@ def create_brake_disable_soul(packer, apply_brake):
   """Creates a CAN message for the Honda DBC BRAKE_COMMAND."""
   brake_rq = apply_brake > 0
 
-  if brake_rq == 0:
+  if brake_rq == False:
     x = 0xCC05
+  else:
+    x = 0x0000
 
   values = {
     "BRAKE_DISABLE_magic": x,
@@ -87,8 +93,10 @@ def create_gas_command(packer, gas_amount):
   enable = gas_amount > 0.001
 
   values = {} #initializing the value dict empty initially
-  if enable == 1:
+  if enable == True:
     x_gas = 0xCC05
+  else:
+    x_gas = 0x0000
 
   if enable:
     values["THROTTLE_COMMAND_magic"] = x_gas
@@ -101,8 +109,10 @@ def create_gas_command_enable(packer, gas_amount):
   enable = gas_amount > 0.001
 
   values = {} #initializing the value dict empty initially
-  if enable == 1:
+  if enable == True:
     x_gas_enable = 0xCC05
+  else:
+    x_gas_enable = 0x0000
 
   if enable:
     values["THROTTLE_ENABLE_magic"] = x_gas_enable
@@ -114,8 +124,10 @@ def create_gas_command_disable(packer, gas_amount):
   disable = gas_amount < 0.001
 
   values = {} #initializing the value dict empty initially
-  if disable == 1:
-    x_gas_disable=0xCC05 
+  if disable == True:
+    x_gas_disable = 0xCC05
+  else:
+    x_gas_disable = 0x0000
 
   if disable:
     values["THROTTLE_DISABLE_magic"] = x_gas_disable
@@ -125,8 +137,10 @@ def create_gas_command_disable(packer, gas_amount):
 
 def create_steering_control(packer, apply_steer, lkas_active):
   """Creates a CAN message for the Honda DBC STEERING_CONTROL."""
-  if lkas_active == 1:
+  if lkas_active == True:
     x_steering_enable = 0xCC05
+  else:
+    x_steering_enable = 0x0000
   values = {
     "STEERING_COMMAND_magic": apply_steer if lkas_active else 0,
     "STEERING_COMMAND_pedal_command": x_steering_enable,
@@ -138,18 +152,22 @@ def create_steering_control_enable(packer, lkas_active):
   print("lkas_active kiacan.py")
   print(lkas_active)
 
-  if lkas_active == 1:
-    x_steering_enable = 0xCC05
+  if lkas_active == True:
+    x_steering_control_enable = 0xCC05
+  else:
+    x_steering_control_enable = 0x0000
 
   values= {
-    "STEERING_ENABLE_magic": x_steering_enable
+    "STEERING_ENABLE_magic": x_steering_control_enable
     }
   return packer.make_can_msg("STEERING_ENABLE", 0, values) #remove idx no need for alive counter and checksum
 
 def create_steering_control_disable(packer, lkas_active):
   """Creates a CAN message for the Honda DBC STEERING_CONTROL."""
-  if lkas_active == 0:
+  if lkas_active == False:
     x_steering_disable = 0xCC05
+  else:
+    x_steering_disable = 0x0000
   values = {
     "STEERING_DISABLE_magic": x_steering_disable
   }

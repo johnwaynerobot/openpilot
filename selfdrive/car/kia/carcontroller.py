@@ -187,6 +187,7 @@ class CarController(object):
 
     # any other cp.vl[0x18F]['STEER_STATUS'] is common and can happen during user override. sending 0 torque to avoid EPS sending error 5
     lkas_active = enabled and not CS.steer_not_allowed  #2018.09.04 coming from steering report that driver not over
+    # 2018.09.12 enabled come from planner.py
     print("carcontroller.py lkas_active")
     print(lkas_active)
     print("carcontroller.py CS.steer_not_allowed")
