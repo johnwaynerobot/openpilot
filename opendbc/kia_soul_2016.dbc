@@ -173,7 +173,7 @@ BO_ 544 IMU: 8 XXX
 
 BO_ 688 STEERING_SENSORS: 5 XXX
  SG_ STEER_ANGLE : 0|16@1- (0.1,0) [-3276.8|3276.7] "Deg" XXX
- SG_ STEERING_ANGLE_RATE : 16|8@1+ (4,0) [0|1016.0] "" XXX
+ SG_ STEERING_ANGLE_RATE : 16|8@0+ (4,0) [0|1016.0] "" XXX
  SG_ SAS_Stat : 24|8@1+ (1,0) [0|255] "" XXX
  SG_ MsgCount : 32|4@1+ (1,0) [0|15] "" XXX
  SG_ CheckSum : 36|4@1+ (1,0) [0|15] "" XXX
