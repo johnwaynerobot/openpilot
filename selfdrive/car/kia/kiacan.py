@@ -135,6 +135,9 @@ def create_steering_control(packer, apply_steer, lkas_active):
 
 def create_steering_control_enable(packer, lkas_active):
   """Creates a CAN message for the Honda DBC STEERING_CONTROL."""
+  print("lkas_active kiacan.py")
+  print(lkas_active)
+
   if lkas_active == 1:
     x_steering_enable = 0xCC05
 
