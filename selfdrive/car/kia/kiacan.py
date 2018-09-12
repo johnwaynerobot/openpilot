@@ -21,11 +21,11 @@ def fix(msg, addr):
   return msg2
 
 #2018.09.12 this one without alive and checksum
-def make_can_msg(addr, dat, alt):
-  return [addr, 0, dat, alt]
+#def make_can_msg(addr, dat, alt):
+  #return [addr, 0, dat, alt]
 
 #2018.09.12 12:01PM EST this is for Honda message with alive and checksum
-def make_hondacan_msg(addr, dat, idx, alt):
+def make_can_msg(addr, dat, idx, alt):
   if idx is not None:
     dat += chr(idx << 4)
     dat = fix(dat, addr)
@@ -193,7 +193,7 @@ def create_ui_commands(packer, pcm_speed, hud, idx):
       'SET_ME_X03_2': 0x03,
       'SET_ME_X01': 0x01,
   }
-  commands.append(packer.make_hondacan_msg("ACC_HUD", 0, acc_hud_values, idx))
+  commands.append(packer.make_can_msg("ACC_HUD", 0, acc_hud_values, idx))
 
   lkas_hud_values = {
     'SET_ME_X41': 0x41,
@@ -202,7 +202,7 @@ def create_ui_commands(packer, pcm_speed, hud, idx):
     'SOLID_LANES': hud.lanes,
     'BEEP': hud.beep,
   }
-  commands.append(packer.make_hondacan_msg('LKAS_HUD', 0, lkas_hud_values, idx))
+  commands.append(packer.make_can_msg('LKAS_HUD', 0, lkas_hud_values, idx))
 
 
   radar_hud_values = {
@@ -211,7 +211,7 @@ def create_ui_commands(packer, pcm_speed, hud, idx):
       'LEAD_STATE': 0x7,
       'LEAD_DISTANCE': 0x1e,
   }
-  commands.append(packer.make_hondacan_msg('RADAR_HUD', 0, radar_hud_values, idx)) #2018.09.03 change to bus 0
+  commands.append(packer.make_can_msg('RADAR_HUD', 0, radar_hud_values, idx)) #2018.09.03 change to bus 0
   return commands
 
 #2018.09.06 12:37AM add comment, this message for radar on bus  1,  channel 2 can of panda
@@ -226,9 +226,9 @@ def create_radar_commands(v_ego, car_fingerprint, new_radar_config, idx):
                "\x00\x00")
 
   msg_0x301 = "\x00\x00\x50\x02\x51\x00\x00"
-  commands.append(make_hondacan_msg(0x300, msg_0x300, idx, 1))
+  commands.append(make_can_msg(0x300, msg_0x300, idx, 1))
 
-  commands.append(make_hondacan_msg(0x301, msg_0x301, idx, 1))
+  commands.append(make_can_msg(0x301, msg_0x301, idx, 1))
   return commands
 
 def spam_buttons_command(packer, button_val, idx):
@@ -236,4 +236,4 @@ def spam_buttons_command(packer, button_val, idx):
     'CRUISE_BUTTONS': button_val,
     'CRUISE_SETTING': 0,
   }
-  return packer.make_hondacan_msg("SCM_BUTTONS", 0, values, idx)
+  return packer.make_can_msg("SCM_BUTTONS", 0, values, idx)
