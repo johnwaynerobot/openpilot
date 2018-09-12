@@ -253,7 +253,7 @@ class CarController(object):
         idx = (frame/radar_send_step) % 4
         if not self.new_radar_config:  # only change state once
           self.new_radar_config = car.RadarState.Error.wrongConfig in radar_error
-        can_sends.extend(create_radar_commands(CS.v_ego, CS.CP.carFingerprint, self.new_radar_config, idx))
+        can_sends.extend(kiacan.create_radar_commands(CS.v_ego, CS.CP.carFingerprint, self.new_radar_config, idx))
             #2018.09.06 12:39AM change to just create_radar_commands to match kiacan.py
 
     ### Send messages to canbus
