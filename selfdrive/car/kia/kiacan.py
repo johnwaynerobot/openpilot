@@ -204,14 +204,14 @@ def create_ui_commands(packer, pcm_speed, hud, idx):
   }
   commands.append(packer.make_can_msg('LKAS_HUD', 0, lkas_hud_values, idx))
 
-
-  radar_hud_values = {
-      'ACC_ALERTS': hud.acc_alert,
-      'LEAD_SPEED': 0x1fe,  # What are these magic values
-      'LEAD_STATE': 0x7,
-      'LEAD_DISTANCE': 0x1e,
-  }
-  commands.append(packer.make_can_msg('RADAR_HUD', 0, radar_hud_values, idx)) #2018.09.03 change to bus 0
+ #2018.09.12 1:09PM use in honda for auto control highbeam
+  #radar_hud_values = {
+ #     'ACC_ALERTS': hud.acc_alert,
+  #    'LEAD_SPEED': 0x1fe,  # What are these magic values
+  #    'LEAD_STATE': 0x7,
+  #    'LEAD_DISTANCE': 0x1e,
+ # }
+ # commands.append(packer.make_can_msg('RADAR_HUD', 0, radar_hud_values, idx)) #2018.09.03 change to bus 0
   return commands
 
 #2018.09.06 12:37AM add comment, this message for radar on bus  1,  channel 2 can of panda
