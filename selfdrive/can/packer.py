@@ -30,7 +30,7 @@ class CANPacker(object):
     for i in range(num_msgs):
       msg = self.dbc[0].msgs[i]
       print("packer.py .msg[i]")
-      print(msgs[i])
+      #print(msg[i])
       print("packer.py self.dbc[0]")
       print(self.dbc[0])
       print("packer.py msg")
