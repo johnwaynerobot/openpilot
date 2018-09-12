@@ -47,8 +47,8 @@ def create_brake_command(packer, apply_brake, pcm_override, pcm_cancel_cmd, chim
 def create_brake_command_soul(packer, apply_brake):
   """Creates a CAN message for the Honda DBC BRAKE_COMMAND."""
   brake_rq = apply_brake > 0
-  if brake_rq==1:
-    x=0xCC05
+  if brake_rq == 1:
+    x = 0xCC05
 
   values = {
     "BRAKE_COMMAND_pedal_command": apply_brake,   # computer
@@ -61,8 +61,8 @@ def create_brake_enable_soul(packer, apply_brake):
 
   brake_rq = apply_brake > 0
 
-  if brake_rq==1:
-    x=0xCC05
+  if brake_rq == 1:
+    x = 0xCC05
 
   values = {
     "BRAKE_ENABLE_magic": x,
@@ -73,8 +73,8 @@ def create_brake_disable_soul(packer, apply_brake):
   """Creates a CAN message for the Honda DBC BRAKE_COMMAND."""
   brake_rq = apply_brake > 0
 
-  if brake_rq==0:
-    x=0xCC05
+  if brake_rq == 0:
+    x = 0xCC05
 
   values = {
     "BRAKE_DISABLE_magic": x,
@@ -87,8 +87,8 @@ def create_gas_command(packer, gas_amount):
   enable = gas_amount > 0.001
 
   values = {} #initializing the value dict empty initially
-  if enable ==1:
-    x_gas=0xCC05
+  if enable == 1:
+    x_gas = 0xCC05
 
   if enable:
     values["THROTTLE_COMMAND_magic"] = x_gas
@@ -101,8 +101,8 @@ def create_gas_command_enable(packer, gas_amount):
   enable = gas_amount > 0.001
 
   values = {} #initializing the value dict empty initially
-  if enable ==1:
-    x_gas_enable=0xCC05 
+  if enable == 1:
+    x_gas_enable = 0xCC05
 
   if enable:
     values["THROTTLE_ENABLE_magic"] = x_gas_enable
@@ -125,8 +125,8 @@ def create_gas_command_disable(packer, gas_amount):
 
 def create_steering_control(packer, apply_steer, lkas_active):
   """Creates a CAN message for the Honda DBC STEERING_CONTROL."""
-  if lkas_active==1:
-    x_steering_enable=0xCC05
+  if lkas_active == 1:
+    x_steering_enable = 0xCC05
   values = {
     "STEERING_COMMAND_magic": apply_steer if lkas_active else 0,
     "STEERING_COMMAND_pedal_command": x_steering_enable,
@@ -135,8 +135,8 @@ def create_steering_control(packer, apply_steer, lkas_active):
 
 def create_steering_control_enable(packer, lkas_active):
   """Creates a CAN message for the Honda DBC STEERING_CONTROL."""
-  if lkas_active==1:
-    x_steering_enable=0xCC05
+  if lkas_active == 1:
+    x_steering_enable = 0xCC05
 
   values= {
     "STEERING_ENABLE_magic": x_steering_enable
@@ -145,8 +145,8 @@ def create_steering_control_enable(packer, lkas_active):
 
 def create_steering_control_disable(packer, lkas_active):
   """Creates a CAN message for the Honda DBC STEERING_CONTROL."""
-  if lkas_active==0:
-    x_steering_disable=0xCC05
+  if lkas_active == 0:
+    x_steering_disable = 0xCC05
   values = {
     "STEERING_DISABLE_magic": x_steering_disable
   }
