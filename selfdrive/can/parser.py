@@ -17,10 +17,10 @@ class CANParser(object):
 
     #2018.09.06 3:56PMEST add print for test
 
-    print("parser.py section dbc_name")
-    print(self.dbc_name)
-    print("dbc_lookup")
-    print(self.dbc)
+    #print("parser.py section dbc_name")
+    #print(self.dbc_name)
+    #print("dbc_lookup")
+    #print(self.dbc)
     #print("parser.py self.dbc[0]")
     #print(self.dbc[0])
     #print("self.dbc[0].msgs[1]")
@@ -38,13 +38,13 @@ class CANParser(object):
       #print(msg)
 
       name = ffi.string(msg.name)
-      print("parser.py ffi.string(msg.name)")
+     # print("parser.py ffi.string(msg.name)")
       #print(msg.name)
       #print("parser.py name")
-      print(name)
-      print("parser.py address")
+     # print(name)
+      #print("parser.py address")
       address = msg.address
-      print(address)
+     # print(address)
 
 
       self.msg_name_to_addres[name] = address
@@ -83,16 +83,16 @@ class CANParser(object):
 
     self.can = libdbc.can_init(bus, dbc_name, len(message_options_c), message_options_c,
                                len(signal_options_c), signal_options_c, sendcan, tcp_addr)
-    print("parser.py self.can")
-    print(self.can)
-    print("parser.py bus")
-    print(bus)
-    print("parser.py len(message_options_c)")
-    print(len(message_options_c))
-    print("parser.py signal_options_c")
-    print(signal_options_c)
-    print("tcp_addr")
-    print(tcp_addr)
+    #print("parser.py self.can")
+    #print(self.can)
+    #print("parser.py bus")
+    #print(bus)
+    #print("parser.py len(message_options_c)")
+    #print(len(message_options_c))
+    #print("parser.py signal_options_c")
+   # print(signal_options_c)
+    #print("tcp_addr")
+    #print(tcp_addr)
 
 
     self.p_can_valid = ffi.new("bool*")

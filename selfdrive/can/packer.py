@@ -6,35 +6,35 @@ class CANPacker(object):
   def __init__(self, dbc_name):
 
     #2018.09.06 9:19PM Print dbc_name test
-    print("packer.py debug")
-    print(dbc_name)
-    print("packer.py packer check")
+    #print("packer.py debug")
+   # print(dbc_name)
+    #print("packer.py packer check")
     self.packer = libdbc.canpack_init(dbc_name)
-    print("packer.py packer check")
-    print(self.packer)
+   # print("packer.py packer check")
+   # print(self.packer)
     self.dbc = libdbc.dbc_lookup(dbc_name)
-    print("packer.py packer self.dbc lookup dbc_name")
-    print(self.dbc)
+   # print("packer.py packer self.dbc lookup dbc_name")
+   # print(self.dbc)
 
     self.sig_names = {}
-    print("packer.py sig_names")
-    print(self.sig_names)
+   # print("packer.py sig_names")
+    #print(self.sig_names)
     self.name_to_address_and_size = {}
-    print("packer.py names to address size")
-    print(self.name_to_address_and_size)
+    #print("packer.py names to address size")
+    #print(self.name_to_address_and_size)
 
     num_msgs = self.dbc[0].num_msgs
-    print("packer.py num_msgs")
-    print(num_msgs)
+    #print("packer.py num_msgs")
+    #print(num_msgs)
 
     for i in range(num_msgs):
       msg = self.dbc[0].msgs[i]
-      print("packer.py .msg[i]")
+      #print("packer.py .msg[i]")
       #print(msg[i])
-      print("packer.py self.dbc[0]")
-      print(self.dbc[0])
-      print("packer.py msg")
-      print(msg)
+      #print("packer.py self.dbc[0]")
+     # print(self.dbc[0])
+     # print("packer.py msg")
+     # print(msg)
 
       name = ffi.string(msg.name)
       address = msg.address
