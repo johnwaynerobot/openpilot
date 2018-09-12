@@ -137,11 +137,11 @@ def get_can_signals(CP):
 def get_can_parser(CP):  #2018.09.04 combine in above
     signals, checks = get_can_signals(CP)  #2018.09.06 add two argument
     #canbus.powertrain is can 0 (bus 0)
-    print ("carstate.py signals")
-    print (signals)
-    print (checks)
-    print("carstate.py")
-    print(DBC[CP.carFingerprint]['pt'])
+   # print ("carstate.py signals")
+    #print (signals)
+   # print (checks)
+    #print("carstate.py")
+   # print(DBC[CP.carFingerprint]['pt'])
     return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, 0)   #2018.09.06 4:37PM change canbuspowertrain to 0
 
     #print("carstate.py canbus.powertrain")
@@ -293,8 +293,8 @@ class CarState(object):
             self.brake_error = cp.vl["BRAKE_REPORT"]['BRAKE_REPORT_dtcs']
             self.esp_disabled = cp.vl["VSA_STATUS"]['ESP_DISABLED']
             self.seatbelt = not cp.vl["SCM_FEEDBACK"]['SEATBELT_DRIVER_LAMP']  # 2018.09.04 0 is 1, 1 is off
-            print("Steering sensor")
-            print(cp.vl["STEERING_SENSORS"])
+           # print("Steering sensor")
+           # print(cp.vl["STEERING_SENSORS"])
             self.angle_steers = cp.vl["STEERING_SENSORS"]['STEER_ANGLE']
            # self.angle_steers_rate = cp.vl["STEERING_SENSORS"]['STEER_ANGLE_RATE']  #TODO not sure why it not reading dbc signal order?
             self.cruise_setting = cp.vl["SCM_BUTTONS"]['CRUISE_SETTING']
