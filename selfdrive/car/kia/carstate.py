@@ -258,7 +258,7 @@ class CarState(object):
         self.esp_disabled = cp.vl["VSA_STATUS"]['ESP_DISABLED']
         self.seatbelt = not cp.vl["SCM_FEEDBACK"]['SEATBELT_DRIVER_LAMP']  # 2018.09.04 0 is 1, 1 is off
         self.angle_steers = cp.vl["STEERING_SENSORS"]['STEER_ANGLE']
-        self.angle_steers_rate = cp.vl["STEERING_SENSORS"]['STEER_ANGLE_RATE']
+        #self.angle_steers_rate = cp.vl["STEERING_SENSORS"]['STEER_ANGLE_RATE']
         self.cruise_setting = cp.vl["SCM_BUTTONS"]['CRUISE_SETTING']
         self.cruise_buttons = cp.vl["SCM_BUTTONS"]['CRUISE_BUTTONS']
         self.blinker_on = cp.vl["SCM_FEEDBACK"]['LEFT_BLINKER'] or cp.vl["SCM_FEEDBACK"]['RIGHT_BLINKER']
@@ -296,7 +296,7 @@ class CarState(object):
             print("Steering sensor")
             print(cp.vl["STEERING_SENSORS"])
             self.angle_steers = cp.vl["STEERING_SENSORS"]['STEER_ANGLE']
-            self.angle_steers_rate = cp.vl["STEERING_SENSORS"]['STEER_ANGLE_RATE']  #TODO not sure why it not reading dbc signal order?
+           # self.angle_steers_rate = cp.vl["STEERING_SENSORS"]['STEER_ANGLE_RATE']  #TODO not sure why it not reading dbc signal order?
             self.cruise_setting = cp.vl["SCM_BUTTONS"]['CRUISE_SETTING']
             self.cruise_buttons = cp.vl["SCM_BUTTONS"]['CRUISE_BUTTONS']
             self.blinker_on = cp.vl["SCM_FEEDBACK"]['LEFT_BLINKER'] or cp.vl["SCM_FEEDBACK"]['RIGHT_BLINKER']
