@@ -201,9 +201,9 @@ class CarController(object):
     # Send steering command.
     idx = frame % 4  #2018.09.02 this mod it get the remainder?? #2018.09.03 remove idx, 2018.09.06 12:33 AM add canbus.powertrain
                      #2018.09.11 update the argument to match for both carcontroller.py and kiacan to fix argument error
-    can_sends.append(kiacan.create_steering_control_enable(self.packer, lkas_active))
-    can_sends.append(kiacan.create_steering_control(self.packer, apply_steer, lkas_active))
-    can_sends.append(kiacan.create_steering_control_disable(self.packer, lkas_active))
+    can_sends.append(kiacan.create_steering_control_enable(self.packer, lkas_active, idx))
+    can_sends.append(kiacan.create_steering_control(self.packer, apply_steer, lkas_active, idx))
+    can_sends.append(kiacan.create_steering_control_disable(self.packer, lkas_active, idx))
 
     # Send dashboard UI commands.
     if (frame % 10) == 0:
@@ -222,11 +222,11 @@ class CarController(object):
       if (frame % 2) == 0:
         idx = (frame / 2) % 4
         can_sends.append(
-          kiacan.create_brake_enable_soul(self.packer,  apply_brake)) #enable brake command,  #2018.09.06 12:33AM add canbus.powertrain
+          kiacan.create_brake_enable_soul(self.packer,  apply_brake, idx)) #enable brake command,  #2018.09.06 12:33AM add canbus.powertrain
         can_sends.append(
-          kiacan.create_brake_command_soul(self.packer,  apply_brake)) #creating brake command  #2018.09.06 12:33AM add canbus.powertrain
+          kiacan.create_brake_command_soul(self.packer,  apply_brake, idx)) #creating brake command  #2018.09.06 12:33AM add canbus.powertrain
         can_sends.append(
-          kiacan.create_brake_disable_soul(self.packer,  apply_brake)) #disable brake command #2018.09.06 12:33AM add canbus.powertrain
+          kiacan.create_brake_disable_soul(self.packer,  apply_brake, idx)) #disable brake command #2018.09.06 12:33AM add canbus.powertrain
         can_sends.append(
           kiacan.create_brake_command(self.packer,  apply_brake, pcm_override, pcm_cancel_cmd, hud.chime, hud.fcw, idx)) #creating brake command for chime & FCW, brake command need idx
         # 2018.09.06 12:33AM add canbus.powertrain  to distinction of can bus channel
@@ -237,9 +237,9 @@ class CarController(object):
           # send exactly zero if apply_gas is zero. Interceptor will send the max between read value and apply_gas.
           # This prevents unexpected pedal range rescaling
           # 2018.09.06 12:33AM add canbus.powertrain  to distinction of can bus channel
-          can_sends.append(kiacan.create_gas_command_enable(self.packer, apply_gas))
-          can_sends.append(kiacan.create_gas_command(self.packer, apply_gas))
-          can_sends.append(kiacan.create_gas_command_disable(self.packer, apply_gas))
+          can_sends.append(kiacan.create_gas_command_enable(self.packer, apply_gas, idx))
+          can_sends.append(kiacan.create_gas_command(self.packer, apply_gas, idx))
+          can_sends.append(kiacan.create_gas_command_disable(self.packer, apply_gas, idx))
 
           
       # radar at 20Hz, but these msgs need to be sent at 50Hz on ilx (seems like an Acura bug)
