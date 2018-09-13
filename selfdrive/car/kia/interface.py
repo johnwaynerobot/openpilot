@@ -389,7 +389,8 @@ class CarInterface(object):
     ret.wheelSpeeds.rr = self.CS.v_wheel_rr
 
     # gas pedal
-    ret.gas = self.CS.car_gas / 256.0
+    #ret.gas = self.CS.car_gas / 256.0
+    ret.gas = self.CS.car_gas    #2018.09.13 12:39AM change gas to car_gas without deviding
     #TODO 2018.09.05 check Throttle report operator override match this
     if not self.CP.enableGasInterceptor:
       ret.gasPressed = self.CS.pedal_gas > 0

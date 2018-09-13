@@ -306,6 +306,11 @@ class CarState(object):
             self.park_brake = 0  # not apply
             self.brake_hold = 0  # not apply
             self.main_on = cp.vl["SCM_BUTTONS"]['MAIN_ON']  #ACC main using UI
+            #2018.09.13 12:36AMEST add for seeing is brake switch press coming in
+            print("carstate.py brakepressed")
+            print(cp.vl["ENG_INFO"]['BRAKE_PRESSED'])
+            print("carstate.py ENG_INFO")
+            print(cp.vl["ENG_INFO"])
             self.brake_switch = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] ==2 # 2018.09.02 DV "2"value is brake switch ON
             self.brake_pressed = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] ==2  # 2018.09.02 change for Kia soul
             self.brake_switch_prev = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] ==2  #2018.09.02 DV "2"value is brake switch ON
@@ -346,6 +351,9 @@ class CarState(object):
 
     # this is a hack for the interceptor. This is now only used in the simulation
     # TODO: Replace tests by toyota so this can go away
+    #2018.09.13 12:41AM add in print
+    print("carstate.py throttle report")
+    print(cp.vl["THROTTLE_REPORT"])    #use to debug if self.user_gas
     if self.CP.enableGasInterceptor:
       self.user_gas = cp.vl["THROTTLE_REPORT"]['THROTTLE_REPORT_operator_override'] #2018.09.02 change for Kia soul when gas being press
       self.user_gas_pressed = self.user_gas > 0 # this works because interceptor read < 0 when pedal position is 0. Once calibrated, this will change
@@ -366,7 +374,9 @@ class CarState(object):
     #2018.09.10 using os cc kit set to steering override
     self.steer_override = abs(self.steer_torque_driver) > STEER_THRESHOLD[self.CP.carFingerprint] #threshold set in values.py
    # self.steer_override = cp.vl["STEERING_REPORT"]['STEERING_REPORT_operator_override']
-
+    #2018.09.13 12:56AM add to debug user brake for ret.brake value
+    print("carstate.py brakereport for why pressing brake pedal nothing or use brake pressed")
+    print(cp.vl["BRAKE_REPORT"])
     #self.user_brake = cp.vl["VSA_STATUS"]['USER_BRAKE']
     self.user_brake = cp.vl["BRAKE_REPORT"]['BRAKE_REPORT_operator_override']  #2018.09.02 DV add for Kia soul
     #self.pcm_acc_status = cp.vl["POWERTRAIN_DATA"]['ACC_STATUS']
