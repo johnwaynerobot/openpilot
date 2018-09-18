@@ -118,8 +118,8 @@ class CANParser(object):
 
     print("parser.py message_options")
     print(message_options)
-    print("parser.py dict((address,0) ")
-    print(dict((address, 0)))
+   # print("parser.py dict((address,0) ")
+    #print(dict((address, 0)))
 
     message_options_c = ffi.new("MessageParseOptions[]", [
       {
