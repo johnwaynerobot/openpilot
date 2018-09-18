@@ -191,8 +191,8 @@ class CANParser(object):
     print(self.can_valid)
     print("parser.py self.p_can_valid[0]")
     print(self.p_can_valid[0])
-    print("parser.py self.p_can_valid[1]")
-    print(self.p_can_valid[1])
+    #print("parser.py self.p_can_valid[1]")
+    #print(self.p_can_valid[1])
 
     # print can_values_len
     ret = set()
