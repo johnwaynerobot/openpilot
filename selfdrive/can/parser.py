@@ -90,7 +90,7 @@ class CANParser(object):
     sig_names = dict((name, ffi.new("char[]", name)) for name, _, _ in signals)
 
     print("parser.py sig_names")
-    print(sig_name)
+    print(sig_names)
     print("parsery.py ffi.new(char ,name)")
     print(ffi.new("char[]", name))
     print("dict (name, ffi.new)")
