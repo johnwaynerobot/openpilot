@@ -68,7 +68,7 @@ class CANParser(object):
     print("parser.py signals")
     print(signals)
     print("parser.py len(signals)")
-    print(len(signal))
+    #print(len(signal))
     print("parser.py s")
     print(s)
     print("parsery.py numbers.number")
