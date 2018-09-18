@@ -158,7 +158,7 @@ class CANParser(object):
     self.p_can_valid = ffi.new("bool*")
 
     print("parser.py self.p_can_valid")
-    print(p.can_valid)
+    print(self.p_can_valid)
 
     value_count = libdbc.can_query(self.can, 0, self.p_can_valid, 0, ffi.NULL)
 
