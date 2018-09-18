@@ -32,8 +32,8 @@ class CANParser(object):
     print(num_msgs)
     for i in range(num_msgs):
       msg = self.dbc[0].msgs[i]
-      print("parser.py msgs[i]")
-      print(msg[i])
+      #print("parser.py msgs[i]")
+      #print(msg[i])
       print("parser.py msg")
       print(msg)
 
@@ -108,8 +108,8 @@ class CANParser(object):
     print(sig_address)
     print("parser.py sig_name")
     print(sig_name)
-    print("parser.py sig_names[sig_name]")
-    print(sig_names[sig_name])
+   # print("parser.py sig_names[sig_name]")
+    #print(sig_names[sig_name])
     print("parser.py sig_default")
 
 
