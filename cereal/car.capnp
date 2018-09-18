@@ -68,6 +68,7 @@ struct CarEvent @0x9b1657f34caf3ad3 {
     preDriverUnresponsive @43;
     promptDriverUnresponsive @44;
     driverUnresponsive @45;
+    belowSteerSpeed @46;
   }
 }
 
@@ -97,7 +98,7 @@ struct CarState {
 
   # steering wheel
   steeringAngle @7 :Float32;   # deg
-  steeringRate @15 :Float32;   # deg/s  #2018.09.10 to do, TODO Kia rate is not the same hyundai
+  steeringRate @15 :Float32;   # deg/s
   steeringTorque @8 :Float32;  # TODO: standardize units
   steeringPressed @9 :Bool;    # if the user is using the steering wheel
 
@@ -284,6 +285,7 @@ struct CarParams {
   enableApgs @28 :Bool; # advanced parking guidance system
 
   minEnableSpeed @17 :Float32;
+  minSteerSpeed @49 :Float32;
   safetyModel @18 :Int16;
   safetyParam @41 :Int16;
 
@@ -310,7 +312,8 @@ struct CarParams {
     hyundai @8;
     chrysler @9;
     tesla @10;
-    kia @11;
+    subaru @11;
+    kia @12;
   }
 
   # things about the car in the manual

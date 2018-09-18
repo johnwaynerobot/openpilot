@@ -225,6 +225,10 @@ class CarState(object):
 
     # ******************* parse out can *******************
 
+    #2018.09.14 3:27PM change here due to message Steering report throttle report and brake report don't have counter and checksum
+    #TODO how to separate the messages with counter and checksum reading, it check in plant_can_parser.py
+    self.can_valid = True
+
     #2018.09.03 Gear name define
 
     # can_gear_shifter = int(cp.vl["GEARBOX"]['GEAR_SHIFTER'])
@@ -307,10 +311,10 @@ class CarState(object):
             self.brake_hold = 0  # not apply
             self.main_on = cp.vl["SCM_BUTTONS"]['MAIN_ON']  #ACC main using UI
             #2018.09.13 12:36AMEST add for seeing is brake switch press coming in
-            print("carstate.py brakepressed")
-            print(cp.vl["ENG_INFO"]['BRAKE_PRESSED'])
-            print("carstate.py ENG_INFO")
-            print(cp.vl["ENG_INFO"])
+           # print("carstate.py brakepressed")
+           # print(cp.vl["ENG_INFO"]['BRAKE_PRESSED'])
+           # print("carstate.py ENG_INFO")
+           # print(cp.vl["ENG_INFO"])
             self.brake_switch = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] ==2 # 2018.09.02 DV "2"value is brake switch ON
             self.brake_pressed = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] ==2  # 2018.09.02 change for Kia soul
             self.brake_switch_prev = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] ==2  #2018.09.02 DV "2"value is brake switch ON
@@ -352,8 +356,8 @@ class CarState(object):
     # this is a hack for the interceptor. This is now only used in the simulation
     # TODO: Replace tests by toyota so this can go away
     #2018.09.13 12:41AM add in print
-    print("carstate.py throttle report")
-    print(cp.vl["THROTTLE_REPORT"])    #use to debug if self.user_gas
+    #print("carstate.py throttle report")
+    #print(cp.vl["THROTTLE_REPORT"])    #use to debug if self.user_gas
     if self.CP.enableGasInterceptor:
       self.user_gas = cp.vl["THROTTLE_REPORT"]['THROTTLE_REPORT_operator_override'] #2018.09.02 change for Kia soul when gas being press
       self.user_gas_pressed = self.user_gas > 0 # this works because interceptor read < 0 when pedal position is 0. Once calibrated, this will change
@@ -375,9 +379,10 @@ class CarState(object):
     self.steer_override = abs(self.steer_torque_driver) > STEER_THRESHOLD[self.CP.carFingerprint] #threshold set in values.py
    # self.steer_override = cp.vl["STEERING_REPORT"]['STEERING_REPORT_operator_override']
     #2018.09.13 12:56AM add to debug user brake for ret.brake value
-    print("carstate.py brakereport for why pressing brake pedal nothing or use brake pressed")
-    print(cp.vl["BRAKE_REPORT"])
+    #print("carstate.py brakereport for why pressing brake pedal nothing or use brake pressed")
+    #print(cp.vl["BRAKE_REPORT"])
     #self.user_brake = cp.vl["VSA_STATUS"]['USER_BRAKE']
+    #2018.09.14 TODO should check if actual brake percentage coming in
     self.user_brake = cp.vl["BRAKE_REPORT"]['BRAKE_REPORT_operator_override']  #2018.09.02 DV add for Kia soul
     #self.pcm_acc_status = cp.vl["POWERTRAIN_DATA"]['ACC_STATUS']
     self.pcm_acc_status = cp.vl["SCM_BUTTONS"]['MAIN_ON'] ==1   #2018.09.02 DV change to UI 0x1A6 main switch

@@ -118,6 +118,7 @@ class CarState(object):
 
     self.CP = CP
 
+
     # initialize can parser
     self.car_fingerprint = CP.carFingerprint
 
