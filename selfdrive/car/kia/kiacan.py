@@ -177,7 +177,7 @@ def create_steering_control_disable(packer, lkas_active):
   values = {
     "STEERING_DISABLE_magic": x_steering_disable
   }
-  return packer.make_can_msg("STEERING_DISABLE", 0, values, idx) #remove idx no need for alive counter and checksum
+  return packer.make_can_msg("STEERING_DISABLE", 0, values) #remove idx no need for alive counter and checksum
 
 
 
