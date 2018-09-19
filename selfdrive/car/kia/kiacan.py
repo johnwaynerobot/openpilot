@@ -62,7 +62,7 @@ def create_brake_command_soul(packer, apply_brake):
     "BRAKE_COMMAND_pedal_command": apply_brake,   # computer
     "BRAKE_COMMAND_magic": x ,
   }
-  return packer.make_can_msg("SOUL_BRAKE_COMMAND", 0, values, idx)  #remove idx no need for alive counter and checksum
+  return packer.make_can_msg("SOUL_BRAKE_COMMAND", 0, values)  #remove idx no need for alive counter and checksum
 
 def create_brake_enable_soul(packer, apply_brake):
   """Creates a CAN message for the Honda DBC BRAKE_COMMAND."""
@@ -123,7 +123,7 @@ def create_gas_command_enable(packer, gas_amount):
   if enable:
     values["THROTTLE_ENABLE_magic"] = x_gas_enable
 
-  return packer.make_can_msg("THROTTLE_ENABLE", 0, values, idx) #remove idx no need for alive counter and checksum
+  return packer.make_can_msg("THROTTLE_ENABLE", 0, values) #remove idx no need for alive counter and checksum
 
 def create_gas_command_disable(packer, gas_amount):
   """Creates a CAN message for the Honda DBC GAS_COMMAND."""
