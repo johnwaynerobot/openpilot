@@ -245,7 +245,9 @@ class CarController(object):
       # radar at 20Hz, but these msgs need to be sent at 50Hz on ilx (seems like an Acura bug)
       #change 2018.09.03 change ILX to dummy
       #if CS.CP.carFingerprint == CAR.DUMMY:
-        radar_send_step = 2
+        #radar_send_step = 2
+        #2018.09.19 12:20PM CRV need 10hz
+        radar_send_step = 1
      # else:
        # radar_send_step = 5
 
