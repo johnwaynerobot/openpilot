@@ -90,6 +90,8 @@ class RadarInterface(object):
       elif cpt['LONG_DIST'] < 255:
         if ii not in self.pts or cpt['NEW_TRACK']:
           self.pts[ii] = car.RadarState.RadarPoint.new_message()
+          print("Self.pts[ii] << radarstate radarpoint newmessage")
+          print(self.pts[ii])
           print("radar_interface.py car.RadarState.RadarPoint.new_message()")
           print(car.RadarState.RadarPoint.new_message())
           self.pts[ii].trackId = self.track_id
@@ -98,6 +100,8 @@ class RadarInterface(object):
           print("radar_interface.py self.pts[ii].trackId")
           print(self.pts[ii].trackId)
           self.track_id += 1
+          print("after track_id +1 sef.pts[ii]")
+          print(self.pts[ii])
         self.pts[ii].dRel = cpt['LONG_DIST']  # from front of car
         print("radar_interface.py self.pts[ii].dRel")
         print(self.pts[ii].dRel)
