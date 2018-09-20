@@ -180,6 +180,12 @@ class CarController(object):
     apply_gas = clip(actuators.gas, 0., 1.)
     apply_brake = int(clip(self.brake_last * BRAKE_MAX, 0, BRAKE_MAX - 1))
     apply_steer = int(clip(-actuators.steer * STEER_MAX, -STEER_MAX, STEER_MAX))
+    print("carcontroller.py apply gas")
+    print(apply_gas)
+    print("carcontroller.py apply brake")
+    print(apply_brake)
+    print("carcontroller.py apply steer")
+    print(apply_steer)
 
      #2018.09.04 hyundai make this change, but need to understand more, we don't have steer_torque driver value
     #apply_steer = actuators.steer * SteerLimitParams.STEER_MAX

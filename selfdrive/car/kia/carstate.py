@@ -209,7 +209,8 @@ class CarState(object):
   def update(self, cp):
 
     # copy can_valid
-    self.can_valid = cp.can_valid
+    #self.can_valid = cp.can_valid
+    self.can_valid = True    #2018.09.19 12:24PMEST change to true
 
     # car param# 2018.09.06 12:33AM add canbus.powertrain  to distinction of can bus channels
     v_weight_v = [0., 1.]  # don't trust smooth speed at low values to avoid premature zero snapping
@@ -286,17 +287,23 @@ class CarState(object):
         self.generic_toggle = cp.vl["CLU1"]['CF_Clu_CruiseSwMain'] #2019.09.04 use stock cruise main switch for steer max test
 
     elif self.CP.carFingerprint in (CAR.SOUL1, CAR.SOUL2): # 2018.09.04 update
-            self.standstill = cp.vl["ENGINE_DATA"]['XMISSION_VSPEED'] < 0.1
+            self.generic_toggle = cp.vl["CLU1"]['CF_Clu_CruiseSwMain']  # 2019.09.04 use stock cruise main switch for steer max test
             self.door_all_closed = not cp.vl["SCM_FEEDBACK"]['DOOR_OPEN_FL']
             #print("carstate STEERING_REPORT ")
             #print(cp.vl["STEERING_REPORT"])
            # self.steer_error = cp.vl["STEERING_REPORT"]['STEERING_REPORT_dtcs']
             self.steer_error = False   #2018.09.11 6:10PM set as False TODO should we above or from Car CAN
-            self.steer_not_allowed = cp.vl["STEERING_REPORT"]['STEERING_REPORT_operator_override']
-            self.steer_warning = cp.vl["STEERING_REPORT"]['STEERING_REPORT_operator_override']
-            self.brake_error = cp.vl["BRAKE_REPORT"]['BRAKE_REPORT_dtcs']
-            self.esp_disabled = cp.vl["VSA_STATUS"]['ESP_DISABLED']
-            self.seatbelt = not cp.vl["SCM_FEEDBACK"]['SEATBELT_DRIVER_LAMP']  # 2018.09.04 0 is 1, 1 is off
+            #self.steer_not_allowed = cp.vl["STEERING_REPORT"]['STEERING_REPORT_operator_override']
+            self.steer_not_allowed = False
+           # self.steer_warning = cp.vl["STEERING_REPORT"]['STEERING_REPORT_operator_override']
+            self.steer_warning = False
+            #self.brake_error = cp.vl["BRAKE_REPORT"]['BRAKE_REPORT_dtcs']
+            self.brake_error = False
+           # self.esp_disabled = cp.vl["VSA_STATUS"]['ESP_DISABLED']
+            self.esp_disabled = False
+           # self.seatbelt = not cp.vl["SCM_FEEDBACK"]['SEATBELT_DRIVER_LAMP']  # 2018.09.04 0 is 1, 1 is off
+            self.seatbelt = True
+
            # print("Steering sensor")
            # print(cp.vl["STEERING_SENSORS"])
             self.angle_steers = cp.vl["STEERING_SENSORS"]['STEER_ANGLE']
@@ -329,21 +336,41 @@ class CarState(object):
             #self.v_cruise_pcm = self.v_cruise_pcm_prev if cp.vl["ACC_HUD"]['CRUISE_SPEED'] > 160.0 else cp.vl["ACC_HUD"]['CRUISE_SPEED']
            # self.v_cruise_pcm_prev = self.v_cruise_pcm
            # self.yaw_rate = cp.vl["IMU"]['YAW_RATE'] > 0
-            self.generic_toggle = cp.vl["CLU1"]['CF_Clu_CruiseSwMain']  # 2019.09.04 use stock cruise main switch for steer max test
+
 
     # calc best v_ego estimate, by averaging two opposite corners
     speed_factor = SPEED_FACTOR[self.CP.carFingerprint]
-    self.v_wheel_fl = cp.vl["WHEEL_SPEEDS"]['WHEEL_SPEED_FL'] * CV.KPH_TO_MS * speed_factor
-    self.v_wheel_fr = cp.vl["WHEEL_SPEEDS"]['WHEEL_SPEED_FR'] * CV.KPH_TO_MS * speed_factor
-    self.v_wheel_rl = cp.vl["WHEEL_SPEEDS"]['WHEEL_SPEED_RL'] * CV.KPH_TO_MS * speed_factor
-    self.v_wheel_rr = cp.vl["WHEEL_SPEEDS"]['WHEEL_SPEED_RR'] * CV.KPH_TO_MS * speed_factor
-    self.v_wheel = (self.v_wheel_fl+self.v_wheel_fr+self.v_wheel_rl+self.v_wheel_rr)/4.
+    #self.v_wheel_fl = cp.vl["WHEEL_SPEEDS"]['WHEEL_SPEED_FL'] * CV.KPH_TO_MS * speed_factor
+    #self.v_wheel_fr = cp.vl["WHEEL_SPEEDS"]['WHEEL_SPEED_FR'] * CV.KPH_TO_MS * speed_factor
+   # self.v_wheel_rl = cp.vl["WHEEL_SPEEDS"]['WHEEL_SPEED_RL'] * CV.KPH_TO_MS * speed_factor
+    #self.v_wheel_rr = cp.vl["WHEEL_SPEEDS"]['WHEEL_SPEED_RR'] * CV.KPH_TO_MS * speed_factor
+    #self.v_wheel = (self.v_wheel_fl+self.v_wheel_fr+self.v_wheel_rl+self.v_wheel_rr)/4.
+    if generic_toggle == True:
+        self.v_wheel_fl = 50* CV.KPH_TO_MS * speed_factor
+        self.v_wheel_fr = 50 * CV.KPH_TO_MS * speed_factor
+        self.v_wheel_rl = 50 * CV.KPH_TO_MS * speed_factor
+        self.v_wheel_rr = 50 * CV.KPH_TO_MS * speed_factor
+        self.v_wheel = 50 * CV.KPH_TO_MS * speed_factor
+        self.standstill = False
+    else:
+        self.v_wheel_fl = cp.vl["ENGINE_DATA"]['XMISSION_VSPEED']  * CV.KPH_TO_MS * speed_factor
+        self.v_wheel_fr = cp.vl["ENGINE_DATA"]['XMISSION_VSPEED']  * CV.KPH_TO_MS * speed_factor
+        self.v_wheel_rl = cp.vl["ENGINE_DATA"]['XMISSION_VSPEED']  * CV.KPH_TO_MS * speed_factor
+        self.v_wheel_rr = cp.vl["ENGINE_DATA"]['XMISSION_VSPEED']  * CV.KPH_TO_MS * speed_factor
+        self.v_wheel = cp.vl["ENGINE_DATA"]['XMISSION_VSPEED'] * CV.KPH_TO_MS * speed_factor
+        self.standstill = cp.vl["ENGINE_DATA"]['XMISSION_VSPEED'] < 0.1
 
     # blend in transmission speed at low speed, since it has more low speed accuracy
     self.v_weight = interp(self.v_wheel, v_weight_bp, v_weight_v)
-    speed = (1. - self.v_weight) * cp.vl["ENGINE_DATA"]['XMISSION_VSPEED'] * CV.KPH_TO_MS * speed_factor + \
-      self.v_weight * self.v_wheel      #2018.09.02 DV change ENGINE_DATA to TM_DATA and VS_TCU to match KIA SOUL,
+    #speed = (1. - self.v_weight) * cp.vl["ENGINE_DATA"]['XMISSION_VSPEED'] * CV.KPH_TO_MS * speed_factor + \
+      #self.v_weight * self.v_wheel      #2018.09.02 DV change ENGINE_DATA to TM_DATA and VS_TCU to match KIA SOUL,
                                         #2018.09.10 change to engine data
+    #speed = cp.vl["ENGINE_DATA"]['XMISSION_VSPEED'] * CV.KPH_TO_MS        #2018.09.19 change speed to actual car speed
+
+
+    speed = self.v_wheel
+            # 2018.09.02 DV change ENGINE_DATA to TM_DATA and VS_TCU to match KIA SOUL,
+    # 2018.09.10 change to engine data
 
     if abs(speed - self.v_ego) > 2.0:  # Prevent large accelerations when car starts at non zero speed
       self.v_ego_x = [[speed], [0.0]]  #kalman filter here
@@ -359,9 +386,10 @@ class CarState(object):
     #print("carstate.py throttle report")
     #print(cp.vl["THROTTLE_REPORT"])    #use to debug if self.user_gas
     if self.CP.enableGasInterceptor:
-      self.user_gas = cp.vl["THROTTLE_REPORT"]['THROTTLE_REPORT_operator_override'] #2018.09.02 change for Kia soul when gas being press
-      self.user_gas_pressed = self.user_gas > 0 # this works because interceptor read < 0 when pedal position is 0. Once calibrated, this will change
-
+      #self.user_gas = cp.vl["THROTTLE_REPORT"]['THROTTLE_REPORT_operator_override'] #2018.09.02 change for Kia soul when gas being press
+      #self.user_gas_pressed = self.user_gas > 0 # this works because interceptor read < 0 when pedal position is 0. Once calibrated, this will change
+      self.user_gas = cp.vl["ENG_INFO"]['PEDAL_GAS']  # 2018.09.02 change for Kia soul when gas being press
+      self.user_gas_pressed = self.user_gas > 0  # gas from actual gas pedal into 2018.09.19 12:35PMEST
 
 
     self.pedal_gas = cp.vl["ENG_INFO"]['PEDAL_GAS'] #2018.09.02 DV change for pedal gas
@@ -383,8 +411,8 @@ class CarState(object):
     #print(cp.vl["BRAKE_REPORT"])
     #self.user_brake = cp.vl["VSA_STATUS"]['USER_BRAKE']
     #2018.09.14 TODO should check if actual brake percentage coming in
-    self.user_brake = cp.vl["BRAKE_REPORT"]['BRAKE_REPORT_operator_override']  #2018.09.02 DV add for Kia soul
-    #self.pcm_acc_status = cp.vl["POWERTRAIN_DATA"]['ACC_STATUS']
+    #self.user_brake = cp.vl["BRAKE_REPORT"]['BRAKE_REPORT_operator_override']  #2018.09.02 DV add for Kia soul
+    self.user_brake = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] ==2  # 2018.09.19 12:38PM to est
     self.pcm_acc_status = cp.vl["SCM_BUTTONS"]['MAIN_ON'] ==1   #2018.09.02 DV change to UI 0x1A6 main switch
    # self.hud_lead = cp.vl["ACC_HUD"]['HUD_LEAD']  #2018.09.10 TODO need to simulated the signal and comment for debug chec
     #but this is the same as honda, EON system should be sending radar info

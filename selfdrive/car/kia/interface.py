@@ -115,12 +115,12 @@ class CarInterface(object):
     if sendcan is not None:
       self.sendcan = sendcan
       #2018.09.05 11:41PM change dbc_name to canbus
-      self.CC = CarController(self.cp.dbc_name, CP.carFingerprint, CP.enableCamera)  # 2018.09.10 add CP.carFingerprint, 2018.09.18 remove fingerprint
-      #print("self.cc interface.py dp.dbc_name")
-      #print(self.cp.dbc_name)
-      #print("interface.py CP.carFingerprint")
+      self.CC = CarController(self.cp.dbc_name, CP.enableCamera)  # 2018.09.10 add CP.carFingerprint, 2018.09.18 remove fingerprint
+      print("self.cc interface.py dp.dbc_name")
+      print(self.cp.dbc_name)
+      print("interface.py CP.carFingerprint")
      # print(CP.carFingerprint)
-     # print(CP.enableCamera)
+      print(CP.enableCamera)
 
 
    # if self.CS.CP.carFingerprint == CAR.DUMMY:   #2018.09.06 12:43AM dummy car for not use
@@ -378,7 +378,7 @@ class CarInterface(object):
     ret = car.CarState.new_message()
 
     #2018.09.05 add generic toggle for testing steering max#
-    ret.genericToggle = self.CS.generic_toggle
+    #ret.genericToggle = self.CS.generic_toggle
 
     # speeds
     ret.vEgo = self.CS.v_ego
