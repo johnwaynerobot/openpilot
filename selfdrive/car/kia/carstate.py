@@ -348,7 +348,7 @@ class CarState(object):
    # self.v_wheel_rl = cp.vl["WHEEL_SPEEDS"]['WHEEL_SPEED_RL'] * CV.KPH_TO_MS * speed_factor
     #self.v_wheel_rr = cp.vl["WHEEL_SPEEDS"]['WHEEL_SPEED_RR'] * CV.KPH_TO_MS * speed_factor
     #self.v_wheel = (self.v_wheel_fl+self.v_wheel_fr+self.v_wheel_rl+self.v_wheel_rr)/4.
-    if generic_toggle == 1:
+    if self.generic_toggle == True:
         self.v_wheel_fl = 50* CV.KPH_TO_MS * speed_factor
         self.v_wheel_fr = 50 * CV.KPH_TO_MS * speed_factor
         self.v_wheel_rl = 50 * CV.KPH_TO_MS * speed_factor
