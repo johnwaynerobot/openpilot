@@ -414,8 +414,8 @@ class CarState(object):
     #print(cp.vl["BRAKE_REPORT"])
     #self.user_brake = cp.vl["VSA_STATUS"]['USER_BRAKE']
     #2018.09.14 TODO should check if actual brake percentage coming in
-    #self.user_brake = cp.vl["BRAKE_REPORT"]['BRAKE_REPORT_operator_override']  #2018.09.02 DV add for Kia soul
-    self.user_brake = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] ==2  # 2018.09.19 12:38PM to est
+    self.user_brake = cp.vl["BRAKE_REPORT"]['BRAKE_REPORT_operator_override']  #2018.09.02 DV add for Kia soul
+    #self.user_brake = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] ==2  # 2018.09.19 12:38PM to est
     self.pcm_acc_status = cp.vl["SCM_BUTTONS"]['MAIN_ON'] ==1   #2018.09.02 DV change to UI 0x1A6 main switch
    # self.hud_lead = cp.vl["ACC_HUD"]['HUD_LEAD']  #2018.09.10 TODO need to simulated the signal and comment for debug chec
     #but this is the same as honda, EON system should be sending radar info
