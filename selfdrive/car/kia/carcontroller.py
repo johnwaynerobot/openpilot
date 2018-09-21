@@ -5,10 +5,8 @@ from selfdrive.controls.lib.drive_helpers import rate_limit
 from common.numpy_fast import clip
 from selfdrive.car import apply_std_steer_torque_limits #same as Hyundai change
 from selfdrive.car.kia.values import AH, CruiseButtons, CAR, DBC  #2018.09.02 DV add for Kia soul
-from selfdrive.car.kia.carstate import CarState, get_can_parser
 from selfdrive.can.packer import CANPacker
 from selfdrive.car.kia import kiacan
-from selfdrive.car.kia.carstate import generic_toggle
 
 #2018.09.04 import from Hyundai sanfe 2019, #TODO will need to use
 #define in steering for reference
@@ -172,8 +170,8 @@ class CarController(object):
       BRAKE_MAX = 1024 / 4
 
       # init safety test lines (2018.09.04 , test parameter)
-    if generic_toggle:
-        actuators.steer = 1.0
+    #if genericToggle:
+      #  actuators.steer = 1.0
       # end safety test lines
 
     # steer torque is converted back to CAN reference (positive when steering right)

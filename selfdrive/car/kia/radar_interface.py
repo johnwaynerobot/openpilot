@@ -11,32 +11,14 @@ import selfdrive.messaging as messaging
 
 def _create_nidec_can_parser():
   dbc_f = 'acura_ilx_2016_nidec.dbc'
-  print("radar_interface.py dbc_f")
-  print(dbc_f)
   radar_messages = [0x400] + range(0x430, 0x43A) + range(0x440, 0x446)
-  print("radar_interface.py radar_messages")
-  print(radar_messages)
   signals = zip(['RADAR_STATE'] +
                 ['LONG_DIST'] * 16 + ['NEW_TRACK'] * 16 + ['LAT_DIST'] * 16 +
                 ['REL_SPEED'] * 16,
                 [0x400] + radar_messages[1:] * 4,
                 [0] + [255] * 16 + [1] * 16 + [0] * 16 + [0] * 16)
-  print("radar_interface.py zip")
-  print(zip(['RADAR_STATE'] +
-                ['LONG_DIST'] * 16 + ['NEW_TRACK'] * 16 + ['LAT_DIST'] * 16 +
-                ['REL_SPEED'] * 16,
-                [0x400] + radar_messages[1:] * 4,
-                [0] + [255] * 16 + [1] * 16 + [0] * 16 + [0] * 16))
-  print("radar_interface.py signals")
-  print(signals)
   checks = zip([0x445], [20])
-  print("radar_interface.py check zip")
-  print(zip([0x445], [20]))
-  print("radar_interface.py check")
-  print(checks)
 
-  print("radar_interface.py os.path.splitext(dbc)")
-  print(os.path.splitext(dbc_f)[0])
   return CANParser(os.path.splitext(dbc_f)[0], signals, checks, 1)
 
 
@@ -72,17 +54,11 @@ class RadarInterface(object):
     while 1:
       tm = int(sec_since_boot() * 1e9)
       updated_messages.update(self.rcp.update(tm, True))
-      print("radar_interface.py update_messages.update")
-      print( updated_messages.update(self.rcp.update(tm, True)))
       if 0x445 in updated_messages:
         break
 
     for ii in updated_messages:
       cpt = self.rcp.vl[ii]
-      print("radar_interface.py self.rcp.vl[ii]")
-      print(self.rcp.vl[ii])
-      print("radar_interface.py cpt")
-      print(cpt)
       if ii == 0x400:
         # check for radar faults
         self.radar_fault = cpt['RADAR_STATE'] != 0x79
@@ -90,27 +66,11 @@ class RadarInterface(object):
       elif cpt['LONG_DIST'] < 255:
         if ii not in self.pts or cpt['NEW_TRACK']:
           self.pts[ii] = car.RadarState.RadarPoint.new_message()
-          print("Self.pts[ii] << radarstate radarpoint newmessage")
-          print(self.pts[ii])
-          print("radar_interface.py car.RadarState.RadarPoint.new_message()")
-          print(car.RadarState.RadarPoint.new_message())
           self.pts[ii].trackId = self.track_id
-          print("radar_interface.py self.track_id")
-          print(self.track_id)
-          print("radar_interface.py self.pts[ii].trackId")
-          print(self.pts[ii].trackId)
           self.track_id += 1
-          print("after track_id +1 sef.pts[ii]")
-          print(self.pts[ii])
         self.pts[ii].dRel = cpt['LONG_DIST']  # from front of car
-        print("radar_interface.py self.pts[ii].dRel")
-        print(self.pts[ii].dRel)
         self.pts[ii].yRel = -cpt['LAT_DIST']  # in car frame's y axis, left is positive
-        print("radar_interface.py self.pts[ii].yRel")
-        print(self.pts[ii].yRel)
         self.pts[ii].vRel = cpt['REL_SPEED']
-        print("radar_interface.py self.pts[ii].vRel ")
-        print(self.pts[ii].vRel)
         self.pts[ii].aRel = float('nan')
         self.pts[ii].yvRel = float('nan')
         self.pts[ii].measured = True
@@ -129,10 +89,6 @@ class RadarInterface(object):
     ret.canMonoTimes = canMonoTimes
 
     ret.points = self.pts.values()
-    print("radar_interface.py self.pts.values() ")
-    print(self.pts.values())
-    print("radar_interface.py ret.points ")
-    print(ret.points)
 
     return ret
 
@@ -145,4 +101,4 @@ if __name__ == "__main__":
   while 1:
     ret = RI.update()
     print(chr(27) + "[2J")
-    print (ret)
+    print ret
