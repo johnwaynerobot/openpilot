@@ -190,7 +190,7 @@ class CarController(object):
     print("carcontroller.py actuator gas")
     print(actuators.gas)
     print("carcontroller.py actuator.steer, steer max")
-    print(actuator.steer)
+    print(actuators.steer)
     print(STEER_MAX)
 
      #2018.09.04 hyundai make this change, but need to understand more, we don't have steer_torque driver value
