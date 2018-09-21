@@ -188,6 +188,7 @@ class CarState(object):
     self.right_blinker_on = 0
 
     self.stopped = 0
+    self.generic_toggle = 0  #2018.09.20 @ 9:35PMEST define global name
 
     # vEgo kalman filter
     dt = 0.01
@@ -231,6 +232,8 @@ class CarState(object):
     self.can_valid = True
 
     #2018.09.03 Gear name define
+
+    self.generic_toggle = cp.vl["CLU1"]['CF_Clu_CruiseSwMain']  # 2019.09.20 9:34PM use stock cruise main switch for steer max test
 
     # can_gear_shifter = int(cp.vl["GEARBOX"]['GEAR_SHIFTER'])
     # self.gear_shifter = parse_gear_shifter(can_gear_shifter, self.shifter_values)
@@ -284,10 +287,10 @@ class CarState(object):
         #self.v_cruise_pcm = self.v_cruise_pcm_prev if cp.vl["ACC_HUD"]['CRUISE_SPEED'] > 160.0 else cp.vl["ACC_HUD"]['CRUISE_SPEED']
        # self.v_cruise_pcm_prev = self.v_cruise_pcm  2018.09.11 finally not use in controlsd.py if enablecruise is false
         #self.yaw_rate = cp.vl["IMU"]['YAW_RATE']
-        self.generic_toggle = cp.vl["CLU1"]['CF_Clu_CruiseSwMain'] #2019.09.04 use stock cruise main switch for steer max test
+        #self.generic_toggle = cp.vl["CLU1"]['CF_Clu_CruiseSwMain'] #2019.09.04 use stock cruise main switch for steer max test
 
     elif self.CP.carFingerprint in (CAR.SOUL1, CAR.SOUL2): # 2018.09.04 update
-            self.generic_toggle = cp.vl["CLU1"]['CF_Clu_CruiseSwMain']  # 2019.09.04 use stock cruise main switch for steer max test
+           # self.generic_toggle = cp.vl["CLU1"]['CF_Clu_CruiseSwMain']  # 2019.09.04 use stock cruise main switch for steer max test
             self.door_all_closed = not cp.vl["SCM_FEEDBACK"]['DOOR_OPEN_FL']
             #print("carstate STEERING_REPORT ")
             #print(cp.vl["STEERING_REPORT"])
@@ -345,7 +348,7 @@ class CarState(object):
    # self.v_wheel_rl = cp.vl["WHEEL_SPEEDS"]['WHEEL_SPEED_RL'] * CV.KPH_TO_MS * speed_factor
     #self.v_wheel_rr = cp.vl["WHEEL_SPEEDS"]['WHEEL_SPEED_RR'] * CV.KPH_TO_MS * speed_factor
     #self.v_wheel = (self.v_wheel_fl+self.v_wheel_fr+self.v_wheel_rl+self.v_wheel_rr)/4.
-    if generic_toggle == True:
+    if generic_toggle == 1:
         self.v_wheel_fl = 50* CV.KPH_TO_MS * speed_factor
         self.v_wheel_fr = 50 * CV.KPH_TO_MS * speed_factor
         self.v_wheel_rl = 50 * CV.KPH_TO_MS * speed_factor
