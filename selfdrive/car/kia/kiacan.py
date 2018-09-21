@@ -58,10 +58,15 @@ def create_brake_command_soul(packer, apply_brake):
   else:
     x = 0x0000
 
+  print("kiacan.py brake command soul apply brake")
+  print(apply_brake)
+
   values = {
     "BRAKE_COMMAND_pedal_command": apply_brake,   # computer
     "BRAKE_COMMAND_magic": x ,
   }
+  print("kiacan.py brake command magic and brake pedal command")
+  print(values)
   return packer.make_can_msg("SOUL_BRAKE_COMMAND", 0, values)  #remove idx no need for alive counter and checksum
 
 def create_brake_enable_soul(packer, apply_brake):
@@ -77,6 +82,8 @@ def create_brake_enable_soul(packer, apply_brake):
   values = {
     "BRAKE_ENABLE_magic": x,
   }
+  print("kiacan.py soul_brake_enable")
+  print(values)
   return packer.make_can_msg("SOUL_BRAKE_ENABLE", 0, values) #remove idx no need for alive counter and checksum
 
 def create_brake_disable_soul(packer, apply_brake):
@@ -91,6 +98,9 @@ def create_brake_disable_soul(packer, apply_brake):
   values = {
     "BRAKE_DISABLE_magic": x,
   }
+
+  print("kiacan.py brake disable soul")
+  print(values)
   return packer.make_can_msg("SOUL_BRAKE_DISABLE", 0, values) #remove idx no need for alive counter and checksum
 
 
@@ -98,6 +108,8 @@ def create_gas_command(packer, gas_amount):
   """Creates a CAN message for the Honda DBC GAS_COMMAND."""
   enable = gas_amount > 0.001
 
+  print("kiacan.py gas amount")
+  print(gas_amount)
   values = {} #initializing the value dict empty initially
   if enable == True:
     x_gas = 0xCC05
@@ -106,7 +118,10 @@ def create_gas_command(packer, gas_amount):
 
   if enable:
     values["THROTTLE_COMMAND_magic"] = x_gas
-    values["THROTTLE_COMMAND_pedal_command"] = gas_amount 
+    values["THROTTLE_COMMAND_pedal_command"] = gas_amount
+
+    print("kiacan.py Throttle command")
+    print(values)
 
   return packer.make_can_msg("THROTTLE_COMMAND", 0, values) #remove idx no need for alive counter and checksum
 
@@ -120,9 +135,13 @@ def create_gas_command_enable(packer, gas_amount):
   else:
     x_gas_enable = 0x0000
 
+  print("kiacan.py x_gas_enable")
+  print(x_gas_enable)
   if enable:
     values["THROTTLE_ENABLE_magic"] = x_gas_enable
 
+  print("kiacan.py gas command enable")
+  print(values)
   return packer.make_can_msg("THROTTLE_ENABLE", 0, values) #remove idx no need for alive counter and checksum
 
 def create_gas_command_disable(packer, gas_amount):
@@ -137,7 +156,8 @@ def create_gas_command_disable(packer, gas_amount):
 
   if disable:
     values["THROTTLE_DISABLE_magic"] = x_gas_disable
-
+  print("kiacan.py gas command disable")
+  print(values)
   return packer.make_can_msg("THROTTLE_DISABLE", 0, values) #remove idx no need for alive counter and checksum
 
 
@@ -147,10 +167,18 @@ def create_steering_control(packer, apply_steer, lkas_active):
     x_steering_enable = 0xCC05
   else:
     x_steering_enable = 0x0000
+  print("kiacan.py apply steer")
+  print(apply_steer)
+  print("kiacan.py lkas_active")
+  print(lkas_active)
+
   values = {
     "STEERING_COMMAND_magic": apply_steer if lkas_active else 0,
     "STEERING_COMMAND_pedal_command": x_steering_enable,
   }
+  print("kiacan.py Steering command pedal command")
+  print(values)
+
   return packer.make_can_msg("STEERING_COMMAND", 0 , values) #remove idx no need for alive counter and checksum
 
 def create_steering_control_enable(packer, lkas_active):
@@ -163,9 +191,14 @@ def create_steering_control_enable(packer, lkas_active):
   else:
     x_steering_control_enable = 0x0000
 
+  print("kiacan.py x_steering_control_enable")
+  print(x_steering_control_enable)
+
   values= {
     "STEERING_ENABLE_magic": x_steering_control_enable
     }
+  print("kiacan.py steering control enable")
+  print(values)
   return packer.make_can_msg("STEERING_ENABLE", 0, values) #remove idx no need for alive counter and checksum
 
 def create_steering_control_disable(packer, lkas_active):
@@ -177,6 +210,9 @@ def create_steering_control_disable(packer, lkas_active):
   values = {
     "STEERING_DISABLE_magic": x_steering_disable
   }
+
+  print("kiacan.py steering control disable")
+  print(values)
   return packer.make_can_msg("STEERING_DISABLE", 0, values) #remove idx no need for alive counter and checksum
 
 

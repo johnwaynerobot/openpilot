@@ -184,6 +184,14 @@ class CarController(object):
     print(apply_brake)
     print("carcontroller.py apply steer")
     print(apply_steer)
+    print("carcontroller.py brake_last, brake max")
+    print(self.brake_last)
+    print(BRAKE_MAX)
+    print("carcontroller.py actuator gas")
+    print(actuators.gas)
+    print("carcontroller.py actuator.steer, steer max")
+    print(actuator.steer)
+    print(STEER_MAX)
 
      #2018.09.04 hyundai make this change, but need to understand more, we don't have steer_torque driver value
     #apply_steer = actuators.steer * SteerLimitParams.STEER_MAX
