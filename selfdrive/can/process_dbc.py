@@ -37,9 +37,9 @@ elif can_dbc.name.startswith("toyota") or can_dbc.name.startswith("lexus"):
 #Reason NIDEC radar is use, other messages doesnt need, it expected the name to have COUNTER and CHECKSUM in DBC
 #change DBC to process counter and checksum
 #dbc_template.cc is where process this
-elif can_dbc.name.startswith("kia"):
-  checksum_type = "honda"
-  checksum_size = 4
+#elif can_dbc.name.startswith("kia"):
+ # checksum_type = "honda"
+ # checksum_size = 4
 else:
   checksum_type = None
 

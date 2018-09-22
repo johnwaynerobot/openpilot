@@ -103,18 +103,18 @@ DBC = {
 
 
 STEER_THRESHOLD = {
-  CAR.SOUL: 0, #2018.09.02 D.V. steering override from OSCC car in carstate.py when 1 is override
-  CAR.SOUL1: 0, #2018.09.02 D.V. steering override from OSCC car in carstate.py when 1 is override
-  CAR.SOUL2: 0,  # 2018.09.11 missing car.soul2
-  CAR.SOUL3: 0, #2018.09.02 D.V. steering override from OSCC car in carstate.py when 1 is override
-  CAR.SOUL4: 0, #2018.09.02 D.V. steering override from OSCC car in carstate.py when 1 is override
-  CAR.SOUL5: 0, #2018.09.02 D.V. steering override from OSCC car in carstate.py when 1 is override
-  CAR.SOUL6: 0, #2018.09.02 D.V. steering override from OSCC car in carstate.py when 1 is override
-  CAR.SOUL7: 0, #2018.09.02 D.V. steering override from OSCC car in carstate.py when 1 is override
-  CAR.SOUL8: 0, #2018.09.02 D.V. steering override from OSCC car in carstate.py when 1 is override
-  CAR.SOUL9: 0, #2018.09.02 D.V. steering override from OSCC car in carstate.py when 1 is override
-  CAR.SOUL10: 0, #2018.09.02 D.V. steering override from OSCC car in carstate.py when 1 is override
-  CAR.SOUL11: 0, #2018.09.02 D.V. steering override from OSCC car in carstate.py when 1 is override
+  CAR.SOUL: 2, #2018.09.02 D.V. steering override from OSCC car in carstate.py when 1 is override
+  CAR.SOUL1: 2, #2018.09.02 D.V. steering override from OSCC car in carstate.py when 1 is override
+  CAR.SOUL2: 2,  # 2018.09.11 missing car.soul2
+  CAR.SOUL3: 2, #2018.09.02 D.V. steering override from OSCC car in carstate.py when 1 is override
+  CAR.SOUL4: 2, #2018.09.02 D.V. steering override from OSCC car in carstate.py when 1 is override
+  CAR.SOUL5: 2, #2018.09.02 D.V. steering override from OSCC car in carstate.py when 1 is override
+  CAR.SOUL6: 2, #2018.09.02 D.V. steering override from OSCC car in carstate.py when 1 is override
+  CAR.SOUL7: 2, #2018.09.02 D.V. steering override from OSCC car in carstate.py when 1 is override
+  CAR.SOUL8: 2, #2018.09.02 D.V. steering override from OSCC car in carstate.py when 1 is override
+  CAR.SOUL9: 2, #2018.09.02 D.V. steering override from OSCC car in carstate.py when 1 is override
+  CAR.SOUL10: 2, #2018.09.02 D.V. steering override from OSCC car in carstate.py when 1 is override
+  CAR.SOUL11: 2, #2018.09.02 D.V. steering override from OSCC car in carstate.py when 1 is override
 }
 
 SPEED_FACTOR = {
