@@ -1,10 +1,3 @@
-const int gas_interceptor_threshold = 328;
-int gas_interceptor_detected = 1;
-int brake_prev = 0;
-int gas_prev = 0;
-int gas_interceptor_prev = 1;
-int ego_speed = 0;
-
 void kia_rx_hook(CAN_FIFOMailBox_TypeDef *to_push) {}
 
 int kia_ign_hook() {
