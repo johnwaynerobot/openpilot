@@ -33,6 +33,8 @@ if can_dbc.name.startswith("honda") or can_dbc.name.startswith("acura"):
 elif can_dbc.name.startswith("toyota") or can_dbc.name.startswith("lexus"):
   checksum_type = "toyota"
   checksum_size = 8
+else:
+  checksum_type = None
 #2018.09.14 3:51PM add in Kia model to use Honda Checksum for radar and UI messages
 #Reason NIDEC radar is use, other messages doesnt need, it expected the name to have COUNTER and CHECKSUM in DBC
 #change DBC to process counter and checksum
@@ -40,8 +42,7 @@ elif can_dbc.name.startswith("toyota") or can_dbc.name.startswith("lexus"):
 #elif can_dbc.name.startswith("kia"):
  # checksum_type = "honda"
  # checksum_size = 4
-else:
-  checksum_type = None
+
 
 for address, msg_name, msg_size, sigs in msgs:
   for sig in sigs:
