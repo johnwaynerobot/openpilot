@@ -166,7 +166,7 @@ class CarController(object):
           STEER_MAX = 0x10  #2018.09.22 DV, this steering angle TODO: need tune parameter max steering allow, value clip when coming on can
           BRAKE_MAX = 100 #2018.09.02 DV TODO: need to tune for BRAKE_COMMAND_pedal_command, but the value clip when coming out
     else:
-      STEER_MAX = 0x1000
+      STEER_MAX = 0.10    #2018.09.25 test
       BRAKE_MAX = 1024 / 4
 
       # init safety test lines (2018.09.04 , test parameter)
