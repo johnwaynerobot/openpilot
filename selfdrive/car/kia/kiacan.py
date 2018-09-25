@@ -109,12 +109,12 @@ def create_gas_command(packer, gas_amount):
 
   print("kiacan.py gas amount")
   print(gas_amount)
-  values = {} #initializing the value dict empty initially
+
   if enable == True:
     x_gas = 0xCC05
   else:
     x_gas = 0x0000
-
+  values = {} #initializing the value dict empty initially
   if enable:
     values["THROTTLE_COMMAND_magic"] = x_gas
     values["THROTTLE_COMMAND_pedal_command"] = gas_amount * 100    #2018.09.24 time 100 to check
@@ -162,7 +162,7 @@ def create_gas_command_disable(packer, gas_amount):
 
 def create_steering_control(packer, apply_steer, lkas_active):
   """Creates a CAN message for the Honda DBC STEERING_CONTROL."""
-  values = {} #initializing the value dict empty initially
+
   if lkas_active == True:
     x_steering_enable = 0xCC05
   else:
@@ -171,7 +171,7 @@ def create_steering_control(packer, apply_steer, lkas_active):
   print(apply_steer)
   print("kiacan.py lkas_active")
   print(lkas_active)
-
+  values = {}  # initializing the value dict empty initially
   if lkas_active:
     values["STEERING_COMMAND_magic"] = x_steering_enable
     values["STEERING_COMMAND_pedal_command"] = apply_steer
