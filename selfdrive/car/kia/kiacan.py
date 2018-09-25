@@ -62,7 +62,7 @@ def create_brake_command_soul(packer, apply_brake):
   print(apply_brake)
 
   values["BRAKE_COMMAND_magic"] = x
-  values["BRAKE_COMMAND_pedal_command"] = apply_brake * 100     #2018.09.24 add * 100 for big endian to little endian
+  values["BRAKE_COMMAND_pedal_command"] = apply_brake * 1000     #2018.09.24 add * 1000 for big endian to little endian
 
   print("kiacan.py brake command magic and brake pedal command")
   print(values)
@@ -117,7 +117,7 @@ def create_gas_command(packer, gas_amount):
   values = {} #initializing the value dict empty initially
   if enable:
     values["THROTTLE_COMMAND_magic"] = x_gas
-    values["THROTTLE_COMMAND_pedal_command"] = gas_amount * 100    #2018.09.24 time 100 to check
+    values["THROTTLE_COMMAND_pedal_command"] = gas_amount * 1000    #2018.09.25 time 1000 to check
 
     print("kiacan.py Throttle command")
     print(values)
@@ -174,7 +174,7 @@ def create_steering_control(packer, apply_steer, lkas_active):
   values = {}  # initializing the value dict empty initially
   if lkas_active:
     values["STEERING_COMMAND_magic"] = x_steering_enable
-    values["STEERING_COMMAND_pedal_command"] = apply_steer
+    values["STEERING_COMMAND_pedal_command"] = apply_steer * 10   #2018.09.25 time 10 for test
 
   print("kiacan.py Steering command pedal command")
   print(values)

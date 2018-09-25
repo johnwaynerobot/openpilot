@@ -335,13 +335,14 @@ class CarState(object):
             self.brake_switch_ts = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] ==2
             self.stopped = cp.vl["ENGINE_DATA"]['XMISSION_VSPEED'] < 0.1
             self.cruise_speed_offset = calc_cruise_offset(0, self.v_ego)
-            #print("ACC_HUD")
-            #print(cp.vl["ACC_HUD"])
-            #print("ACC_HUD CRUISE SPEED")
-            #print(cp.vl["ACC_HUD"]['CRUISE_SPEED'])
+            print("ACC_HUD")
+            print(cp.vl["ACC_HUD"])
+            print("ACC_HUD CRUISE SPEED")
+            print(cp.vl["ACC_HUD"]['CRUISE_SPEED'])
             #2018.09.10 TODO this self.v_cruise_pcm is same as honda, we using gas interceptor, does it need? do we need to simulated the message for debug
-            #self.v_cruise_pcm = self.v_cruise_pcm_prev if cp.vl["ACC_HUD"]['CRUISE_SPEED'] > 160.0 else cp.vl["ACC_HUD"]['CRUISE_SPEED']
-           # self.v_cruise_pcm_prev = self.v_cruise_pcm
+            #2018.09.25 add these cruise pcm back for test
+            self.v_cruise_pcm = self.v_cruise_pcm_prev if cp.vl["ACC_HUD"]['CRUISE_SPEED'] > 160.0 else cp.vl["ACC_HUD"]['CRUISE_SPEED']
+            self.v_cruise_pcm_prev = self.v_cruise_pcm
            # self.yaw_rate = cp.vl["IMU"]['YAW_RATE'] > 0
 
 
@@ -406,6 +407,12 @@ class CarState(object):
       #self.user_gas = cp.vl["ENG_INFO"]['PEDAL_GAS']  # 2018.09.02 change for Kia soul when gas being press
       self.user_gas_pressed = self.user_gas > 0  # gas from actual gas pedal into 2018.09.19 12:35PMEST
 
+    # self.user_gas = cp.vl["THROTTLE_REPORT"]['THROTTLE_REPORT_operator_override'] #2018.09.02 change for Kia soul when gas being press
+    # print("carstate.py self.user_gas")
+    # print(self.user_gas)
+    # #self.user_gas_pressed = self.user_gas > 0 # this works because interceptor read < 0 when pedal position is 0. Once calibrated, this will change
+    # #self.user_gas = cp.vl["ENG_INFO"]['PEDAL_GAS']  # 2018.09.02 change for Kia soul when gas being press
+    # self.user_gas_pressed = self.user_gas > 0  # gas from actual gas pedal into 2018.09.19 12:35PMEST
 
     #self.pedal_gas = cp.vl["ENG_INFO"]['PEDAL_GAS'] #2018.09.02 DV change for pedal gas
     self.pedal_gas = self.user_gas  #2018.09.25 12:02PMEST change pedal gas to user_gas

@@ -172,6 +172,7 @@ class CarInterface(object):
     ret.enableCamera = not any(x for x in CAMERA_MSGS_SOUL if x in fingerprint)  #2018.09.02 DV change for KIA message
       #ret.enableGasInterceptor = 0x201 in fingerprint
     ret.enableGasInterceptor = 0x93 in fingerprint   #2018.09.02 DV change for gas interceptor to throttle report
+    # ret.enableGasInterceptor = False   #2018.09.25 ignore use regular cruise change for gas interceptor to throttle report
     cloudlog.warn("ECU Camera Simulated: %r", ret.enableCamera)
     cloudlog.warn("ECU Gas Interceptor: %r", ret.enableGasInterceptor)
 
