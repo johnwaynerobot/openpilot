@@ -57,7 +57,7 @@ def create_brake_command_soul(packer, apply_brake):
     x = 0xCC05
   else:
     x = 0x0000
-
+  values = {}  # initializing the value dict empty initially
   print("kiacan.py brake command soul apply brake")
   print(apply_brake)
 
