@@ -8,8 +8,8 @@ from selfdrive.config import Conversions as CV
 V_CRUISE_MAX = 144
 V_CRUISE_MIN = 8
 V_CRUISE_DELTA = 8
-#V_CRUISE_ENABLE_MIN = 40
-V_CRUISE_ENABLE_MIN = 0  #2018.09.22 @ 10:28AM EST change minimum set cruise to 0
+V_CRUISE_ENABLE_MIN = 40
+#V_CRUISE_ENABLE_MIN = 0  #2018.09.22 @ 10:28AM EST change minimum set cruise to 0
 #V_CRUISE_ENABLE_ADD = 3.21869   # add 2 MPH to cruise initial set speed, # 2018.09.22 this was copy https://github.com/tentious/openpilot/commit/83b03b1d7d40324424124ea8c71785ced7efc384
                                 #reason to use for pressing set to stay at the speed you at instead of slowing down
 
