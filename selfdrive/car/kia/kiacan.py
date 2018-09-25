@@ -162,6 +162,7 @@ def create_gas_command_disable(packer, gas_amount):
 
 def create_steering_control(packer, apply_steer, lkas_active):
   """Creates a CAN message for the Honda DBC STEERING_CONTROL."""
+  values = {} #initializing the value dict empty initially
   if lkas_active == True:
     x_steering_enable = 0xCC05
   else:
