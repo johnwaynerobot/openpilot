@@ -407,7 +407,8 @@ class CarState(object):
       self.user_gas_pressed = self.user_gas > 0  # gas from actual gas pedal into 2018.09.19 12:35PMEST
 
 
-    self.pedal_gas = cp.vl["ENG_INFO"]['PEDAL_GAS'] #2018.09.02 DV change for pedal gas
+    #self.pedal_gas = cp.vl["ENG_INFO"]['PEDAL_GAS'] #2018.09.02 DV change for pedal gas
+    self.pedal_gas = self.user_gas  #2018.09.25 12:02PMEST change pedal gas to user_gas
     # crv doesn't include cruise control
    # if self.CP.carFingerprint in (CAR.SOUL, CAR.SOUL1):  #2018.09.04
     #  self.car_gas = self.pedal_gas
