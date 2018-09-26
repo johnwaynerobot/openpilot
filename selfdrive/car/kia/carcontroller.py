@@ -249,7 +249,7 @@ class CarController(object):
     print(apply_angle)
     print(self.last_angle)
     print(angle_rate_lim)
-
+    self.last_angle = apply_angle
     #2018.09.25 python 1D interpolation function to get angle to -1 to +1
     x_angle_range = np.r[-360, 360, 1000]
     y_apply_torque_kia = np.r[-1, 1, 1000]
@@ -270,7 +270,7 @@ class CarController(object):
     #print(lkas_active)
    # print("carcontroller.py CS.steer_not_allowed")
     #print(CS.steer_not_allowed)
-    self.last_angle = apply_angle
+
     # Send CAN commands.
     can_sends = []
     #canbus = self.canbus  2018.09.06 comment out canbus
