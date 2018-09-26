@@ -9,6 +9,7 @@ from selfdrive.can.packer import CANPacker
 from selfdrive.car.kia import kiacan
 import numpy as np
 from scipy import interpolate
+import struct    #2018.09.26 for conversion number floating into integer to conver to hex
 
 #2018.09.04 import from Hyundai sanfe 2019, #TODO will need to use
 #define in steering for reference
@@ -209,7 +210,7 @@ class CarController(object):
     ANGLE_DELTA_V = [5., .8, .15]  # windup limit
     ANGLE_DELTA_VU = [5., 3.5, 0.4]  # unwind limit
 
-    # steer angle (2018.09.25 BORROW FROM TOYOTA)
+    # steer angle (2018.09.25 BORROW FROM TOYOTA)-
     #if self.steer_angle_enabled and CS.ipas_active:
     print("carcontroller.py actuator.steerAngle")
     print(actuators.steerAngle)
@@ -261,12 +262,29 @@ class CarController(object):
     print(y_apply_torque_kia)
     x_apply_angle_input = apply_angle
     f = interpolate.interp1d(x_angle_range, y_apply_torque_kia)
-    steeringkia = f(x_apply_angle_input)
+    steeringkia = f(x_apply_angle_input)      #2018.09.26 2:26PM is a scalar array, need to output as a single value
     print("carcontroller.py steeringkia")
-    print(steeringkia)
+    print(steeringkia)     #2018.09.26 2:26PM is a scalar array, need to output as a single value
+    steerkiaouptut = np.asscalar(steeringkia)     #2018.09.26 conversion array to single value
+    print("carcontroller.py steerkia output scalar")
+    print(steerkiaouptut)
+    packed_steering_angle = struct.pack('>I', int(np.asscalar(steeringkia) * 100))    #2018.09.26 packed the value into byte as big endian,
+                                                                                      # multiply by 100 to store as integer, int cut off decimal point
+    print("carcontroller.py steering command packed output as big endian")
+    print(packed_steering_angle)
+    unpacked_steering_angle = struct.unpack('<I', packed_steering_angle)[0]   #2018.09.26 [] get the first value of output tupple, unpack as little endian
+    print("carcontroller.py steering command")
+    print(unpacked_steering_angle)
+
+   #### end of steering
+
+   ## 2018.09.26 3:05PMEST pack gas to byte as big endian to byte hex data
+    packed_apply_gas = struct.pack('>I', int(np.asscalar(apply_gas) * 100))
+    print("carcontroller.py packed_apply_gas")
+    print(packed_apply_gas)
 
 
-     #2018.09.04 hyundai make this change, but need to understand more, we don't have steer_torque driver value
+    #2018.09.04 hyundai make this change, but need to understand more, we don't have steer_torque driver value
     #apply_steer = actuators.steer * SteerLimitParams.STEER_MAX
    # apply_steer = apply_std_steer_torque_limits(apply_steer, self.apply_steer_last, CS.steer_torque_driver,
                                                # SteerLimitParams)
