@@ -2,7 +2,7 @@ from cereal import car
 from collections import namedtuple
 from selfdrive.boardd.boardd import can_list_to_can_capnp
 from selfdrive.controls.lib.drive_helpers import rate_limit
-from common.numpy_fast import clip
+from common.numpy_fast import clip, interp   #2018.09.26 add interp
 from selfdrive.car import apply_std_steer_torque_limits #same as Hyundai change
 from selfdrive.car.kia.values import AH, CruiseButtons, CAR, DBC  #2018.09.02 DV add for Kia soul
 from selfdrive.can.packer import CANPacker
