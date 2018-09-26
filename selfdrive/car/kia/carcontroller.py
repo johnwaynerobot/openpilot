@@ -172,7 +172,7 @@ class CarController(object):
      #    STEER_MAX = 0xF00
      #    BRAKE_MAX = 1024 / 4
     if CS.CP.carFingerprint in (CAR.SOUL, CAR.SOUL1, CAR.SOUL2): # 2018.09.04 add different fingerprint messages Kia
-          STEER_MAX = 0.15  #2018.09.25 steering torque TODO: need tune parameter max steering allow, value clip when coming on can
+          STEER_MAX = 16  #2018.09.26 steering torque TODO: need tune parameter max steering allow, value clip when coming on can
           BRAKE_MAX = 100 #2018.09.02 DV TODO: need to tune for BRAKE_COMMAND_pedal_command, but the value clip when coming out
     else:
       STEER_MAX = 0.15   #2018.09.25 test
@@ -201,6 +201,15 @@ class CarController(object):
     print("carcontroller.py actuator.steer, steer max")
     print(actuators.steer)
     print(STEER_MAX)
+
+
+    ## 2018.09.26 3:05PMEST pack gas to byte as big endian to byte hex data
+    apply_gas_pack = apply_gas * 100
+    packed_apply_gas = struct.pack('<I', int(apply_gas_pack))  # 2018.09.26 no need aascalar gas because it not an array
+    print("carcontroller.py apply_gas_pack packed_apply_gas")
+    print(apply_gas_pack)
+    print(packed_apply_gas)
+
 
     #2018.09.25 borrow from toyota
     #Steer angle limits (tested at the Crows Landing track and considered ok)
@@ -278,10 +287,7 @@ class CarController(object):
 
    #### end of steering
 
-   ## 2018.09.26 3:05PMEST pack gas to byte as big endian to byte hex data
-    packed_apply_gas = struct.pack('>I', int(apply_gas*100))   #2018.09.26 no need aascalar gas because it not an array
-    print("carcontroller.py packed_apply_gas")
-    print(packed_apply_gas)
+
 
 
     #2018.09.04 hyundai make this change, but need to understand more, we don't have steer_torque driver value
