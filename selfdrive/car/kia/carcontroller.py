@@ -7,8 +7,8 @@ from selfdrive.car import apply_std_steer_torque_limits #same as Hyundai change
 from selfdrive.car.kia.values import AH, CruiseButtons, CAR, DBC  #2018.09.02 DV add for Kia soul
 from selfdrive.can.packer import CANPacker
 from selfdrive.car.kia import kiacan
-import numpy as np
-from scipy import interpolate
+#import numpy as np
+#from scipy import interpolate
 
 #2018.09.04 import from Hyundai sanfe 2019, #TODO will need to use
 #define in steering for reference
@@ -252,17 +252,17 @@ class CarController(object):
     print(angle_rate_lim)
     self.last_angle = apply_angle
     #2018.09.25 python 1D interpolation function to get angle to -1 to +1
-    x_angle_range = np.r[-360, 360, 1000]
-    print("carcontroller.py x_angle_range")
-    print(x_angle_range)
-    y_apply_torque_kia = np.r[-1.0, 1.0, 1000]
-    print("carcontroller.py")
-    print(y_apply_torque_kia)
-    x_apply_angle_input = apply_angle
-    f = interpolate.interp1d(x_angle_range, y_apply_torque_kia)
-    steeringkia = f(x_apply_angle_input)
-    print("carcontroller.py steeringkia")
-    print(steeringkia)
+    # x_angle_range = np.r[-360, 360, 1000]
+    # print("carcontroller.py x_angle_range")
+    # print(x_angle_range)
+    # y_apply_torque_kia = np.r[-1.0, 1.0, 1000]
+    # print("carcontroller.py")
+    # print(y_apply_torque_kia)
+    # x_apply_angle_input = apply_angle
+    # f = interpolate.interp1d(x_angle_range, y_apply_torque_kia)
+    # steeringkia = f(x_apply_angle_input)
+    # print("carcontroller.py steeringkia")
+    # print(steeringkia)
 
 
      #2018.09.04 hyundai make this change, but need to understand more, we don't have steer_torque driver value
