@@ -7,8 +7,8 @@ from selfdrive.car import apply_std_steer_torque_limits #same as Hyundai change
 from selfdrive.car.kia.values import AH, CruiseButtons, CAR, DBC  #2018.09.02 DV add for Kia soul
 from selfdrive.can.packer import CANPacker
 from selfdrive.car.kia import kiacan
-#import numpy as np
-#from scipy import interpolate
+import numpy as np
+from scipy import interpolate
 
 #2018.09.04 import from Hyundai sanfe 2019, #TODO will need to use
 #define in steering for reference
@@ -201,62 +201,68 @@ class CarController(object):
     print(actuators.steer)
     print(STEER_MAX)
 
-    # 2018.09.25 borrow from toyota
-    # Steer angle limits (tested at the Crows Landing track and considered ok)
-    # ANGLE_MAX_BP = [0., 5.]
-    # ANGLE_MAX_V = [510., 300.]
-    # ANGLE_DELTA_BP = [0., 5., 15.]
-    # ANGLE_DELTA_V = [5., .8, .15]  # windup limit
-    # ANGLE_DELTA_VU = [5., 3.5, 0.4]  # unwind limit
-    #
-    # # steer angle (2018.09.25 BORROW FROM TOYOTA)
-    # #if self.steer_angle_enabled and CS.ipas_active:
-    # print("carcontroller.py actuator.steerAngle")
-    # print(actuators.steerAngle)
-    # apply_angle = actuators.steerAngle
-    # angle_lim = interp(CS.v_ego, ANGLE_MAX_BP, ANGLE_MAX_V)
-    # print("carcontroller.py angle_lim")
-    # print(angle_lim)
-    # print("carcontroller.py Angle_max_BP, Angle_max_V")
-    # print(ANGLE_MAX_BP)
-    # print(ANGLE_MAX_V)
-    # apply_angle = clip(apply_angle, -angle_lim, angle_lim)
-    # print("carcontroller.py apply angle after clip")
-    # print(apply_angle)
-    #
-    #   # windup slower
-    # print("carcontroller.py self.last_angle")
-    # print(self.last_angle)
-    # if self.last_angle * apply_angle > 0. and abs(apply_angle) > abs(self.last_angle):
-    #     print("carcontroller.py absolute apply_angles section")
-    #     angle_rate_lim = interp(CS.v_ego, ANGLE_DELTA_BP, ANGLE_DELTA_V)
-    #     print("carcontroller.py v_ego, Angle_DeltaBP, angle Delta V, Angle_rate Lim")
-    #     print(CS.v_ego)
-    #     print(ANGLE_DELTA_BP)
-    #     print(ANGLE_DELTA_V)
-    #     print(angle_rate_lim)
-    # else:
-    #     angle_rate_lim = interp(CS.v_ego, ANGLE_DELTA_BP, ANGLE_DELTA_VU)
-    #     print("carcontroller.py if not self.lastangle v_ego, angle_rate_lim, Angle delta bp, angle delta vu")
-    #     print(CS.v_ego)
-    #     print(angle_rate_lim)
-    #     print(ANGLE_DELTA_BP)
-    #     print(ANGLE_DELTA_VU)
-    #
-    # print("carcontroller.py apply_angle before clip")
-    # print(apply_angle)
-    # apply_angle = clip(apply_angle, self.last_angle - angle_rate_lim, self.last_angle + angle_rate_lim)
-    # print("carcontroller.py apply_angle after clip, self.last angle, angle_rate_lim")
-    # print(apply_angle)
-    # print(self.last_angle)
-    # print(angle_rate_lim)
-    # self.last_angle = apply_angle
-    # #2018.09.25 python 1D interpolation function to get angle to -1 to +1
-    # x_angle_range = np.r[-360, 360, 1000]
-    # y_apply_torque_kia = np.r[-1, 1, 1000]
-    # x_apply_angle_input = apply_angle
-    # f = interpolate.interp1d(x_angle_range, y_apply_torque_kia)
-    # steeringkia = f(x_apply_angle_input)
+    #2018.09.25 borrow from toyota
+    #Steer angle limits (tested at the Crows Landing track and considered ok)
+    ANGLE_MAX_BP = [0., 5.]
+    ANGLE_MAX_V = [510., 300.]
+    ANGLE_DELTA_BP = [0., 5., 15.]
+    ANGLE_DELTA_V = [5., .8, .15]  # windup limit
+    ANGLE_DELTA_VU = [5., 3.5, 0.4]  # unwind limit
+
+    # steer angle (2018.09.25 BORROW FROM TOYOTA)
+    #if self.steer_angle_enabled and CS.ipas_active:
+    print("carcontroller.py actuator.steerAngle")
+    print(actuators.steerAngle)
+    apply_angle = actuators.steerAngle
+    angle_lim = interp(CS.v_ego, ANGLE_MAX_BP, ANGLE_MAX_V)
+    print("carcontroller.py angle_lim")
+    print(angle_lim)
+    print("carcontroller.py Angle_max_BP, Angle_max_V")
+    print(ANGLE_MAX_BP)
+    print(ANGLE_MAX_V)
+    apply_angle = clip(apply_angle, -angle_lim, angle_lim)
+    print("carcontroller.py apply angle after clip")
+    print(apply_angle)
+
+      # windup slower
+    print("carcontroller.py self.last_angle")
+    print(self.last_angle)
+    if self.last_angle * apply_angle > 0. and abs(apply_angle) > abs(self.last_angle):
+        print("carcontroller.py absolute apply_angles section")
+        angle_rate_lim = interp(CS.v_ego, ANGLE_DELTA_BP, ANGLE_DELTA_V)
+        print("carcontroller.py v_ego, Angle_DeltaBP, angle Delta V, Angle_rate Lim")
+        print(CS.v_ego)
+        print(ANGLE_DELTA_BP)
+        print(ANGLE_DELTA_V)
+        print(angle_rate_lim)
+    else:
+        angle_rate_lim = interp(CS.v_ego, ANGLE_DELTA_BP, ANGLE_DELTA_VU)
+        print("carcontroller.py if not self.lastangle v_ego, angle_rate_lim, Angle delta bp, angle delta vu")
+        print(CS.v_ego)
+        print(angle_rate_lim)
+        print(ANGLE_DELTA_BP)
+        print(ANGLE_DELTA_VU)
+
+    print("carcontroller.py apply_angle before clip")
+    print(apply_angle)
+    apply_angle = clip(apply_angle, self.last_angle - angle_rate_lim, self.last_angle + angle_rate_lim)
+    print("carcontroller.py apply_angle after clip, self.last angle, angle_rate_lim")
+    print(apply_angle)
+    print(self.last_angle)
+    print(angle_rate_lim)
+    self.last_angle = apply_angle
+    #2018.09.25 python 1D interpolation function to get angle to -1 to +1
+    x_angle_range = np.r[-360, 360, 1000]
+    print("carcontroller.py x_angle_range")
+    print(x_angle_range)
+    y_apply_torque_kia = np.r[-1.0, 1.0, 1000]
+    print("carcontroller.py")
+    print(y_apply_torque_kia)
+    x_apply_angle_input = apply_angle
+    f = interpolate.interp1d(x_angle_range, y_apply_torque_kia)
+    steeringkia = f(x_apply_angle_input)
+    print("carcontroller.py steeringkia")
+    print(steeringkia)
 
 
      #2018.09.04 hyundai make this change, but need to understand more, we don't have steer_torque driver value
