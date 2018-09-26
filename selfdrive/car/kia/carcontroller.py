@@ -253,10 +253,10 @@ class CarController(object):
     print(angle_rate_lim)
 
     #2018.09.25 python 1D interpolation function to get angle to -1 to +1
-    x_angle_range = np.r[-360, 360, 1000]
+    x_angle_range = np.r_[-360, 360, 1000]
     print("carcontroller.py x_angle_range")
     print(x_angle_range)
-    y_apply_torque_kia = np.r[-1.0, 1.0, 1000]
+    y_apply_torque_kia = np.r_[-1.0, 1.0, 1000]
     print("carcontroller.py")
     print(y_apply_torque_kia)
     x_apply_angle_input = apply_angle
