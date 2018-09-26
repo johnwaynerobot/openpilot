@@ -8,7 +8,7 @@ from selfdrive.car.kia.values import AH, CruiseButtons, CAR, DBC  #2018.09.02 DV
 from selfdrive.can.packer import CANPacker
 from selfdrive.car.kia import kiacan
 import numpy as np
-from scipy import interpolate
+#from scipy import interpolate
 import struct    #2018.09.26 for conversion number floating into integer to conver to hex
 
 #2018.09.04 import from Hyundai sanfe 2019, #TODO will need to use
@@ -253,28 +253,28 @@ class CarController(object):
     print(self.last_angle)
     print(angle_rate_lim)
 
-    #2018.09.25 python 1D interpolation function to get angle to -1 to +1
-    x_angle_range = np.r_[-360, 360, 1000]
-    print("carcontroller.py x_angle_range")
-    print(x_angle_range)
-    y_apply_torque_kia = np.r_[-1.0, 1.0, 1000]
-    print("carcontroller.py")
-    print(y_apply_torque_kia)
-    x_apply_angle_input = apply_angle
-    f = interpolate.interp1d(x_angle_range, y_apply_torque_kia)
-    steeringkia = f(x_apply_angle_input)      #2018.09.26 2:26PM is a scalar array, need to output as a single value
-    print("carcontroller.py steeringkia")
-    print(steeringkia)     #2018.09.26 2:26PM is a scalar array, need to output as a single value
-    steerkiaouptut = np.asscalar(steeringkia)     #2018.09.26 conversion array to single value
-    print("carcontroller.py steerkia output scalar")
-    print(steerkiaouptut)
-    packed_steering_angle = struct.pack('>I', int(np.asscalar(steeringkia) * 100))    #2018.09.26 packed the value into byte as big endian,
-                                                                                      # multiply by 100 to store as integer, int cut off decimal point
-    print("carcontroller.py steering command packed output as big endian")
-    print(packed_steering_angle)
-    unpacked_steering_angle = struct.unpack('<I', packed_steering_angle)[0]   #2018.09.26 [] get the first value of output tupple, unpack as little endian
-    print("carcontroller.py steering command")
-    print(unpacked_steering_angle)
+    # #2018.09.25 python 1D interpolation function to get angle to -1 to +1
+    # x_angle_range = np.r_[-360, 360, 1000]
+    # print("carcontroller.py x_angle_range")
+    # print(x_angle_range)
+    # y_apply_torque_kia = np.r_[-1.0, 1.0, 1000]
+    # print("carcontroller.py")
+    # print(y_apply_torque_kia)
+    # x_apply_angle_input = apply_angle
+    # f = interpolate.interp1d(x_angle_range, y_apply_torque_kia)
+    # steeringkia = f(x_apply_angle_input)      #2018.09.26 2:26PM is a scalar array, need to output as a single value
+    # print("carcontroller.py steeringkia")
+    # print(steeringkia)     #2018.09.26 2:26PM is a scalar array, need to output as a single value
+    # steerkiaouptut = np.asscalar(steeringkia)     #2018.09.26 conversion array to single value
+    # print("carcontroller.py steerkia output scalar")
+    # print(steerkiaouptut)
+    # packed_steering_angle = struct.pack('>I', int(np.asscalar(steeringkia) * 100))    #2018.09.26 packed the value into byte as big endian,
+    #                                                                                   # multiply by 100 to store as integer, int cut off decimal point
+    # print("carcontroller.py steering command packed output as big endian")
+    # print(packed_steering_angle)
+    # unpacked_steering_angle = struct.unpack('<I', packed_steering_angle)[0]   #2018.09.26 [] get the first value of output tupple, unpack as little endian
+    # print("carcontroller.py steering command")
+    # print(unpacked_steering_angle)
 
    #### end of steering
 
