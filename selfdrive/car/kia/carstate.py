@@ -341,7 +341,9 @@ class CarState(object):
             print(cp.vl["ACC_HUD"]['CRUISE_SPEED'])
             #2018.09.10 TODO this self.v_cruise_pcm is same as honda, we using gas interceptor, does it need? do we need to simulated the message for debug
             #2018.09.25 add these cruise pcm back for test
-            self.v_cruise_pcm = self.v_cruise_pcm_prev if cp.vl["ACC_HUD"]['CRUISE_SPEED'] > 160.0 else cp.vl["ACC_HUD"]['CRUISE_SPEED']
+           # self.v_cruise_pcm = self.v_cruise_pcm_prev if cp.vl["ACC_HUD"]['CRUISE_SPEED'] > 160.0 else cp.vl["ACC_HUD"]['CRUISE_SPEED']
+            #self.v_cruise_pcm_prev = self.v_cruise_pcm
+            self.v_cruise_pcm = cp.vl["ENGINE_DATA"]['XMISSION_VSPEED']  #20180925 10:04PM est used vehicle speed as set
             self.v_cruise_pcm_prev = self.v_cruise_pcm
            # self.yaw_rate = cp.vl["IMU"]['YAW_RATE'] > 0
 
@@ -414,8 +416,8 @@ class CarState(object):
     # #self.user_gas = cp.vl["ENG_INFO"]['PEDAL_GAS']  # 2018.09.02 change for Kia soul when gas being press
     # self.user_gas_pressed = self.user_gas > 0  # gas from actual gas pedal into 2018.09.19 12:35PMEST
 
-    #self.pedal_gas = cp.vl["ENG_INFO"]['PEDAL_GAS'] #2018.09.02 DV change for pedal gas
-    self.pedal_gas = self.user_gas  #2018.09.25 12:02PMEST change pedal gas to user_gas
+    self.pedal_gas = cp.vl["ENG_INFO"]['PEDAL_GAS'] #2018.09.02 DV change for pedal gas
+    #self.pedal_gas = self.user_gas  #2018.09.25 12:02PMEST change pedal gas to user_gas
     # crv doesn't include cruise control
    # if self.CP.carFingerprint in (CAR.SOUL, CAR.SOUL1):  #2018.09.04
     #  self.car_gas = self.pedal_gas

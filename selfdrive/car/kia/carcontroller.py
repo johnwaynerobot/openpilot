@@ -255,7 +255,7 @@ class CarController(object):
     y_apply_torque_kia = np.r[-1, 1, 1000]
     x_apply_angle_input = apply_angle
     f = interpolate.interp1d(x_angle_range, y_apply_torque_kia)
-    SteeringKiaoutput = f(x_apply_angle_input)
+    steeringkia = f(x_apply_angle_input)
 
 
      #2018.09.04 hyundai make this change, but need to understand more, we don't have steer_torque driver value
@@ -280,7 +280,7 @@ class CarController(object):
     idx = frame % 4  #2018.09.02 this mod it get the remainder?? #2018.09.03 remove idx, 2018.09.06 12:33 AM add canbus.powertrain
                      #2018.09.11 update the argument to match for both carcontroller.py and kiacan to fix argument error
     can_sends.append(kiacan.create_steering_control_enable(self.packer, lkas_active))
-    can_sends.append(kiacan.create_steering_control(self.packer, SteeringKiaoutput, lkas_active))  #2018.09.25
+    can_sends.append(kiacan.create_steering_control(self.packer, steeringkia, lkas_active))  #2018.09.25
     can_sends.append(kiacan.create_steering_control_disable(self.packer, lkas_active))
 
     # Send dashboard UI commands.

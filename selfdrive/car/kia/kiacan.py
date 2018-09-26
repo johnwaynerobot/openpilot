@@ -160,7 +160,7 @@ def create_gas_command_disable(packer, gas_amount):
   return packer.make_can_msg("THROTTLE_DISABLE", 0, values) #remove idx no need for alive counter and checksum
 
 
-def create_steering_control(packer, SteeringKiaoutput, lkas_active):
+def create_steering_control(packer, steeringkia, lkas_active):
   """Creates a CAN message for the Honda DBC STEERING_CONTROL."""
 
   if lkas_active == True:
@@ -174,7 +174,7 @@ def create_steering_control(packer, SteeringKiaoutput, lkas_active):
   values = {}  # initializing the value dict empty initially
   if lkas_active:
     values["STEERING_COMMAND_magic"] = x_steering_enable
-    values["STEERING_COMMAND_pedal_command"] = SteeringKiaoutput   #2018.09.25 6:52PMEST change to steering output interpolation
+    values["STEERING_COMMAND_pedal_command"] = steeringkia   #2018.09.25 6:52PMEST change to steering output interpolation
 
   print("kiacan.py Steering command pedal command")
   print(values)
