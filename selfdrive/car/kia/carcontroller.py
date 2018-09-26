@@ -279,9 +279,9 @@ class CarController(object):
    #### end of steering
 
    ## 2018.09.26 3:05PMEST pack gas to byte as big endian to byte hex data
-    # packed_apply_gas = struct.pack('>I', int(np.asscalar(apply_gas) * 100))
-    # print("carcontroller.py packed_apply_gas")
-    # print(packed_apply_gas)
+    packed_apply_gas = struct.pack('>I', int(apply_gas) * 100)   #2018.09.26 no need aascalar gas because it not an array
+    print("carcontroller.py packed_apply_gas")
+    print(packed_apply_gas)
 
 
     #2018.09.04 hyundai make this change, but need to understand more, we don't have steer_torque driver value
