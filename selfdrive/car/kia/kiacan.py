@@ -75,7 +75,7 @@ def create_brake_command_soul(packer, apply_brake):
   print(apply_brake_can_bytes)
 
   values["BRAKE_COMMAND_magic"] = x
-  values["BRAKE_COMMAND_pedal_command"] = apply_brake * 1000  #2018.09.28 6:49PMEST expecting float
+  values["BRAKE_COMMAND_pedal_command"] = apply_brake * 10000  #2018.09.28 6:49PMEST expecting float
 
   print("kiacan.py brake command magic and brake pedal command")
   print(values)
@@ -135,7 +135,7 @@ def create_gas_command(packer, gas_amount):
   values = {} #initializing the value dict empty initially
   if enable:
     values["THROTTLE_COMMAND_magic"] = x_gas
-    values["THROTTLE_COMMAND_pedal_command"] = gas_amount * 1000  #2018.09.28 1:53PMEST expecting float
+    values["THROTTLE_COMMAND_pedal_command"] = gas_amount * 10000  #2018.09.28 1:53PMEST expecting float
 
     print("kiacan.py Throttle command")
     print(values)
