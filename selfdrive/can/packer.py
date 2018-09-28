@@ -53,6 +53,9 @@ class CANPacker(object):
       })
 
     values_c = ffi.new("SignalPackValue[]", values_thing)
+    print("packer.py values_c under pack")
+    print(values_c)
+
 
     return libdbc.canpack_pack(self.packer, addr, len(values_thing), values_c, counter)
 
@@ -65,6 +68,12 @@ class CANPacker(object):
   def pack_bytes(self, addr, values, counter=-1):
     addr, size = self.name_to_address_and_size[addr]
 
+    print("packer.py pack_bytes addr")
+    print(addr)
+    print("packer.py pack_bytes values")
+    print(values)
+    print("packer.py pack_bytes counter")
+    print(counter)
     val = self.pack(addr, values, counter)
     print("packer.py pack_bytes val")
     print(val)
