@@ -172,7 +172,7 @@ class CarController(object):
      #    STEER_MAX = 0xF00
      #    BRAKE_MAX = 1024 / 4
     if CS.CP.carFingerprint in (CAR.SOUL, CAR.SOUL1, CAR.SOUL2): # 2018.09.04 add different fingerprint messages Kia
-          STEER_MAX = 16  #2018.09.26 steering torque TODO: need tune parameter max steering allow, value clip when coming on can
+          STEER_MAX = 0.3  #2018.09.28 steering torque TODO: need tune parameter max steering allow, value clip when coming on can
           BRAKE_MAX = 100 #2018.09.02 DV TODO: need to tune for BRAKE_COMMAND_pedal_command, but the value clip when coming out
     else:
       STEER_MAX = 0.15   #2018.09.25 test

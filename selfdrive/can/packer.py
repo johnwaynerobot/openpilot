@@ -52,6 +52,8 @@ class CANPacker(object):
         'value': value
       })
 
+    print("definition pack in packer.py values_things")
+    print(values_thing)
     values_c = ffi.new("SignalPackValue[]", values_thing)
     print("packer.py values_c under pack")
     print(values_c)
@@ -87,10 +89,10 @@ class CANPacker(object):
   def pack_bytes2(self, addr, values, counter=-1):
     addr, size = self.name_to_address_and_size[addr]
 
-    val = self.pack(addr, values, counter)
+    val = values
     print("packer.py pack_bytes2")
     print(val)
-    r2 = list(bytearray(struct.pack("=f", val)))
+    r2 = struct.pack("=f", val)
     print("packer.py pack_bytes2 r")
     print(r2)
     return addr, r2[:size]

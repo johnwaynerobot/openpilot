@@ -33,6 +33,13 @@ def make_can_msg(addr, dat, idx, alt):
     dat = fix(dat, addr)
   return [addr, 0, dat, alt]
 
+#2018.09.28 att one for link with packer
+def make_can_msg2(addr, dat, idx, alt):
+  if idx is not None:
+    dat += chr(idx << 4)
+    dat = fix(dat, addr)
+  return [addr, 0, dat, alt]
+
 #2018.09.01 this one we should add fingerprint CAR.SOUL ,
 def create_brake_command(packer, apply_brake, pcm_override, pcm_cancel_cmd, chime, fcw, idx):
   """Creates a CAN message for the Honda DBC BRAKE_COMMAND."""
@@ -72,7 +79,7 @@ def create_brake_command_soul(packer, apply_brake):
 
   print("kiacan.py brake command magic and brake pedal command")
   print(values)
-  return packer.make_can_msg("SOUL_BRAKE_COMMAND", 0, values)  #remove idx no need for alive counter and checksum
+  return packer.make_can_msg2("SOUL_BRAKE_COMMAND", 0, values)  #remove idx no need for alive counter and checksum
 
 def create_brake_enable_soul(packer, apply_brake):
   """Creates a CAN message for the Honda DBC BRAKE_COMMAND."""
@@ -133,7 +140,7 @@ def create_gas_command(packer, gas_amount):
     print("kiacan.py Throttle command")
     print(values)
 
-  return packer.make_can_msg("THROTTLE_COMMAND", 0, values) #remove idx no need for alive counter and checksum
+  return packer.make_can_msg2("THROTTLE_COMMAND", 0, values) #remove idx no need for alive counter and checksum
 
 def create_gas_command_enable(packer, gas_amount):
   """Creates a CAN message for the Honda DBC GAS_COMMAND."""
@@ -197,7 +204,7 @@ def create_steering_control(packer, apply_steer, lkas_active):
   print("kiacan.py Steering command pedal command")
   print(values)
 
-  return packer.make_can_msg("STEERING_COMMAND", 0 , values) #remove idx no need for alive counter and checksum
+  return packer.make_can_msg2("STEERING_COMMAND", 0 , values) #remove idx no need for alive counter and checksum
 
 def create_steering_control_enable(packer, lkas_active):
   """Creates a CAN message for the Honda DBC STEERING_CONTROL."""
