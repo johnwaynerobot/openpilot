@@ -98,7 +98,7 @@ class CANPacker(object):
     val = values
     print("packer.py pack_bytes2")
     print(val)
-    r2 = struct.pack("=f", val)
+    r2 = struct.pack("=f", val)   # 2018.09.28 wont work because expect single float not full value
     print("packer.py pack_bytes2 r")
     print(r2)
     return addr, r2[:size]
