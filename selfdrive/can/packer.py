@@ -89,6 +89,12 @@ class CANPacker(object):
   def pack_bytes2(self, addr, values, counter=-1):
     addr, size = self.name_to_address_and_size[addr]
 
+    print("packer.py pack_bytes2 addr")
+    print(addr)
+    print("packer.py pack_bytes2 values")
+    print(values)
+    print("packer.py pack_bytes2 counter")
+    print(counter)
     val = values
     print("packer.py pack_bytes2")
     print(val)
