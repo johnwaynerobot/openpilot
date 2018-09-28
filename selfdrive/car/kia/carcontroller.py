@@ -203,12 +203,21 @@ class CarController(object):
     print(STEER_MAX)
 
 
-    ## 2018.09.26 3:05PMEST pack gas to byte as big endian to byte hex data
-    apply_gas_pack = apply_gas * 100
-    packed_apply_gas = struct.pack('<I', int(apply_gas_pack))  # 2018.09.26 no need aascalar gas because it not an array
-    print("carcontroller.py apply_gas_pack packed_apply_gas")
-    print(apply_gas_pack)
-    print(packed_apply_gas)
+    ## 2018.09.28 11:42AMEST
+    apply_gas_bytes = list(bytearray(struct.pack("=f", apply_gas)))    #converting float apply gas to byte list
+    print("carcontroller.py output gas byte")
+    print(bytearray(struct.pack("=f", apply_gas)))
+    print(apply_gas_bytes)
+
+    apply_brake_bytes = list(bytearray(struct.pack("=f", apply_brake)))
+    print("carcontroller.py output brake byte")
+    print(bytearray(struct.pack("=f", apply_brake)))
+    print(apply_brake_bytes)
+
+    apply_steer_bytes = list(bytearray(struct.pack("=f", apply_steer)))
+    print("carcontroller.py output steer byte")
+    print(bytearray(struct.pack("=f", apply_steer)))
+    print(apply_steer_bytes)
 
 
     #2018.09.25 borrow from toyota
