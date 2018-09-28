@@ -60,9 +60,15 @@ def create_brake_command_soul(packer, apply_brake):
   values = {}  # initializing the value dict empty initially
   print("kiacan.py brake command soul apply brake")
   print(apply_brake)
+  ## 2018.09.28 12:23PMEST
+  apply_brake_can_bytes = list(bytearray(struct.pack("=f", apply_brake)))    #converting float apply gas to byte list
+  print("kiacan.py output brake bytes array")
+  print(bytearray(struct.pack("=f", apply_brake)))
+  print("kiacan.py output apply_brake_can_bytes")
+  print(apply_brake_can_bytes)
 
   values["BRAKE_COMMAND_magic"] = x
-  values["BRAKE_COMMAND_pedal_command"] = apply_brake  #2018.09.24 add * 1000 for big endian to little endian
+  values["BRAKE_COMMAND_pedal_command"] = apply_brake_can_bytes #2018.09.28 change to byte types
 
   print("kiacan.py brake command magic and brake pedal command")
   print(values)
@@ -109,7 +115,12 @@ def create_gas_command(packer, gas_amount):
 
   print("kiacan.py gas amount")
   print(gas_amount)
-
+  ## 2018.09.28 12:22PMEST
+  apply_gas_can_bytes = list(bytearray(struct.pack("=f", gas_amount)))    #converting float apply gas to byte list
+  print("kiacan.py output gas bytes array")
+  print(bytearray(struct.pack("=f", gas_amount)))
+  print("kiacan.py output apply_gas_can_bytes")
+  print(apply_gas_can_bytes)
   if enable == True:
     x_gas = 0xCC05
   else:
@@ -117,7 +128,7 @@ def create_gas_command(packer, gas_amount):
   values = {} #initializing the value dict empty initially
   if enable:
     values["THROTTLE_COMMAND_magic"] = x_gas
-    values["THROTTLE_COMMAND_pedal_command"] = gas_amount   #2018.09.25 time 1000 to check
+    values["THROTTLE_COMMAND_pedal_command"] = apply_gas_can_bytes   #2018.09.28 12:20PMEST
 
     print("kiacan.py Throttle command")
     print(values)
@@ -171,10 +182,17 @@ def create_steering_control(packer, apply_steer, lkas_active):
   print(apply_steer)
   print("kiacan.py lkas_active")
   print(lkas_active)
+  ## 2018.09.28 12:25PMEST
+  apply_steer_can_bytes = list(bytearray(struct.pack("=f", apply_steer)))    #converting float apply gas to byte list
+  print("kiacan.py output apply_steer bytes array")
+  print(bytearray(struct.pack("=f", apply_steer)))
+  print("kiacan.py output apply_steer_can_bytes")
+  print(apply_steer_can_bytes)
+
   values = {}  # initializing the value dict empty initially
   if lkas_active:
     values["STEERING_COMMAND_magic"] = x_steering_enable
-    values["STEERING_COMMAND_pedal_command"] = apply_steer   #2018.09.25 6:52PMEST change to steering output interpolation
+    values["STEERING_COMMAND_pedal_command"] = apply_steer_can_bytes   #2018.09.28 change to float to bytes
 
   print("kiacan.py Steering command pedal command")
   print(values)
