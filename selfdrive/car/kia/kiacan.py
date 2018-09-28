@@ -128,7 +128,7 @@ def create_gas_command(packer, gas_amount):
   values = {} #initializing the value dict empty initially
   if enable:
     values["THROTTLE_COMMAND_magic"] = x_gas
-    values["THROTTLE_COMMAND_pedal_command"] = apply_gas   #2018.09.28 1:53PMEST expecting float
+    values["THROTTLE_COMMAND_pedal_command"] = gas_amount   #2018.09.28 1:53PMEST expecting float
 
     print("kiacan.py Throttle command")
     print(values)
