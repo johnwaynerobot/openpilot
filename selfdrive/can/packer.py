@@ -66,12 +66,36 @@ class CANPacker(object):
     addr, size = self.name_to_address_and_size[addr]
 
     val = self.pack(addr, values, counter)
+    print("packer.py pack_bytes val")
+    print(val)
     r = struct.pack(">Q", val)
+    print("packer.py pack_bytes struck pack")
+    print(r)
+
     return addr, r[:size]
+
+  #2018.09.28 1:47PMEST try bytes conversion in packer.py
+  def pack_bytes2(self, addr, values, counter=-1):
+    addr, size = self.name_to_address_and_size[addr]
+
+    val = self.pack(addr, values, counter)
+    print("packer.py pack_bytes2")
+    print(val)
+    r2 = list(bytearray(struct.pack("=f", val)))
+    print("packer.py pack_bytes2 r")
+    print(r2)
+    return addr, r2[:size]
+
+  #2018.09.28 2:01PMEST add make_can_msg2 for test
+  def make_can_msg2(self, addr, bus, values, counter=-1):
+    addr, msg = self.pack_bytes2(addr, values, counter)
+    return [addr, 0, msg, bus]
 
   def make_can_msg(self, addr, bus, values, counter=-1):
     addr, msg = self.pack_bytes(addr, values, counter)
     return [addr, 0, msg, bus]
+
+
 
    # print("packer.py make_can_msg")
    # print(addr)

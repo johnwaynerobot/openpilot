@@ -68,7 +68,7 @@ def create_brake_command_soul(packer, apply_brake):
   print(apply_brake_can_bytes)
 
   values["BRAKE_COMMAND_magic"] = x
-  values["BRAKE_COMMAND_pedal_command"] = apply_brake_can_bytes #2018.09.28 change to byte types
+  values["BRAKE_COMMAND_pedal_command"] = apply_brake  #2018.09.28 1:53PMEST expecting float
 
   print("kiacan.py brake command magic and brake pedal command")
   print(values)
@@ -128,7 +128,7 @@ def create_gas_command(packer, gas_amount):
   values = {} #initializing the value dict empty initially
   if enable:
     values["THROTTLE_COMMAND_magic"] = x_gas
-    values["THROTTLE_COMMAND_pedal_command"] = apply_gas_can_bytes   #2018.09.28 12:20PMEST
+    values["THROTTLE_COMMAND_pedal_command"] = apply_gas   #2018.09.28 1:53PMEST expecting float
 
     print("kiacan.py Throttle command")
     print(values)
@@ -192,7 +192,7 @@ def create_steering_control(packer, apply_steer, lkas_active):
   values = {}  # initializing the value dict empty initially
   if lkas_active:
     values["STEERING_COMMAND_magic"] = x_steering_enable
-    values["STEERING_COMMAND_pedal_command"] = apply_steer_can_bytes   #2018.09.28 change to float to bytes
+    values["STEERING_COMMAND_pedal_command"] = apply_steer   #2018.09.28 expecting float
 
   print("kiacan.py Steering command pedal command")
   print(values)
