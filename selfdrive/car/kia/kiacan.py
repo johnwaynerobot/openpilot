@@ -90,6 +90,31 @@ def create_steering_control(packer, apply_steer, lkas_active, idx):
 
 ###---- Honda Style End
 
+## begin toyota style send angle
+def create_ipas_steer_command(packer, apply_angle, enabled):
+  """Creates a CAN message for the Toyota Steer Command."""
+  if apply_angle < 0:
+    direction = 3
+  elif apply_angle > 0:
+    direction = 1
+  else:
+    direction = 2
+
+  mode = 3 if enabled else 1
+
+  values = {
+    "STATE": mode,
+    "DIRECTION_CMD": direction,
+    "ANGLE": apply_angle,
+    "SET_ME_X10": 0x10,
+    "SET_ME_X40": 0x40
+  }
+  #if apgs_enabled:
+  #  return packer.make_can_msg("STEERING_IPAS", 0, values)
+  #else:
+  return packer.make_can_msg("STEERING_IPAS_COMMA", 0, values)
+# end toyota style send angle
+
 # def create_brake_command_soul(packer, apply_brake):
 #   """Creates a CAN message for the Honda DBC BRAKE_COMMAND."""
 #   brake_rq = apply_brake > 0

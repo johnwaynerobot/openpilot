@@ -135,6 +135,15 @@ BO_ 357 STEER_STATUS: 8 XXX
  SG_ CF_Mdps_AliveCnt : 48|4@1+ (1,0) [0|15] "" XXX
  SG_ CF_Mdps_Chksum : 56|8@1+ (1,0) [0|255] "" XXX
 
+BO_ 359 STEERING_IPAS_COMMA: 8 XXX
+ SG_ STATE : 7|4@0+ (1,0) [0|15] "" XXX
+ SG_ ANGLE : 3|12@0- (1.5,0) [-510|510] "deg" XXX
+ SG_ SET_ME_X10 : 23|8@0+ (1,0) [0|255] "" XXX
+ SG_ SET_ME_X00 : 31|8@0+ (1,0) [0|255] "" XXX
+ SG_ DIRECTION_CMD : 38|2@0+ (1,0) [0|3] "" XXX
+ SG_ SET_ME_X40 : 47|8@0+ (1,0) [0|255] "" XXX
+ SG_ SET_ME_X00 : 55|8@0+ (1,0) [0|255] "" XXX
+
 BO_ 422 SCM_BUTTONS: 8 XXX
  SG_ CRUISE_BUTTONS : 7|3@0+ (1,0) [0|7] "" XXX
  SG_ LIGHTS_SETTING : 1|2@0+ (1,0) [0|3] "" XXX

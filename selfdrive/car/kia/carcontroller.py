@@ -172,7 +172,7 @@ class CarController(object):
      #    STEER_MAX = 0xF00
      #    BRAKE_MAX = 1024 / 4
     if CS.CP.carFingerprint in (CAR.SOUL, CAR.SOUL1, CAR.SOUL2): # 2018.09.04 add different fingerprint messages Kia
-          STEER_MAX = 0x1000   #2018.09.29 copy from Honda steering torque TODO: need tune parameter max steering allow, value clip when coming on can
+          STEER_MAX = 0xF00   #2018.09.29 copy from Honda steering torque TODO: need tune parameter max steering allow, value clip when coming on can
           BRAKE_MAX = 1024/4 #2018.09.29 TODO: need to tune for BRAKE_COMMAND_pedal_command, but the value clip when coming out
     else:
       STEER_MAX = 0x1000    #2018.09.29 copy for Honda
@@ -323,7 +323,8 @@ class CarController(object):
     can_sends.append(kiacan.create_steering_control_enable(self.packer, lkas_active))
     #can_sends.append(kiacan.create_steering_control_soul(self.packer, apply_steer, lkas_active))  #2018.09.26 reverse back to steer
     can_sends.append(kiacan.create_steering_control_disable(self.packer, lkas_active))
-    can_sends.append(kiacan.create_steering_control(self.packer, apply_steer, lkas_active, idx))  #2018.09.28 add in Honda command
+    can_sends.append(kiacan.create_steering_control(self.packer, apply_steer, lkas_active, idx))  #2018.09.29 add in Honda command
+    can_sends.append(kiacan.create_ipas_steer_command(self.packer, apply_angle, lkas_active)) #2018.09.29 borrow from toyota to add in angle
 
     # Send dashboard UI commands.
     if (frame % 10) == 0:
