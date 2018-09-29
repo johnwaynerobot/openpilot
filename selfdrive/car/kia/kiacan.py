@@ -40,16 +40,22 @@ def make_can_msg2(addr, dat, idx, alt):
     dat = fix(dat, addr)
   return [addr, 0, dat, alt]
 
-#2018.09.01 this one we should add fingerprint CAR.SOUL ,
+### HONDA Style Begin
+#2018.09.29 9:00AMEST change this to match honda this one we should add fingerprint CAR.SOUL ,
 def create_brake_command(packer, apply_brake, pcm_override, pcm_cancel_cmd, chime, fcw, idx):
   """Creates a CAN message for the Honda DBC BRAKE_COMMAND."""
+  pump_on = apply_brake > 0
   brakelights = apply_brake > 0
+  brake_rq = apply_brake > 0
   pcm_fault_cmd = False
 
   values = {
+    "COMPUTER_BRAKE": apply_brake,
+    "BRAKE_PUMP_REQUEST": pump_on,
     "CRUISE_OVERRIDE": pcm_override,
     "CRUISE_FAULT_CMD": pcm_fault_cmd,
     "CRUISE_CANCEL_CMD": pcm_cancel_cmd,
+    "COMPUTER_BRAKE_REQUEST": brake_rq,
     "SET_ME_0X80": 0x80,
     "BRAKE_LIGHTS": brakelights,
     "CHIME": chime,
@@ -57,29 +63,56 @@ def create_brake_command(packer, apply_brake, pcm_override, pcm_cancel_cmd, chim
   }
   return packer.make_can_msg("BRAKE_COMMAND", 0, values, idx)
 
-def create_brake_command_soul(packer, apply_brake):
-  """Creates a CAN message for the Honda DBC BRAKE_COMMAND."""
-  brake_rq = apply_brake > 0
-  if brake_rq == True:
-    x = 0xCC05
-  else:
-    x = 0x0000
-  values = {}  # initializing the value dict empty initially
-  print("kiacan.py brake command soul apply brake")
-  print(apply_brake)
-  ## 2018.09.28 12:23PMEST
-  apply_brake_can_bytes = list(bytearray(struct.pack("=f", apply_brake)))    #converting float apply gas to byte list
-  print("kiacan.py output brake bytes array")
-  print(bytearray(struct.pack("=f", apply_brake)))
-  print("kiacan.py output apply_brake_can_bytes")
-  print(apply_brake_can_bytes)
 
-  values["BRAKE_COMMAND_magic"] = x
-  values["BRAKE_COMMAND_pedal_command"] = apply_brake * 1000000  #2018.09.28 6:49PMEST expecting float
+def create_gas_command(packer, gas_amount, idx):
+  """Creates a CAN message for the Honda DBC GAS_COMMAND."""
+  enable = gas_amount > 0.001
 
-  print("kiacan.py brake command magic and brake pedal command")
-  print(values)
-  return packer.make_can_msg("SOUL_BRAKE_COMMAND", 0, values)  #remove idx no need for alive counter and checksum
+  values = {"ENABLE": enable}
+
+  if enable:
+    values["GAS_COMMAND"] = gas_amount * 255.
+    values["GAS_COMMAND2"] = gas_amount * 255.
+
+  return packer.make_can_msg("GAS_COMMAND", 0, values, idx)
+
+def create_steering_control(packer, apply_steer, lkas_active, idx):
+  """Creates a CAN message for the Honda DBC STEERING_CONTROL."""
+  values = {
+    "STEER_TORQUE": apply_steer if lkas_active else 0,
+    "STEER_TORQUE_REQUEST": lkas_active,
+  }
+  # Set bus 2 for accord and new crv.
+  #bus = 2 if car_fingerprint in HONDA_BOSCH else 0
+  bus = 0
+  return packer.make_can_msg("STEERING_CONTROL", bus, values, idx)
+
+
+###---- Honda Style End
+
+# def create_brake_command_soul(packer, apply_brake):
+#   """Creates a CAN message for the Honda DBC BRAKE_COMMAND."""
+#   brake_rq = apply_brake > 0
+#   if brake_rq == True:
+#     x = 0xCC05
+#   else:
+#     x = 0x0000
+#   values = {}  # initializing the value dict empty initially
+#   print("kiacan.py brake command soul apply brake")
+#   print(apply_brake)
+#   ## 2018.09.28 12:23PMEST
+#   apply_brake_can_bytes = list(bytearray(struct.pack("=f", apply_brake)))    #converting float apply gas to byte list
+#   print("kiacan.py output brake bytes array")
+#   print(bytearray(struct.pack("=f", apply_brake)))
+#   print("kiacan.py output apply_brake_can_bytes")
+#   print(apply_brake_can_bytes)
+#
+#   values["BRAKE_COMMAND_magic"] = x
+#   values["BRAKE_COMMAND_pedal_command"] = apply_brake * 1000000  #2018.09.28 6:49PMEST expecting float
+#
+#   print("kiacan.py brake command magic and brake pedal command")
+#   print(values)
+#   return packer.make_can_msg("SOUL_BRAKE_COMMAND", 0, values)  #remove idx no need for alive counter and checksum
 
 def create_brake_enable_soul(packer, apply_brake):
   """Creates a CAN message for the Honda DBC BRAKE_COMMAND."""
@@ -116,31 +149,31 @@ def create_brake_disable_soul(packer, apply_brake):
   return packer.make_can_msg("SOUL_BRAKE_DISABLE", 0, values) #remove idx no need for alive counter and checksum
 
 
-def create_gas_command(packer, gas_amount):
-  """Creates a CAN message for the Honda DBC GAS_COMMAND."""
-  enable = gas_amount > 0.001
-
-  print("kiacan.py gas amount")
-  print(gas_amount)
-  ## 2018.09.28 12:22PMEST
-  apply_gas_can_bytes = list(bytearray(struct.pack("=f", gas_amount)))    #converting float apply gas to byte list
-  print("kiacan.py output gas bytes array")
-  print(bytearray(struct.pack("=f", gas_amount)))
-  print("kiacan.py output apply_gas_can_bytes")
-  print(apply_gas_can_bytes)
-  if enable == True:
-    x_gas = 0xCC05
-  else:
-    x_gas = 0x0000
-  values = {} #initializing the value dict empty initially
-  if enable:
-    values["THROTTLE_COMMAND_magic"] = x_gas
-    values["THROTTLE_COMMAND_pedal_command"] = gas_amount * 1000000  #2018.09.28 1:53PMEST expecting float
-
-    print("kiacan.py Throttle command")
-    print(values)
-
-  return packer.make_can_msg("THROTTLE_COMMAND", 0, values) #remove idx no need for alive counter and checksum
+# def create_gas_command_soul(packer, gas_amount):
+#   """Creates a CAN message for the Honda DBC GAS_COMMAND."""
+#   enable = gas_amount > 0.001
+#
+#   print("kiacan.py gas amount")
+#   print(gas_amount)
+#   ## 2018.09.28 12:22PMEST
+#   apply_gas_can_bytes = list(bytearray(struct.pack("=f", gas_amount)))    #converting float apply gas to byte list
+#   print("kiacan.py output gas bytes array")
+#   print(bytearray(struct.pack("=f", gas_amount)))
+#   print("kiacan.py output apply_gas_can_bytes")
+#   print(apply_gas_can_bytes)
+#   if enable == True:
+#     x_gas = 0xCC05
+#   else:
+#     x_gas = 0x0000
+#   values = {} #initializing the value dict empty initially
+#   if enable:
+#     values["THROTTLE_COMMAND_magic"] = x_gas
+#     values["THROTTLE_COMMAND_pedal_command"] = gas_amount * 1000000  #2018.09.28 1:53PMEST expecting float
+#
+#     print("kiacan.py Throttle command")
+#     print(values)
+#
+#   return packer.make_can_msg("THROTTLE_COMMAND", 0, values) #remove idx no need for alive counter and checksum
 
 def create_gas_command_enable(packer, gas_amount):
   """Creates a CAN message for the Honda DBC GAS_COMMAND."""
@@ -178,33 +211,33 @@ def create_gas_command_disable(packer, gas_amount):
   return packer.make_can_msg("THROTTLE_DISABLE", 0, values) #remove idx no need for alive counter and checksum
 
 
-def create_steering_control(packer, apply_steer, lkas_active):
-  """Creates a CAN message for the Honda DBC STEERING_CONTROL."""
-
-  if lkas_active == True:
-    x_steering_enable = 0xCC05
-  else:
-    x_steering_enable = 0x0000
-  print("kiacan.py apply steer")
-  print(apply_steer)
-  print("kiacan.py lkas_active")
-  print(lkas_active)
-  ## 2018.09.28 12:25PMEST
-  apply_steer_can_bytes = list(bytearray(struct.pack("=f", apply_steer)))    #converting float apply gas to byte list
-  print("kiacan.py output apply_steer bytes array")
-  print(bytearray(struct.pack("=f", apply_steer)))
-  print("kiacan.py output apply_steer_can_bytes")
-  print(apply_steer_can_bytes)
-
-  values = {}  # initializing the value dict empty initially
-  if lkas_active:
-    values["STEERING_COMMAND_magic"] = x_steering_enable
-    values["STEERING_COMMAND_pedal_command"] = apply_steer   #2018.09.28 expecting float
-
-  print("kiacan.py Steering command pedal command")
-  print(values)
-
-  return packer.make_can_msg("STEERING_COMMAND", 0 , values) #remove idx no need for alive counter and checksum
+# def create_steering_control_soul(packer, apply_steer, lkas_active):
+#   """Creates a CAN message for the Honda DBC STEERING_CONTROL."""
+#
+#   if lkas_active == True:
+#     x_steering_enable = 0xCC05
+#   else:
+#     x_steering_enable = 0x0000
+#   print("kiacan.py apply steer")
+#   print(apply_steer)
+#   print("kiacan.py lkas_active")
+#   print(lkas_active)
+#   ## 2018.09.28 12:25PMEST
+#   apply_steer_can_bytes = list(bytearray(struct.pack("=f", apply_steer)))    #converting float apply gas to byte list
+#   print("kiacan.py output apply_steer bytes array")
+#   print(bytearray(struct.pack("=f", apply_steer)))
+#   print("kiacan.py output apply_steer_can_bytes")
+#   print(apply_steer_can_bytes)
+#
+#   values = {}  # initializing the value dict empty initially
+#   if lkas_active:
+#     values["STEERING_COMMAND_magic"] = x_steering_enable
+#     values["STEERING_COMMAND_pedal_command"] = apply_steer   #2018.09.28 expecting float
+#
+#   print("kiacan.py Steering command pedal command")
+#   print(values)
+#
+#   return packer.make_can_msg("STEERING_COMMAND", 0 , values) #remove idx no need for alive counter and checksum
 
 def create_steering_control_enable(packer, lkas_active):
   """Creates a CAN message for the Honda DBC STEERING_CONTROL."""

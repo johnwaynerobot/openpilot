@@ -172,10 +172,10 @@ class CarController(object):
      #    STEER_MAX = 0xF00
      #    BRAKE_MAX = 1024 / 4
     if CS.CP.carFingerprint in (CAR.SOUL, CAR.SOUL1, CAR.SOUL2): # 2018.09.04 add different fingerprint messages Kia
-          STEER_MAX = 0.3  #2018.09.28 steering torque TODO: need tune parameter max steering allow, value clip when coming on can
-          BRAKE_MAX = 100 #2018.09.02 DV TODO: need to tune for BRAKE_COMMAND_pedal_command, but the value clip when coming out
+          STEER_MAX = 0x1000   #2018.09.29 copy from Honda steering torque TODO: need tune parameter max steering allow, value clip when coming on can
+          BRAKE_MAX = 1024/4 #2018.09.29 TODO: need to tune for BRAKE_COMMAND_pedal_command, but the value clip when coming out
     else:
-      STEER_MAX = 0.15   #2018.09.25 test
+      STEER_MAX = 0x1000    #2018.09.29 copy for Honda
       BRAKE_MAX = 1024 / 4
 
       # init safety test lines (2018.09.04 , test parameter)
@@ -321,8 +321,9 @@ class CarController(object):
     idx = frame % 4  #2018.09.02 this mod it get the remainder?? #2018.09.03 remove idx, 2018.09.06 12:33 AM add canbus.powertrain
                      #2018.09.11 update the argument to match for both carcontroller.py and kiacan to fix argument error
     can_sends.append(kiacan.create_steering_control_enable(self.packer, lkas_active))
-    can_sends.append(kiacan.create_steering_control(self.packer, apply_steer, lkas_active))  #2018.09.26 reverse back to steer
+    #can_sends.append(kiacan.create_steering_control_soul(self.packer, apply_steer, lkas_active))  #2018.09.26 reverse back to steer
     can_sends.append(kiacan.create_steering_control_disable(self.packer, lkas_active))
+    can_sends.append(kiacan.create_steering_control(self.packer, apply_steer, lkas_active, idx))  #2018.09.28 add in Honda command
 
     # Send dashboard UI commands.
     if (frame % 10) == 0:
@@ -342,8 +343,8 @@ class CarController(object):
         idx = (frame / 2) % 4
         can_sends.append(
           kiacan.create_brake_enable_soul(self.packer,  apply_brake)) #enable brake command,  #2018.09.06 12:33AM add canbus.powertrain
-        can_sends.append(
-          kiacan.create_brake_command_soul(self.packer,  apply_brake)) #creating brake command  #2018.09.06 12:33AM add canbus.powertrain
+       # can_sends.append(
+         # kiacan.create_brake_command_soul(self.packer,  apply_brake)) #creating brake command  #2018.09.06 12:33AM add canbus.powertrain
         can_sends.append(
           kiacan.create_brake_disable_soul(self.packer,  apply_brake)) #disable brake command #2018.09.06 12:33AM add canbus.powertrain
         can_sends.append(
@@ -357,11 +358,11 @@ class CarController(object):
           # This prevents unexpected pedal range rescaling
           # 2018.09.06 12:33AM add canbus.powertrain  to distinction of can bus channel
           can_sends.append(kiacan.create_gas_command_enable(self.packer, apply_gas))
-          can_sends.append(kiacan.create_gas_command(self.packer, apply_gas))
+         # can_sends.append(kiacan.create_gas_command_soul(self.packer, apply_gas))
           can_sends.append(kiacan.create_gas_command_disable(self.packer, apply_gas))
+          can_sends.append(hondacan.create_gas_command(self.packer, apply_gas, idx))  #2018.09.29 9:15AMEST  add in honda style
 
-          
-      # radar at 20Hz, but these msgs need to be sent at 50Hz on ilx (seems like an Acura bug)
+          # radar at 20Hz, but these msgs need to be sent at 50Hz on ilx (seems like an Acura bug)
       #change 2018.09.03 change ILX to dummy
       if CS.CP.carFingerprint == CAR.DUMMY:
         radar_send_step = 2
