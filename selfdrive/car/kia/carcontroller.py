@@ -361,7 +361,7 @@ class CarController(object):
           can_sends.append(kiacan.create_gas_command_enable(self.packer, apply_gas))
          # can_sends.append(kiacan.create_gas_command_soul(self.packer, apply_gas))
           can_sends.append(kiacan.create_gas_command_disable(self.packer, apply_gas))
-          can_sends.append(hondacan.create_gas_command(self.packer, apply_gas, idx))  #2018.09.29 9:15AMEST  add in honda style
+          can_sends.append(kiacan.create_gas_command(self.packer, apply_gas, idx))  #2018.09.29 9:15AMEST  add in honda style
 
           # radar at 20Hz, but these msgs need to be sent at 50Hz on ilx (seems like an Acura bug)
       #change 2018.09.03 change ILX to dummy
