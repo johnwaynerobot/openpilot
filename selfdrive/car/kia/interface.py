@@ -29,7 +29,7 @@ except ImportError:
 # those messages are mutually exclusive on CRV and non-CRV cars
 #CAMERA_MSGS = [0xe4, 0x194] #message on Honda car
 
-CAMERA_MSGS_SOUL = [0x82] #Kia Soul Steering command message
+CAMERA_MSGS_SOUL = [0xE4, 0x167] #20181001 change to use Honda style message 0xE4 and 167 (angle base on comma)
 
 
 
