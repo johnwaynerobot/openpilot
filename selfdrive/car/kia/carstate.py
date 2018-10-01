@@ -330,7 +330,7 @@ class CarState(object):
            # print("carstate.py ENG_INFO")
            # print(cp.vl["ENG_INFO"])
             self.brake_switch = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] ==2 # 2018.09.02 DV "2"value is brake switch ON
-            self.brake_pressed = cp.vl["BRAKE_REPORT"]['BRAKE_REPORT_operator_override']  # 2018.10.01 change for Kia soul
+            self.brake_pressed = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] ==2  # 2018.10.01 change for Kia soul
             self.brake_switch_prev = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] ==2  #2018.09.02 DV "2"value is brake switch ON
             self.brake_switch_ts = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] ==2
             self.stopped = cp.vl["ENGINE_DATA"]['XMISSION_VSPEED'] < 0.1
