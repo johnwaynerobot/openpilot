@@ -398,8 +398,8 @@ class CarInterface(object):
     print(ret.gas)
     print("honda interface.py gaspPressed")
     print(ret.gasPressed)
-    print("honda interface.py enableGasInterceptor")
-    print(ret.enableGasInterceptor)
+   # print("honda interface.py enableGasInterceptor")
+    #print(ret.enableGasInterceptor)
 
     # brake pedal
     ret.brake = self.CS.user_brake
