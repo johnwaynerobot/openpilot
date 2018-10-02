@@ -47,6 +47,9 @@ def create_brake_command(packer, apply_brake, pcm_override, pcm_cancel_cmd, chim
     "CHIME": chime,
     "FCW": fcw << 1,  # TODO: Why are there two bits for fcw? According to dbc file the first bit should also work
   }
+
+  print("hondacan.py brake command")
+  print(values)
   return packer.make_can_msg("BRAKE_COMMAND", 0, values, idx)
 
 
@@ -59,7 +62,8 @@ def create_gas_command(packer, gas_amount, idx):
   if enable:
     values["GAS_COMMAND"] = gas_amount * 255.
     values["GAS_COMMAND2"] = gas_amount * 255.
-
+  print("hondacan.py gas command")
+  print(values)
   return packer.make_can_msg("GAS_COMMAND", 0, values, idx)
 
 
@@ -69,6 +73,8 @@ def create_steering_control(packer, apply_steer, lkas_active, car_fingerprint, i
     "STEER_TORQUE": apply_steer if lkas_active else 0,
     "STEER_TORQUE_REQUEST": lkas_active,
   }
+  print("hondacan.py steering control")
+  print(values)
   # Set bus 2 for accord and new crv.
   bus = 2 if car_fingerprint in HONDA_BOSCH else 0
   return packer.make_can_msg("STEERING_CONTROL", bus, values, idx)
@@ -93,6 +99,8 @@ def create_ui_commands(packer, pcm_speed, hud, car_fingerprint, idx):
       'SET_ME_X03_2': 0x03,
       'SET_ME_X01': 0x01,
     }
+    print("hondacan.py UI commands")
+    print(values)
     commands.append(packer.make_can_msg("ACC_HUD", 0, acc_hud_values, idx))
 
   lkas_hud_values = {
@@ -102,6 +110,8 @@ def create_ui_commands(packer, pcm_speed, hud, car_fingerprint, idx):
     'SOLID_LANES': hud.lanes,
     'BEEP': hud.beep,
   }
+  print("hondacan.py UI lkas_hud_values")
+  print(values)
   commands.append(packer.make_can_msg('LKAS_HUD', bus, lkas_hud_values, idx))
 
   if car_fingerprint in (CAR.CIVIC, CAR.ODYSSEY):
@@ -113,6 +123,8 @@ def create_ui_commands(packer, pcm_speed, hud, car_fingerprint, idx):
       'LEAD_STATE': 0x7,
       'LEAD_DISTANCE': 0x1e,
     }
+    print("hondacan.py UI radar_hud_values")
+    print(values)
     commands.append(packer.make_can_msg('RADAR_HUD', 0, radar_hud_values, idx))
   return commands
 
@@ -142,4 +154,6 @@ def spam_buttons_command(packer, button_val, idx):
     'CRUISE_BUTTONS': button_val,
     'CRUISE_SETTING': 0,
   }
+  print("hondacan.py spam_buttons command")
+  print(values)
   return packer.make_can_msg("SCM_BUTTONS", 0, values, idx)

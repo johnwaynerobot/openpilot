@@ -124,9 +124,23 @@ class CarController(object):
       STEER_MAX = 0x1000
 
     # steer torque is converted back to CAN reference (positive when steering right)
+    print("honda carcontroller.py actuators.gas")
+    print(actuators.gas)
+    print("honda carcontroller.py actuators.steer")
+    print(actuators.steers)
+    print("honda carcontroller.py brake max, steer max")
+    print(BRAKE_MAX)
+    print(STEER_MAX)
     apply_gas = clip(actuators.gas, 0., 1.)
     apply_brake = int(clip(self.brake_last * BRAKE_MAX, 0, BRAKE_MAX - 1))
     apply_steer = int(clip(-actuators.steer * STEER_MAX, -STEER_MAX, STEER_MAX))
+    print("honda carcontroller.py apply_gas")
+    print(apply_gas)
+    print("honda carcontroller.py apply_brake")
+    print(apply_brake)
+    print("honda carcontroller.py apply_steer")
+    print(apply_steer)
+
 
     # any other cp.vl[0x18F]['STEER_STATUS'] is common and can happen during user override. sending 0 torque to avoid EPS sending error 5
     lkas_active = enabled and not CS.steer_not_allowed

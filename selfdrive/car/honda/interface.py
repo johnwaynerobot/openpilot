@@ -394,9 +394,20 @@ class CarInterface(object):
     else:
       ret.gasPressed = self.CS.user_gas_pressed
 
+    print("honda interface.py ret.gas")
+    print(ret.gas)
+    print("honda interface.py gaspPressed")
+    print(ret.gasPressed)
+    print("honda interface.py enableGasInterceptor")
+    print(ret.enableGasInterceptor)
+
     # brake pedal
     ret.brake = self.CS.user_brake
     ret.brakePressed = self.CS.brake_pressed != 0
+    print("honda interface.py ret.brake")
+    print(ret.brake)
+    print("honda interface.py ret.brakePressed")
+    print(ret.brakePressed)
     # FIXME: read sendcan for brakelights
     brakelights_threshold = 0.02 if self.CS.CP.carFingerprint == CAR.CIVIC else 0.1
     ret.brakeLights = bool(self.CS.brake_switch or
@@ -405,14 +416,34 @@ class CarInterface(object):
     # steering wheel
     ret.steeringAngle = self.CS.angle_steers
     ret.steeringRate = self.CS.angle_steers_rate
+    # print 2018.10.02 more print in honda interface.py
+    print("honda interface.py ret.steeringAngle")
+    print(ret.steeringAngle)
+    print("honda interface.py ret.steeringRate")
+    print(ret.steeringRate)
 
     # gear shifter lever
     ret.gearShifter = self.CS.gear_shifter
 
     ret.steeringTorque = self.CS.steer_torque_driver
     ret.steeringPressed = self.CS.steer_override
+    print("honda interface.py ret.steeringTorque")
+    print(ret.steeringTorque)
+    print("honda interface.py ret.steeringPressed")
+    print(ret.steeringPressed)
 
     # cruise state
+    #print 2018.10.02 more print in honda interface.py
+    print("honda interface.py cruise state.enable")
+    print(ret.cruiseState.enabled)
+    print("honda interface.py cruise state.speed")
+    print(ret.cruiseState.speed)
+    print("honda interface.py ret.cruiseState.available")
+    print(ret.cruiseState.available)
+    print("honda interface.py ret.cruiseState.speedOffset")
+    print(ret.cruiseState.speedOffset)
+    print("honda interface.py ret.cruiseState.standstill")
+    print(ret.cruiseState.standstill)
     ret.cruiseState.enabled = self.CS.pcm_acc_status != 0
     ret.cruiseState.speed = self.CS.v_cruise_pcm * CV.KPH_TO_MS
     ret.cruiseState.available = bool(self.CS.main_on)
@@ -458,6 +489,10 @@ class CarInterface(object):
         be.type = 'altButton3'
       buttonEvents.append(be)
 
+    print("honda interface.py cruise setting")
+    print(self.CS.cruise_setting)
+    print("honda interface.py prev cruise setting")
+    print(self.CS.prev_cruise_setting)
     if self.CS.cruise_setting != self.CS.prev_cruise_setting:
       be = car.CarState.ButtonEvent.new_message()
       be.type = 'unknown'
@@ -519,7 +554,11 @@ class CarInterface(object):
 
     # it can happen that car cruise disables while comma system is enabled: need to
     # keep braking if needed or if the speed is very low
+    #2018.10.02 print for more statement
+    print("honda interface.py print enable cruise")
+    print(self.CP.enableCruise)
     if self.CP.enableCruise and not ret.cruiseState.enabled and c.actuators.brake <= 0.:
+
       # non loud alert if cruise disbales below 25mph as expected (+ a little margin)
       if ret.vEgo < self.CP.minEnableSpeed + 2.:
         events.append(create_event('speedTooLow', [ET.IMMEDIATE_DISABLE]))

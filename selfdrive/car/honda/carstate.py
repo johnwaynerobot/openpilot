@@ -229,7 +229,10 @@ class CarState(object):
 
     self.cruise_setting = cp.vl["SCM_BUTTONS"]['CRUISE_SETTING']
     self.cruise_buttons = cp.vl["SCM_BUTTONS"]['CRUISE_BUTTONS']
-
+    print("carstate.py cruise_setting")
+    print(self.cruise_setting)
+    print("carstate.py cruise_buttons")
+    print(self.cruise_buttons)
     self.blinker_on = cp.vl["SCM_FEEDBACK"]['LEFT_BLINKER'] or cp.vl["SCM_FEEDBACK"]['RIGHT_BLINKER']
     self.left_blinker_on = cp.vl["SCM_FEEDBACK"]['LEFT_BLINKER']
     self.right_blinker_on = cp.vl["SCM_FEEDBACK"]['RIGHT_BLINKER']
@@ -275,8 +278,16 @@ class CarState(object):
       self.v_cruise_pcm_prev = self.v_cruise_pcm
     else:
       self.brake_switch = cp.vl["POWERTRAIN_DATA"]['BRAKE_SWITCH']
+      print("carstate.py cruise_params cruise speed offset")
+      print(cp.vl["CRUISE_PARAMS"]['CRUISE_SPEED_OFFSET'])
+      print("carstate.py self.v_ego")
+      print(self.v_ego)
       self.cruise_speed_offset = calc_cruise_offset(cp.vl["CRUISE_PARAMS"]['CRUISE_SPEED_OFFSET'], self.v_ego)
+      print("carstate.py cruise_speed_offset")
+      print(self.cruise_speed_offset)
       self.v_cruise_pcm = cp.vl["CRUISE"]['CRUISE_SPEED_PCM']
+      print("carstate.py v_cruise_pcm")
+      print(self.v_cruise_pcm)
       # brake switch has shown some single time step noise, so only considered when
       # switch is on for at least 2 consecutive CAN samples
       self.brake_pressed = cp.vl["POWERTRAIN_DATA"]['BRAKE_PRESSED'] or \
@@ -288,7 +299,10 @@ class CarState(object):
     self.user_brake = cp.vl["VSA_STATUS"]['USER_BRAKE']
     self.pcm_acc_status = cp.vl["POWERTRAIN_DATA"]['ACC_STATUS']
     self.hud_lead = cp.vl["ACC_HUD"]['HUD_LEAD']
-
+    print("carstate.py pcm_acc_status")
+    print(self.pcm_acc_status)
+    print("carstate.py hud_lead")
+    print(self.hud_lead)
 
 # carstate standalone tester
 if __name__ == '__main__':
