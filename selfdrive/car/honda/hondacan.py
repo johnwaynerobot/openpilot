@@ -100,7 +100,7 @@ def create_ui_commands(packer, pcm_speed, hud, car_fingerprint, idx):
       'SET_ME_X01': 0x01,
     }
     print("hondacan.py UI commands")
-    print(values)
+    print(acc_hud_values)
     commands.append(packer.make_can_msg("ACC_HUD", 0, acc_hud_values, idx))
 
   lkas_hud_values = {
@@ -124,7 +124,7 @@ def create_ui_commands(packer, pcm_speed, hud, car_fingerprint, idx):
       'LEAD_DISTANCE': 0x1e,
     }
     print("hondacan.py UI radar_hud_values")
-    print(values)
+    print(radar_hud_values)
     commands.append(packer.make_can_msg('RADAR_HUD', 0, radar_hud_values, idx))
   return commands
 
