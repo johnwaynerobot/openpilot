@@ -127,7 +127,7 @@ class CarController(object):
     print("honda carcontroller.py actuators.gas")
     print(actuators.gas)
     print("honda carcontroller.py actuators.steer")
-    print(actuators.steers)
+    print(actuators.steer)
     print("honda carcontroller.py brake max, steer max")
     print(BRAKE_MAX)
     print(STEER_MAX)
