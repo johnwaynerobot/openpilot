@@ -111,7 +111,7 @@ def create_ui_commands(packer, pcm_speed, hud, car_fingerprint, idx):
     'BEEP': hud.beep,
   }
   print("hondacan.py UI lkas_hud_values")
-  print(values)
+  print(lkas_hud_values)
   commands.append(packer.make_can_msg('LKAS_HUD', bus, lkas_hud_values, idx))
 
   if car_fingerprint in (CAR.CIVIC, CAR.ODYSSEY):
