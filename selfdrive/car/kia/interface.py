@@ -222,8 +222,8 @@ class CarInterface(object):
       ret.longitudinalKiV = [0.18, 0.12]
 
     elif candidate == CAR.SOUL1:
-      stop_and_go = False
-      #ret.safetyParam = 8  # define in /boardd/boardd.cc
+      stop_and_go = True   #2018.10.04 12:15PMEST change allow stop and go
+      ret.safetyParam = 9  # define in /boardd/boardd.cc
       ret.mass = 3410. * CV.LB_TO_KG + std_cargo
       ret.wheelbase = 2.66
       ret.centerToFront = ret.wheelbase * 0.41

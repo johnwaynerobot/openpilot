@@ -334,7 +334,8 @@ class CarState(object):
             self.brake_switch_prev = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] ==2  #2018.09.02 DV "2"value is brake switch ON
             self.brake_switch_ts = cp.vl["ENG_INFO"]['BRAKE_PRESSED'] ==2
             self.stopped = cp.vl["ENGINE_DATA"]['XMISSION_VSPEED'] < 0.1
-            self.cruise_speed_offset = calc_cruise_offset(0, self.v_ego)
+            #self.cruise_speed_offset = calc_cruise_offset(0, self.v_ego)
+            self.cruise_speed_offset = calc_cruise_offset(1.80, self.v_ego)  #2018.10.04 copy data from CRV offset
             #print("ACC_HUD")
             #print(cp.vl["ACC_HUD"])
             #print("ACC_HUD CRUISE SPEED")

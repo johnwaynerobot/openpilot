@@ -416,11 +416,11 @@ class CarInterface(object):
     # steering wheel
     ret.steeringAngle = self.CS.angle_steers
     ret.steeringRate = self.CS.angle_steers_rate
-    # print 2018.10.02 more print in honda interface.py
+    # print 2018.10.04 more print in honda interface.py
     print("honda interface.py ret.steeringAngle")
-    print(ret.steeringAngle)
+    print(self.CS.angle_steers)
     print("honda interface.py ret.steeringRate")
-    print(ret.steeringRate)
+    print(self.CS.angle_steers_rate)
 
     # gear shifter lever
     ret.gearShifter = self.CS.gear_shifter
