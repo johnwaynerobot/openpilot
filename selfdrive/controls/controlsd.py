@@ -189,7 +189,7 @@ def state_transition(CS, CP, state, events, soft_disable_timer, v_cruise_kph, AM
         AM.add("enable", enabled)
         print("controlsd state_transition v_cruise_kph_last if enable under AM.add")
         print(v_cruise_kph_last)
-        print(initialize_v_cruise())
+       # print(initialize_v_cruise())
        # v_cruise_kph = initialize_v_cruise(CS.vEgo, CS.buttonEvents, v_cruise_kph_last)
         print("controlsd state_transition v_cruise kph under AM. add if pre enable")
         print(v_cruise_kph)
