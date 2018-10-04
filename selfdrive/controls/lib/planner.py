@@ -30,10 +30,10 @@ GPS_PLANNER_ADDR = "192.168.5.1"
 # make sure these accelerations are smaller than mpc limits
 _A_CRUISE_MIN_V  = [-1.0, -.8, -.67, -.5, -.30]
 _A_CRUISE_MIN_BP = [   0., 5.,  10., 20.,  40.]
-print("planner.py A_CRUISE_MIN_V")
-print(_A_CRUISE_MIN_V)
-print("planner.py A_CRUISE_MIN_BP")
-print(_A_CRUISE_MIN_BP)
+# print("planner.py A_CRUISE_MIN_V")
+# print(_A_CRUISE_MIN_V)
+# print("planner.py A_CRUISE_MIN_BP")
+# print(_A_CRUISE_MIN_BP)
 
 
 # need fast accel at very low speed for stop and go
@@ -51,15 +51,23 @@ _FCW_A_ACT_BP = [0., 30.]
 
 # max acceleration allowed in acc, which happens in restart
 A_ACC_MAX = max(_A_CRUISE_MAX_V_FOLLOWING)
+print("planner.py A_ACC_MAX")
+print(A_ACC_MAX)
 
 
 def calc_cruise_accel_limits(v_ego, following):
   a_cruise_min = interp(v_ego, _A_CRUISE_MIN_BP, _A_CRUISE_MIN_V)
+  print("plannery.py calc_cruise_accel_limits")
+  print(a_cruise_min)
 
   if following:
-    a_cruise_max = interp(v_ego, _A_CRUISE_MAX_BP, _A_CRUISE_MAX_V_FOLLOWING)
+    a_cruise_max = interp(v_ego, _A_CRUISE_MAX_BP, _A_CRUISE_MAX_V_FOLLOWING)   #seen this following lead car
+    print("plannery.py calc_cruise_accel_limits following")
+    print(a_cruise_max)
   else:
-    a_cruise_max = interp(v_ego, _A_CRUISE_MAX_BP, _A_CRUISE_MAX_V)
+    a_cruise_max = interp(v_ego, _A_CRUISE_MAX_BP, _A_CRUISE_MAX_V)    #max cruise is not following car
+    print("plannery.py calc_cruise_accel_limits not following car")
+    print(a_cruise_max)
   return np.vstack([a_cruise_min, a_cruise_max])
 
 
@@ -315,8 +323,8 @@ class Planner(object):
       print(solutions)
       if self.mpc1.prev_lead_status:
         solutions['mpc1'] = self.mpc1.v_mpc
-        print("planner.py solutions [mpc1")
-        print( solutions['mpc1'] )
+        print("planner.py solutions [mpc1]")
+        print(solutions['mpc1'])
       if self.mpc2.prev_lead_status:
         solutions['mpc2'] = self.mpc2.v_mpc
         print("planner.py solutions [mpc2")
@@ -324,7 +332,7 @@ class Planner(object):
 
 
       slowest = min(solutions, key=solutions.get)
-      print("planner.py slowest")
+      print("planner.py choose solution slowest")
       print(slowest)
 
       """
@@ -339,23 +347,23 @@ class Planner(object):
       if slowest == 'mpc1':
         self.v_acc = self.mpc1.v_mpc
         self.a_acc = self.mpc1.a_mpc
-        print("planner.py slowest == mpc1 self.v_acc")
+        print("planner.py choose solution slowest == mpc1 self.v_acc")
         print(self.v_acc)
-        print("planner.py slowest == mpc1 self.a_acc")
+        print("planner.py choose solution slowest == mpc1 self.a_acc")
         print(self.a_acc)
       elif slowest == 'mpc2':
         self.v_acc = self.mpc2.v_mpc
         self.a_acc = self.mpc2.a_mpc
-        print("planner.py slowest == mpc2 self.v_acc")
+        print("planner.py choose solution slowest == mpc2 self.v_acc")
         print(self.v_acc)
-        print("planner.py slowest == mpc2 self.a_acc")
+        print("planner.py choose solution slowest == mpc2 self.a_acc")
         print(self.a_acc)
       elif slowest == 'cruise':
         self.v_acc = self.v_cruise
         self.a_acc = self.a_cruise
-        print("planner.py slowest == cruise self.v_acc")
+        print("planner.py choose solution slowest == cruise self.v_acc")
         print(self.v_acc)
-        print("planner.py slowest == cruise self.a_acc")
+        print("planner.py choose solution slowest == cruise self.a_acc")
         print(self.a_acc)
 
     print("planner.py self.mpc1.v_mpc_future")
@@ -365,13 +373,19 @@ class Planner(object):
     print("planner.py v_acc_future v_cruise_setpoint")
     print(v_cruise_setpoint)
     self.v_acc_future = min([self.mpc1.v_mpc_future, self.mpc2.v_mpc_future, v_cruise_setpoint])
-    print("planner.py self.v_acc_future")
+    print("planner.py choose solution self.v_acc_future")
     print(self.v_acc_future)
 
   # this runs whenever we get a packet that can change the plan
   def update(self, CS, LaC, LoC, v_cruise_kph, force_slow_decel):
     cur_time = sec_since_boot()
     v_cruise_setpoint = v_cruise_kph * CV.KPH_TO_MS
+    print("planner.py update v_cruise_kph")
+    print(v_cruise_kph)
+    print("planner.py update CV.KPH_TO_MS")
+    print(CV.KPH_TO_MS)
+    print("planner.py update v_cruise_setpoint")
+    print(v_cruise_setpoint)
 
     md = None
     l20 = None
@@ -431,29 +445,31 @@ class Planner(object):
 
       enabled = (LoC.long_control_state == LongCtrlState.pid) or (LoC.long_control_state == LongCtrlState.stopping)
       following = self.lead_1.status and self.lead_1.dRel < 45.0 and self.lead_1.vLeadK > CS.vEgo and self.lead_1.aLeadK > 0.0
-      print("planner.py enabled")
+      print("planner.py def update enabled")
       print(enabled)
-      print("planner.py enabled")
+      print("planner.py def update following")
       print(following)
 
       # Calculate speed for normal cruise control
       if enabled:
-        print("planner.py enabled true CS.vEg0")
+        print("planner.py def update calculate speed for normal cruise control enabled true CS.vEg0")
         print(CS.vEgo)
         accel_limits = map(float, calc_cruise_accel_limits(CS.vEgo, following))
-        print("planner.py enabled true accel_limit")
+        print("planner.py def update calculate speed for normal cruise control enabled true accel_limit")
         print(accel_limits)
         # TODO: make a separate lookup for jerk tuning
         jerk_limits = [min(-0.1, accel_limits[0]), max(0.1, accel_limits[1])]
-        print("planner.py enabled true jerk_limits")
+        print("planner.py def update calculate speed for normal cruise control enabled true jerk_limits")
         print(jerk_limits)
         accel_limits = limit_accel_in_turns(CS.vEgo, CS.steeringAngle, accel_limits, self.CP)
-        print("planner.py enabled true after jerk limit accel in turn")
+        print("planner.py def update calculate speed for normal cruise control enabled true after jerk limit accel in turn")
         print(accel_limits)
         if force_slow_decel:
           # if required so, force a smooth deceleration
           accel_limits[1] = min(accel_limits[1], AWARENESS_DECEL)
           accel_limits[0] = min(accel_limits[0], accel_limits[1])
+          print("planner.py def update calculate speed for normal cruise control force_slow_decel true after jerk limit accel in turn")
+          print(accel_limits)
 
         self.v_cruise, self.a_cruise = speed_smoother(self.v_acc_start, self.a_acc_start,
                                                       v_cruise_setpoint,
@@ -462,14 +478,18 @@ class Planner(object):
                                                       _DT_MPC)
         # cruise speed can't be negative even is user is distracted
         self.v_cruise = max(self.v_cruise, 0.)
+        print("planner.py def update calculate speed for normal cruise control enabled  starting over a_ego")
+        print(self.v_cruise)
       else:
         starting = LoC.long_control_state == LongCtrlState.starting
+        print("planner.py if not enable normal cruise control starting")
+        print(starting)
         a_ego = min(CS.aEgo, 0.0)
-        print("planner.py starting over a_ego")
+        print("planner.py if not enable normal cruise control starting over a_ego")
         print(a_ego)
-        print("planner.py starting MIN_CAN_SPEED")
+        print("planner.py if not enable normal cruise control starting MIN_CAN_SPEED")
         print(MIN_CAN_SPEED)
-        print("planner.py starting CS.vEgo")
+        print("planner.py if not enable normal cruise control starting CS.vEgo")
         print(CS.vEgo)
         reset_speed = MIN_CAN_SPEED if starting else CS.vEgo
         print("planner.py starting reset_speed")
@@ -477,24 +497,51 @@ class Planner(object):
         print("planner.py starting self.CP.startAccel")
         print(self.CP.startAccel)
         reset_accel = self.CP.startAccel if starting else a_ego
-        print("planner.py starting reset_accel")
+        print("planner.py if not enable normal cruise control starting reset_accel")
         print(reset_accel)
         self.v_acc = reset_speed
+        print("planner.py if not enable normal cruise control starting self.v_acc")
+        print(self.v_acc)
         self.a_acc = reset_accel
+        print("planner.py if not enable normal cruise control starting self.a_acc")
+        print(self.a_acc)
         self.v_acc_start = reset_speed
+        print("planner.py if not enable normal cruise control starting self.v_acc_start")
+        print(self.v_acc_start)
         self.a_acc_start = reset_accel
+        print("planner.py if not enable normal cruise control starting self.a_acc_start")
+        print(self.a_acc_start)
         self.v_cruise = reset_speed
+        print("planner.py if not enable normal cruise control starting self.v_cruise")
+        print(self.v_cruise)
         self.a_cruise = reset_accel
+        print("planner.py if not enable normal cruise control starting self.a_cruise")
+        print(self.a_cruise)
         self.v_acc_sol = reset_speed
+        print("planner.py if not enable normal cruise control starting self.v_acc_sol")
+        print(self.v_acc_sol)
         self.a_acc_sol = reset_accel
+        print("planner.py if not enable normal cruise control starting self.a_acc_sol")
+        print(self.a_acc_sol)
 
       self.mpc1.set_cur_state(self.v_acc_start, self.a_acc_start)
+      print("planner.py def update  self.mpc1.set_cur_state(self.v_acc_start, self.a_acc_start)")
+      print( self.mpc1.set_cur_state(self.v_acc_start, self.a_acc_start))
       self.mpc2.set_cur_state(self.v_acc_start, self.a_acc_start)
+      print("planner.py def update  self.mpc2.set_cur_state(self.v_acc_start, self.a_acc_start)")
+      print(self.mpc2.set_cur_state(self.v_acc_start, self.a_acc_start))
 
       self.mpc1.update(CS, self.lead_1, v_cruise_setpoint)
+      print("planner.py def update self.mpc1.update(CS, self.lead_1, v_cruise_setpoint) ")
+      print(self.mpc1.update(CS, self.lead_1, v_cruise_setpoint))
       self.mpc2.update(CS, self.lead_2, v_cruise_setpoint)
+      print("planner.py def update  self.mpc2.update(CS, self.lead_2, v_cruise_setpoint) ")
+      print(self.mpc2.update(CS, self.lead_2, v_cruise_setpoint))
+
 
       self.choose_solution(v_cruise_setpoint, enabled)
+      print("planner.py def update  self.choose_solution(v_cruise_setpoint, enabled) ")
+      print(self.choose_solution(v_cruise_setpoint, enabled))
 
       # determine fcw
       if self.mpc1.new_lead:
@@ -532,6 +579,10 @@ class Planner(object):
     dt = min(cur_time - self.acc_start_time, _DT_MPC + _DT) + _DT  # no greater than dt mpc + dt, to prevent too high extraps
     self.a_acc_sol = self.a_acc_start + (dt / _DT_MPC) * (self.a_acc - self.a_acc_start)
     self.v_acc_sol = self.v_acc_start + dt * (self.a_acc_sol + self.a_acc_start) / 2.0
+    print("planner.py def update  interpolation of trajectory self.a_acc_sol ")
+    print(self.a_acc_sol)
+    print("planner.py def update  interpolation of trajectory self.v_acc_sol ")
+    print(self.v_acc_sol)
 
     plan_send.plan.events = events
     plan_send.plan.mdMonoTime = self.last_md_ts
