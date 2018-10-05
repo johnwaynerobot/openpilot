@@ -126,11 +126,11 @@ def get_can_signals(CP):
         signals += [("DOOR_OPEN_FL", "SCM_FEEDBACK", 1)]  # 2018.09.04 update
 
         # add gas interceptor reading if we are using it
-    if CP.enableGasInterceptor:
-
-        signals.append(("THROTTLE_REPORT_operator_override", "THROTTLE_REPORT", 0)) #2018.09.02 DV add change for Kia soul
-       # checks.append(("THROTTLE_REPORT", 50)) # signal and frequency#2018.09.02 DV add change for Kia soul
-        #comment out check, frequency need to verify
+    # if CP.enableGasInterceptor:
+    #
+    #     signals.append(("THROTTLE_REPORT_operator_override", "THROTTLE_REPORT", 0)) #2018.09.02 DV add change for Kia soul
+    #    # checks.append(("THROTTLE_REPORT", 50)) # signal and frequency#2018.09.02 DV add change for Kia soul
+    #     #comment out check, frequency need to verify
     return signals, checks
 
     #2018.09.06 11:49PM remove canbus
@@ -402,23 +402,23 @@ class CarState(object):
     #2018.09.13 12:41AM add in print
     #print("carstate.py throttle report")
     #print(cp.vl["THROTTLE_REPORT"])    #use to debug if self.user_gas
-    if self.CP.enableGasInterceptor:
-      self.user_gas = cp.vl["THROTTLE_REPORT"]['THROTTLE_REPORT_operator_override'] #2018.09.02 change for Kia soul when gas being press
-      print("carstate.py self.user_gas")
-      print(self.user_gas)
-      #self.user_gas_pressed = self.user_gas > 0 # this works because interceptor read < 0 when pedal position is 0. Once calibrated, this will change
-      #self.user_gas = cp.vl["ENG_INFO"]['PEDAL_GAS']  # 2018.09.02 change for Kia soul when gas being press
-      self.user_gas_pressed = self.user_gas > 0  # gas from actual gas pedal into 2018.09.19 12:35PMEST
+    # if self.CP.enableGasInterceptor:
+    #   self.user_gas = cp.vl["THROTTLE_REPORT"]['THROTTLE_REPORT_operator_override'] #2018.09.02 change for Kia soul when gas being press
+    #   print("carstate.py self.user_gas")
+    #   print(self.user_gas)
+    #   #self.user_gas_pressed = self.user_gas > 0 # this works because interceptor read < 0 when pedal position is 0. Once calibrated, this will change
+    #   #self.user_gas = cp.vl["ENG_INFO"]['PEDAL_GAS']  # 2018.09.02 change for Kia soul when gas being press
+    #   self.user_gas_pressed = self.user_gas > 0  # gas from actual gas pedal into 2018.09.19 12:35PMEST
 
-    # self.user_gas = cp.vl["THROTTLE_REPORT"]['THROTTLE_REPORT_operator_override'] #2018.09.02 change for Kia soul when gas being press
-    # print("carstate.py self.user_gas")
-    # print(self.user_gas)
-    # #self.user_gas_pressed = self.user_gas > 0 # this works because interceptor read < 0 when pedal position is 0. Once calibrated, this will change
-    # #self.user_gas = cp.vl["ENG_INFO"]['PEDAL_GAS']  # 2018.09.02 change for Kia soul when gas being press
-    # self.user_gas_pressed = self.user_gas > 0  # gas from actual gas pedal into 2018.09.19 12:35PMEST
+    self.user_gas = cp.vl["THROTTLE_REPORT"]['THROTTLE_REPORT_operator_override'] #2018.09.02 change for Kia soul when gas being press
+    print("carstate.py self.user_gas")
+    print(self.user_gas)
+    #self.user_gas_pressed = self.user_gas > 0 # this works because interceptor read < 0 when pedal position is 0. Once calibrated, this will change
+    #self.user_gas = cp.vl["ENG_INFO"]['PEDAL_GAS']  # 2018.09.02 change for Kia soul when gas being press
+    self.user_gas_pressed = self.user_gas > 0  # gas from actual gas pedal into 2018.09.19 12:35PMEST
 
-    self.pedal_gas = cp.vl["ENG_INFO"]['PEDAL_GAS'] #2018.09.02 DV change for pedal gas
-    #self.pedal_gas = self.user_gas  #2018.09.25 12:02PMEST change pedal gas to user_gas
+    #self.pedal_gas = cp.vl["ENG_INFO"]['PEDAL_GAS'] #2018.09.02 DV change for pedal gas
+    self.pedal_gas = self.user_gas  #2018.09.25 12:02PMEST change pedal gas to user_gas
     # crv doesn't include cruise control
    # if self.CP.carFingerprint in (CAR.SOUL, CAR.SOUL1):  #2018.09.04
     #  self.car_gas = self.pedal_gas

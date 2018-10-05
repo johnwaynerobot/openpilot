@@ -124,10 +124,6 @@ def calc_plan(CS, CP, events, PL, LaC, LoC, v_cruise_kph, driver_status, geofenc
    # plan runs always, independently of the state
    force_decel = driver_status.awareness < 0. or (geofence is not None and not geofence.in_geofence)
    plan_packet = PL.update(CS, LaC, LoC, v_cruise_kph, force_decel)
-   print("controlsd calc_plan")
-   print(v_cruise_kph)
-   # print("controlsd plan_packet")
-   # print(plan_packet)
    plan = plan_packet.plan
    plan_ts = plan_packet.logMonoTime
 
@@ -145,28 +141,14 @@ def calc_plan(CS, CP, events, PL, LaC, LoC, v_cruise_kph, driver_status, geofenc
 def state_transition(CS, CP, state, events, soft_disable_timer, v_cruise_kph, AM):
   # compute conditional state transitions and execute actions on state transitions
   enabled = isEnabled(state)
-  # print("controlsd state _transition enabled")
-  # print(enabled)
 
   v_cruise_kph_last = v_cruise_kph
-  # print("controlsd state _transition v_cruise_kph_last")
-  # print(v_cruise_kph_last)
-
 
   # if stock cruise is completely disabled, then we can use our own set speed logic
   if not CP.enableCruise:
-   #  print("controlsd state_transition update_v_cruise if not CP.enableCruise")
-   # # print(update_v_cruise(v_cruise_kph, CS.buttonEvents, enabled))
-   #  print(CP.enableCruise)
     v_cruise_kph = update_v_cruise(v_cruise_kph, CS.buttonEvents, enabled)
-    # print("controlsd state_transition v_cruise_kph")
-    # print(v_cruise_kph)
   elif CP.enableCruise and CS.cruiseState.enabled:
-    # print("controlsd state_transition enable cruise section")
-    # #print(CP.enableCruise)
     v_cruise_kph = CS.cruiseState.speed * CV.MS_TO_KPH
-    # print("controlsd state_transition under enablecruise v_cruise_kph elif CP.enableCruise")
-    # print(v_cruise_kph)
 
   # decrease the soft disable timer at every step, as it's reset on
   # entrance in SOFT_DISABLING state
@@ -187,12 +169,7 @@ def state_transition(CS, CP, state, events, soft_disable_timer, v_cruise_kph, AM
         else:
           state = State.enabled
         AM.add("enable", enabled)
-        # print("controlsd state_transition v_cruise_kph_last if enable under AM.add")
-        # print(v_cruise_kph_last)
-       # print(initialize_v_cruise())
         v_cruise_kph = initialize_v_cruise(CS.vEgo, CS.buttonEvents, v_cruise_kph_last)
-       #  print("controlsd state_transition v_cruise kph under AM. add if pre enable")
-       #  print(v_cruise_kph)
 
   # ENABLED
   elif state == State.enabled:
@@ -225,8 +202,6 @@ def state_transition(CS, CP, state, events, soft_disable_timer, v_cruise_kph, AM
     elif not get_events(events, [ET.SOFT_DISABLE]):
       # no more soft disabling condition, so go back to ENABLED
       state = State.enabled
-      # print("controlsd state_transition state enable")
-      # print(state)
 
     elif soft_disable_timer <= 0:
       state = State.disabled
@@ -236,9 +211,6 @@ def state_transition(CS, CP, state, events, soft_disable_timer, v_cruise_kph, AM
     if get_events(events, [ET.USER_DISABLE]):
       state = State.disabled
       AM.add("disable", enabled)
-      # print("controlsd state_transition state disable")
-      # print(state)
-
 
     elif get_events(events, [ET.IMMEDIATE_DISABLE, ET.SOFT_DISABLE]):
       state = State.disabled
@@ -257,8 +229,6 @@ def state_control(plan, CS, CP, state, events, v_cruise_kph, v_cruise_kph_last, 
 
   # reset actuators to zero
   actuators = car.CarControl.Actuators.new_message()
-  # print("controlsd state_control reset actuators to zero")
-  # print(actuators)
 
   enabled = isEnabled(state)
   active = isActive(state)
@@ -297,73 +267,19 @@ def state_control(plan, CS, CP, state, events, v_cruise_kph, v_cruise_kph_last, 
     angle_offset = learn_angle_offset(active, CS.vEgo, angle_offset,
                                       PL.PP.c_poly, PL.PP.c_prob, CS.steeringAngle,
                                       CS.steeringPressed)
-    # print("controlsd state_control angle_offset learning")
-    # print(angle_offset)
 
   # *** gas/brake PID loop ***
-  # print("controlsd under gas/brake PID loop, active")
-  # print(active)
-  # print("controlsd under gas/brake PID loop, CS.vEgo")
-  # print(CS.vEgo)
-  # print("controlsd under gas/brake PID loop, CS.brakePressed")
-  # print(CS.brakePressed)
-  # print("controlsd under gas/brake PID loop, CS.standstill")
-  # print(CS.standstill)
-  # print("controlsd under gas/brake PID loop, CS.cruiseState.standstill")
-  # print(CS.cruiseState.standstill)
-  # print("controlsd under gas/brake PID loop, v_cruise_kph")
-  # print(v_cruise_kph)
-  # print("controlsd under gas/brake PID loop, plan.vTarget")
-  # print(plan.vTarget)
-  # print("controlsd under gas/brake PID loop, plan.vTargetFuture")
-  # print(plan.vTargetFuture)
-  # print("controlsd under gas/brake PID loop, plan.aTarget")
-  # print(plan.aTarget)
-  # print("controlsd under gas/brake PID loop, CP")
-  # print(CP)
-  # print("controlsd under gas/brake PID loop, PL.lead_1")
-  # print(PL.lead_1)
   actuators.gas, actuators.brake = LoC.update(active, CS.vEgo, CS.brakePressed, CS.standstill, CS.cruiseState.standstill,
                                               v_cruise_kph, plan.vTarget, plan.vTargetFuture, plan.aTarget,
                                               CP, PL.lead_1)
-  # print("controlsd under gas/brake PID loop, actuators.gas")
-  # print(actuators.gas)
-  # print("controlsd under gas/brake PID loop, actuators.brake")
-  # print(actuators.brake)
-
 
   # *** steering PID loop ***
-  # print("controlsd under steering PID loop, active")
-  # print(active)
-  # # print("controlsd under steering PID CS.vEgo")
-  # print(CS.vEgo)
-  # print("controlsd under steering PID CS.steeringAngle")
-  # print(CS.steeringAngle)
-  # print("controlsd under steering PID CS.steeringPressed")
-  # print(CS.steeringPressed)
-  # print("controlsd under steering PID plan.dPoly")
-  # print(plan.dPoly)
-  # print("controlsd under steering PID angle_offset")
-  # print(angle_offset)
-  # print("controlsd under steering PID VM")
-  # print(VM)
-  # print("controlsd under steering PID PL")
-  # print(PL)
   actuators.steer, actuators.steerAngle = LaC.update(active, CS.vEgo, CS.steeringAngle,
                                                      CS.steeringPressed, plan.dPoly, angle_offset, VM, PL)
-  # print("controlsd actuators.steer")
-  # print(actuators.steer)
-  # print("controlsd actuators.steerAngle")
-  # print(actuators.steerAngle)
-
 
   # send a "steering required alert" if saturation count has reached the limit
   if LaC.sat_flag and CP.steerLimitAlert:
     AM.add("steerSaturated", enabled)
-  # print("controlsd steering required alert Lac.sat_flag")
-  # print(LaC.sat_flag)
-  # print("controlsd steering required alert steerLimitAlert")
-  # print(CP.steerLimitAlert)
 
   # parse permanent warnings to display constantly
   for e in get_events(events, [ET.PERMANENT]):
@@ -372,12 +288,7 @@ def state_control(plan, CS, CP, state, events, v_cruise_kph, v_cruise_kph_last, 
   # *** process alerts ***
 
   AM.process_alerts(sec_since_boot())
-  # print("controlsd return value AM. process_alerts actuators")
-  # print(actuators)
-  # print("controlsd state_control return value AM. v_cruise_kph")
-  # print(v_cruise_kph)
-  # print("controlsd state_control return value AM. angle_offset")
-  # print(angle_offset)
+
   return actuators, v_cruise_kph, driver_status, angle_offset
 
 
@@ -398,39 +309,13 @@ def data_send(perception_state, plan, plan_ts, CS, CI, CP, VM, state, events, ac
     CC.cruiseControl.override = True
     # always cancel if we have an interceptor
     CC.cruiseControl.cancel = not CP.enableCruise or (not isEnabled(state) and CS.cruiseState.enabled)
-    # print("controlsd data_send CC.cruiseControl.cancel")
-    # print(CC.cruiseControl.cancel)
 
     # brake discount removes a sharp nonlinearity
     brake_discount = (1.0 - clip(actuators.brake*3., 0.0, 1.0))
-    # print("controlsd data_send brake_discount")
-    # print(brake_discount)
-    # print("controlsd data_send Loc.v_pid")
-    # print(LoC.v_pid)
-    # print("controlsd data_send enableCruise")
-    # print(CP.enableCruise)
-    # print("controlsd data_send before speed overrive float max")
-    #print((0.0, (LoC.v_pid + CS.cruiseState.speedOffset) * brake_discount) if CP.enableCruise else 0.0)
     CC.cruiseControl.speedOverride = float(max(0.0, (LoC.v_pid + CS.cruiseState.speedOffset) * brake_discount) if CP.enableCruise else 0.0)
-    # print("controlsd data_send CC.cruiseControl.speedOverride")
-    # print(CC.cruiseControl.speedOverride)
-    # print("controlsd data_send cruiseControl accelOverride CS.aEgo")
-    # print(CS.aEgo)
-    # print("controlsd data_send cruiseControl accelOverride plan.aTarget")
-    # print(plan.aTarget)
-    # print("controlsd data_send cruiseControl accelOverride CS.vEgo")
-    # print(CS.vEgo)
-    # print("controlsd data_send cruiseControl accelOverride plan.VTarget")
-    # print(plan.vTarget)
     CC.cruiseControl.accelOverride = CI.calc_accel_override(CS.aEgo, plan.aTarget, CS.vEgo, plan.vTarget)
-    # print("controlsd data_send cruiseControl CC.cruisecontrol.accelOverride")
-    # print(CC.cruiseControl.accelOverride)
-    # print("controlsd data_send cruiseControl hud CV.KPH_TO_MS")
-    # print(CV.KPH_TO_MS)
+
     CC.hudControl.setSpeed = float(v_cruise_kph * CV.KPH_TO_MS)
-    # print("controlsd data_send cruiseControl hud setspeed")
-    # print(CC.hudControl.setSpeed)
-    #print(CC.cruiseControl.accelOverride)
     CC.hudControl.speedVisible = isEnabled(state)
     CC.hudControl.lanesVisible = isEnabled(state)
     CC.hudControl.leadVisible = plan.hasLead

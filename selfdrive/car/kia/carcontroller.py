@@ -354,14 +354,23 @@ class CarController(object):
 
           #2018.09.02 DV TODO: need to confirm THROTTLE PEDAL command pedal command
           #2018.09.03 remove idx for oscc kit
-        if CS.CP.enableGasInterceptor:
-          # send exactly zero if apply_gas is zero. Interceptor will send the max between read value and apply_gas.
-          # This prevents unexpected pedal range rescaling
-          # 2018.09.06 12:33AM add canbus.powertrain  to distinction of can bus channel
-          can_sends.append(kiacan.create_gas_command_enable(self.packer, apply_gas))
-         # can_sends.append(kiacan.create_gas_command_soul(self.packer, apply_gas))
-          can_sends.append(kiacan.create_gas_command_disable(self.packer, apply_gas))
-          can_sends.append(kiacan.create_gas_command(self.packer, apply_gas, idx))  #2018.09.29 9:15AMEST  add in honda style
+        # if CS.CP.enableGasInterceptor:
+        #   # send exactly zero if apply_gas is zero. Interceptor will send the max between read value and apply_gas.
+        #   # This prevents unexpected pedal range rescaling
+        #   # 2018.09.06 12:33AM add canbus.powertrain  to distinction of can bus channel
+        #   can_sends.append(kiacan.create_gas_command_enable(self.packer, apply_gas))
+        #  # can_sends.append(kiacan.create_gas_command_soul(self.packer, apply_gas))
+        #   can_sends.append(kiacan.create_gas_command_disable(self.packer, apply_gas))
+        #   can_sends.append(kiacan.create_gas_command(self.packer, apply_gas, idx))  #2018.09.29 9:15AMEST  add in honda style
+
+
+        # send exactly zero if apply_gas is zero. Interceptor will send the max between read value and apply_gas.
+        # This prevents unexpected pedal range rescaling
+        # 2018.09.06 12:33AM add canbus.powertrain  to distinction of can bus channel
+        can_sends.append(kiacan.create_gas_command_enable(self.packer, apply_gas))
+        # can_sends.append(kiacan.create_gas_command_soul(self.packer, apply_gas))
+        can_sends.append(kiacan.create_gas_command_disable(self.packer, apply_gas))
+        can_sends.append(kiacan.create_gas_command(self.packer, apply_gas, idx))  # 2018.09.29 9:15AMEST  add in honda style
 
           # radar at 20Hz, but these msgs need to be sent at 50Hz on ilx (seems like an Acura bug)
       #change 2018.09.03 change ILX to dummy

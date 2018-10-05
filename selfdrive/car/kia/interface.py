@@ -171,7 +171,7 @@ class CarInterface(object):
      #ret.enableCamera = not any(x for x in CAMERA_MSGS if x in fingerprint)
     ret.enableCamera = not any(x for x in CAMERA_MSGS_SOUL if x in fingerprint)  #2018.09.02 DV change for KIA message
       #ret.enableGasInterceptor = 0x201 in fingerprint
-    ret.enableGasInterceptor = 0x93 in fingerprint   #2018.09.02 DV change for gas interceptor to throttle report
+    #ret.enableGasInterceptor = 0x93 in fingerprint   #2018.09.02 DV change for gas interceptor to throttle report
     # ret.enableGasInterceptor = False   #2018.09.25 ignore use regular cruise change for gas interceptor to throttle report
     cloudlog.warn("ECU Camera Simulated: %r", ret.enableCamera)
     cloudlog.warn("ECU Gas Interceptor: %r", ret.enableGasInterceptor)
@@ -203,6 +203,7 @@ class CarInterface(object):
     # # 2018.09.04
     # full torque for 20 deg at 80mph means 0.00007818594 comment from hyundai
     ret.steerKf = 0.00006 # conservative feed-forward
+
 
 
     #2018.09.02 DV add Kia soul #TODO need to modified paramater
@@ -425,10 +426,10 @@ class CarInterface(object):
 
     #2018.09.02 TODO need to check is matter, we not using kia cruise control
     # cruise state
-    #ret.cruiseState.enabled = self.CS.pcm_acc_status != 0
-    ret.cruiseState.enabled = False  #2018.09.11 if use Openpilot cruise, no need, this should set to 0, need set to False
-    #ret.cruiseState.speed = self.CS.v_cruise_pcm * CV.KPH_TO_MS #2018.09.11 check in controlsd.py if not enable cruise, this not needed
-    ret.cruiseState.speed = 0  # 2018.09.11 check in controlsd.py if not enable cruise, this not needed, set to 0
+    ret.cruiseState.enabled = self.CS.pcm_acc_status != 0
+    #ret.cruiseState.enabled = False  #2018.09.11 if use Openpilot cruise, no need, this should set to 0, need set to False
+    ret.cruiseState.speed = self.CS.v_cruise_pcm * CV.KPH_TO_MS #2018.09.11 check in controlsd.py if not enable cruise, this not needed
+    #ret.cruiseState.speed = 0  # 2018.09.11 check in controlsd.py if not enable cruise, this not needed, set to 0
     ret.cruiseState.available = bool(self.CS.main_on)  #2018.09.11 not use anywhere else beside interface.py
     ret.cruiseState.speedOffset = self.CS.cruise_speed_offset  #2018.09.11 finally not use in controlsd.py if we use interceptor and enablecruise=false
     ret.cruiseState.standstill = False
