@@ -171,7 +171,7 @@ class CarInterface(object):
      #ret.enableCamera = not any(x for x in CAMERA_MSGS if x in fingerprint)
     ret.enableCamera = not any(x for x in CAMERA_MSGS_SOUL if x in fingerprint)  #2018.09.02 DV change for KIA message
       #ret.enableGasInterceptor = 0x201 in fingerprint
-    #ret.enableGasInterceptor = 0x93 in fingerprint   #2018.09.02 DV change for gas interceptor to throttle report
+    ret.enableGasInterceptor = 0x93 in fingerprint   #2018.09.02 DV change for gas interceptor to throttle report
     # ret.enableGasInterceptor = False   #2018.09.25 ignore use regular cruise change for gas interceptor to throttle report
     cloudlog.warn("ECU Camera Simulated: %r", ret.enableCamera)
     cloudlog.warn("ECU Gas Interceptor: %r", ret.enableGasInterceptor)
@@ -223,7 +223,7 @@ class CarInterface(object):
       ret.longitudinalKiV = [0.18, 0.12]
 
     elif candidate == CAR.SOUL1:
-      stop_and_go = True   #2018.10.04 12:15PMEST change allow stop and go
+      stop_and_go = False   #2018.10.04 12:15PMEST change allow stop and go
       ret.safetyParam = 9  # define in /boardd/boardd.cc
       ret.mass = 3410. * CV.LB_TO_KG + std_cargo
       ret.wheelbase = 2.66

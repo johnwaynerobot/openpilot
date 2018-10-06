@@ -103,8 +103,8 @@ DBC = {
 
 
 STEER_THRESHOLD = {
-  CAR.SOUL: 1, #2018.09.02 D.V. steering override from OSCC car in carstate.py when 1 is override
-  CAR.SOUL1: 1, #2018.09.02 D.V. steering override from OSCC car in carstate.py when 1 is override
+  CAR.SOUL: 0.8, #2018.10.06 steering override from OSCC car in carstate.py when 1 is override
+  CAR.SOUL1: 0.8, #2018.10.06 D.V. steering override from OSCC car in carstate.py when 1 is override
   CAR.SOUL2: 1,  # 2018.09.11 missing car.soul2
   CAR.SOUL3: 2, #2018.09.02 D.V. steering override from OSCC car in carstate.py when 1 is override
   CAR.SOUL4: 2, #2018.09.02 D.V. steering override from OSCC car in carstate.py when 1 is override
