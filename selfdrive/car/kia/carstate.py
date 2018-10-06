@@ -403,12 +403,14 @@ class CarState(object):
     #print("carstate.py throttle report")
     #print(cp.vl["THROTTLE_REPORT"])    #use to debug if self.user_gas
     if self.CP.enableGasInterceptor:
-      self.user_gas = cp.vl["THROTTLE_REPORT"]['THROTTLE_REPORT_operator_override'] #2018.09.02 change for Kia soul when gas being press
+     # self.user_gas = cp.vl["THROTTLE_REPORT"]['THROTTLE_REPORT_operator_override'] #2018.09.02 change for Kia soul when gas being press
+      self.user_gas = 0
       print("carstate.py self.user_gas")
       print(self.user_gas)
       #self.user_gas_pressed = self.user_gas > 0 # this works because interceptor read < 0 when pedal position is 0. Once calibrated, this will change
       #self.user_gas = cp.vl["ENG_INFO"]['PEDAL_GAS']  # 2018.09.02 change for Kia soul when gas being press
       self.user_gas_pressed = self.user_gas > 0  # gas from actual gas pedal into 2018.09.19 12:35PMEST
+
 
     #self.user_gas = cp.vl["THROTTLE_REPORT"]['THROTTLE_REPORT_operator_override'] == 1 #2018.09.02 change for Kia soul when gas being press
     #print("carstate.py self.user_gas")
