@@ -203,7 +203,7 @@ class CarInterface(object):
     # # 2018.09.04
     # full torque for 20 deg at 80mph means 0.00007818594 comment from hyundai
     #ret.steerKf = 0.00006 # conservative feed-forward
-    ret.steerKf = 0.0008   # conservative feed-forward
+    ret.steerKf = 0.0009   # conservative feed-forward
 
 
 
@@ -226,13 +226,13 @@ class CarInterface(object):
     elif candidate == CAR.SOUL1:
       stop_and_go = False   #2018.10.04 12:15PMEST change allow stop and go
       ret.safetyParam = 9  # define in /boardd/boardd.cc
-      ret.mass = 3410. * CV.LB_TO_KG + std_cargo
-      ret.wheelbase = 2.66
+      ret.mass = 3836. * CV.LB_TO_KG + std_cargo    #2018.10.07 update to kia value
+      ret.wheelbase = 2.57048                    #2018.10.07 update to kia value
       ret.centerToFront = ret.wheelbase * 0.41
-      ret.steerRatio = 16.0  # 12.3 is spec end-to-end
+      ret.steerRatio = 15.7  # 12.3 is spec end-to-end    #2018.10.07 update to kai value
       tire_stiffness_factor = 0.677
       #ret.steerKpV, ret.steerKiV = [[0.6], [0.18]]
-      ret.steerKpV, ret.steerKiV = [[0.04], [0.16]]
+      ret.steerKpV, ret.steerKiV = [[0.37], [0.1]] #2018.10.07 copy from hyundai santa fe
       ret.steerKiBP, ret.steerKpBP = [[0.], [0.]]  # 2018.09.04 from hyundai
       ret.longitudinalKpBP = [0., 5., 35.]
       ret.longitudinalKpV = [1.2, 0.8, 0.5]
