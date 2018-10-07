@@ -203,7 +203,7 @@ class CarInterface(object):
     # # 2018.09.04
     # full torque for 20 deg at 80mph means 0.00007818594 comment from hyundai
     #ret.steerKf = 0.00006 # conservative feed-forward
-    ret.steerKf = 0.000030  # conservative feed-forward
+    ret.steerKf = 0.0010   # conservative feed-forward
 
 
 
