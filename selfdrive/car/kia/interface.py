@@ -203,7 +203,7 @@ class CarInterface(object):
     # # 2018.09.04
     # full torque for 20 deg at 80mph means 0.00007818594 comment from hyundai
     #ret.steerKf = 0.00006 # conservative feed-forward
-    ret.steerKf = 0.0010   # conservative feed-forward
+    ret.steerKf = 0.0008   # conservative feed-forward
 
 
 
@@ -232,7 +232,7 @@ class CarInterface(object):
       ret.steerRatio = 16.0  # 12.3 is spec end-to-end
       tire_stiffness_factor = 0.677
       #ret.steerKpV, ret.steerKiV = [[0.6], [0.18]]
-      ret.steerKpV, ret.steerKiV = [[0.03], [0.18]]
+      ret.steerKpV, ret.steerKiV = [[0.04], [0.16]]
       ret.steerKiBP, ret.steerKpBP = [[0.], [0.]]  # 2018.09.04 from hyundai
       ret.longitudinalKpBP = [0., 5., 35.]
       ret.longitudinalKpV = [1.2, 0.8, 0.5]
