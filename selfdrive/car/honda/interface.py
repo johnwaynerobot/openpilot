@@ -295,8 +295,10 @@ class CarInterface(object):
       ret.wheelbase = 2.81
       ret.centerToFront = ret.wheelbase * 0.41
       ret.steerRatio = 16.0         # as spec
-      tire_stiffness_factor = 0.444 # not optimized yet
-      ret.steerKpV, ret.steerKiV = [[0.38], [0.11]]
+      #tire_stiffness_factor = 0.444 # not optimized yet
+      tire_stiffness_factor = 0.82  #20181101 setting from @kegman 2018pilot
+      #ret.steerKpV, ret.steerKiV = [[0.38], [0.11]]
+      ret.steerKpV, ret.steerKiV = [[0.5], [0.22]]   #20181101 setting from @kegman 2018pilot https://github.com/kegman/openpilot/blob/kegman-devel/selfdrive/car/honda/interface.py
       ret.longitudinalKpBP = [0., 5., 35.]
       ret.longitudinalKpV = [1.2, 0.8, 0.5]
       ret.longitudinalKiBP = [0., 35.]

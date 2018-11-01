@@ -14,7 +14,8 @@ class PathPlanner(object):
 
     self.lane_width_estimate = 3.7
     self.lane_width_certainty = 1.0
-    self.lane_width = 3.7
+    #self.lane_width = 3.7
+    self.lane_width = 2.85   #20181101 @kegman try change lanewidth to 2.85 https://github.com/kegman/openpilot/blob/kegman-devel/selfdrive/controls/lib/pathplanner.py
 
   def update(self, v_ego, md):
     if md is not None:
