@@ -572,7 +572,7 @@ def controlsd_thread(gctx=None, rate=100, default_bias=0.):
         rtt_params['steerRateCost'] = CP.steerRateCost
         rtt_params['latPidDeadzone'] = 0.0
         rtt_params['steerActuatorDelay'] = CP.steerActuatorDelay
-        rtt_params['Camera Offset'] = PL.PP.cam_offset
+       # rtt_params['Camera Offset'] = PL.PP.cam_offset
         # Write the pickle file
         # TODO:  try/except the open
         with open(rt_tuning_file, "wb") as f_write:
@@ -600,8 +600,8 @@ def controlsd_thread(gctx=None, rate=100, default_bias=0.):
                   'steerRatio': [ 8.0, 25.0, 14.0 ],
                   'steerRateCost': [ 0.05, 1.0, 0.5 ],
                   'latPidDeadzone': [ 0.0, 4.0, 0.0 ],
-                  'steerActuatorDelay': [ 0.0, 0.5, 0.1 ],
-                  'Camera Offset': [ -0.2, 0.2, 0.06 ]
+                  'steerActuatorDelay': [ 0.0, 0.5, 0.1 ]
+                 # 'Camera Offset': [ -0.2, 0.2, 0.06 ]
                   }
         # Do the checks and set the values
         for key in rt_data_limits:
@@ -656,7 +656,7 @@ def controlsd_thread(gctx=None, rate=100, default_bias=0.):
         # Make updates in latcontrol, etc.  I'm not sure if this is actually necessary, depends on if the objects are referenced or not.  Anyway, one less thing to debug atm.
         VM.update_rt_params(CP)
         LaC.update_rt_params(VM, rt_mpc_flag, deadzone=rtt_params['latPidDeadzone'])
-        PL.PP.update_rt_params(rtt_params['Camera Offset'])
+        #PL.PP.update_rt_params(rtt_params['Camera Offset'])
         #print('RTT Last_mod_time:  {0}'.format(last_mod_time))
 
     ####### END OF REAL-TIME TUNING ADD-ON #######
